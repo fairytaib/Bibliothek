@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thema — ARCHIV</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="index.html">
+      <span class="mark">A</span>
+      Archiv <small>Web-Bibliothek</small>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Katalog</a>
+      <a href="themen.html">Themen</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Lade-Zustand -->
+<div id="thema-loading-state" class="not-found">
+  <p class="code">LADEN …</p>
+  <h1>Thema wird geladen</h1>
+  <p>Einen Moment bitte.</p>
+</div>
+
+<!-- Fehler-Zustand: kein "thema"-Parameter in der URL / Daten nicht ladbar -->
+<div id="thema-not-found-state" class="not-found" style="display:none;">
+  <p class="code">FEHLER 404</p>
+  <h1>Kein Thema angegeben</h1>
+  <p>Es wurde kein gültiges Thema in der URL gefunden.</p>
+  <a class="btn" href="themen.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+    Zurück zur Themen-Übersicht
+  </a>
+</div>
+
+<!-- Leer-Zustand: gültiges Thema, aber keine Treffer -->
+<div id="thema-empty-state" class="not-found" style="display:none;">
+  <p class="code">OHNE TREFFER</p>
+  <h1>Noch keine Einträge zu diesem Thema</h1>
+  <p>Es sind noch keine Videos, Bücher oder Professoren mit diesem Thema verknüpft.</p>
+  <a class="btn" href="themen.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+    Zurück zur Themen-Übersicht
+  </a>
+</div>
+
+<!-- Themen-Inhalt -->
+<div id="thema-content" style="display:none;">
+
+  <section class="thema-hero">
+    <div class="container">
+      <a class="back-link" href="themen.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Zurück zur Themen-Übersicht
+      </a>
+      <p class="hero-eyebrow">Thema</p>
+      <h1 id="thema-title"></h1>
+      <p id="thema-summary"></p>
+    </div>
+  </section>
+
+  <section class="thema-body">
+    <div class="container">
+
+      <div class="panel" id="thema-professoren-panel">
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          Professoren zu diesem Thema
+        </h2>
+        <div class="theme-prof-grid" id="thema-professoren"></div>
+      </div>
+
+      <div class="panel" id="thema-videos-panel">
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+          Videos zu diesem Thema
+        </h2>
+        <ul class="resource-list" id="thema-videos"></ul>
+      </div>
+
+      <div class="panel" id="thema-buecher-panel">
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          Bücher zu diesem Thema
+        </h2>
+        <ul class="resource-list" id="thema-buecher"></ul>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    Archiv · Ein statisches Bibliothekssystem ohne Backend
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

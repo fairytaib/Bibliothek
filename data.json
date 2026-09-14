@@ -1,30 +1,38 @@
-[{
+[
+  {
     "id": "prof-mustermann",
     "name": "Prof. Dr. Max Mustermann",
     "sprache": "Deutsch",
     "spezialisierung": "Künstliche Intelligenz",
     "themen": ["Deep Learning", "Ethik", "Algorithmen", "Neuronale Netze"],
     "anmerkung": "Prof. Mustermann gilt als einer der zugänglichsten Dozenten im Bereich KI. Seine Vorlesungen kombinieren mathematische Tiefe mit anschaulichen Praxisbeispielen. Besonders empfehlenswert für Einsteiger, die einen roten Faden durch das Thema suchen.",
-    "videos": [{
+    "videos": [
+      {
         "titel": "Einführung in neuronale Netze",
-        "url": "https://www.youtube.com/watch?v=aircAruvnKk"
+        "url": "https://www.youtube.com/watch?v=aircAruvnKk",
+        "themen": ["Neuronale Netze", "Deep Learning"]
       },
       {
         "titel": "Backpropagation einfach erklärt",
-        "url": "https://www.youtube.com/watch?v=Ilg3gGewQ5U"
+        "url": "https://www.youtube.com/watch?v=Ilg3gGewQ5U",
+        "themen": ["Neuronale Netze", "Algorithmen"]
       },
       {
         "titel": "Ethik der Künstlichen Intelligenz",
-        "url": "https://www.youtube.com/watch?v=UwsrzCVZAb8"
+        "url": "https://www.youtube.com/watch?v=UwsrzCVZAb8",
+        "themen": ["Ethik"]
       }
     ],
-    "buecher": [{
+    "buecher": [
+      {
         "titel": "Deep Learning (Goodfellow, Bengio, Courville)",
-        "url": "https://www.deeplearningbook.org/"
+        "url": "https://www.deeplearningbook.org/",
+        "themen": ["Deep Learning", "Neuronale Netze"]
       },
       {
         "titel": "Artificial Intelligence: A Modern Approach",
-        "url": "http://aima.cs.berkeley.edu/"
+        "url": "http://aima.cs.berkeley.edu/",
+        "themen": ["Algorithmen", "Ethik"]
       }
     ]
   },
@@ -35,22 +43,28 @@
     "spezialisierung": "Kognitionswissenschaft",
     "themen": ["Wahrnehmung", "Gedächtnis", "Sprachverarbeitung", "Neurolinguistik"],
     "anmerkung": "Prof. Schneiders Seminare sind stark diskussionsbasiert. Sie legt großen Wert auf Primärliteratur und erwartet aktive Beteiligung. Ihre Vorlesungsreihe zur Sprachverarbeitung ist fachübergreifend sehr beliebt.",
-    "videos": [{
+    "videos": [
+      {
         "titel": "How the Brain Processes Language",
-        "url": "https://www.youtube.com/watch?v=q2_o-M3joIY"
+        "url": "https://www.youtube.com/watch?v=q2_o-M3joIY",
+        "themen": ["Sprachverarbeitung", "Neurolinguistik"]
       },
       {
         "titel": "Memory and Cognition Basics",
-        "url": "https://www.youtube.com/watch?v=eIho2S0ZahI"
+        "url": "https://www.youtube.com/watch?v=eIho2S0ZahI",
+        "themen": ["Gedächtnis", "Wahrnehmung"]
       }
     ],
-    "buecher": [{
+    "buecher": [
+      {
         "titel": "Cognitive Psychology: A Student's Handbook",
-        "url": "https://www.routledge.com/Cognitive-Psychology-A-Students-Handbook/Eysenck-Groome/p/book/9780367136957"
+        "url": "https://www.routledge.com/Cognitive-Psychology-A-Students-Handbook/Eysenck-Groome/p/book/9780367136957",
+        "themen": ["Wahrnehmung", "Gedächtnis"]
       },
       {
         "titel": "The Language Instinct (Steven Pinker)",
-        "url": "https://stevenpinker.com/publications/language-instinct"
+        "url": "https://stevenpinker.com/publications/language-instinct",
+        "themen": ["Sprachverarbeitung", "Neurolinguistik"]
       }
     ]
   },
@@ -61,26 +75,19 @@
     "spezialisierung": "Volkswirtschaftslehre",
     "themen": ["Makroökonomie", "Spieltheorie", "Verhaltensökonomik"],
     "anmerkung": "Sehr klare, strukturierte Vorlesungen mit vielen aktuellen Fallbeispielen aus der Wirtschaftspresse. Klausuren orientieren sich eng an den Vorlesungsfolien.",
-    "videos": [{
-      "titel": "Introduction to Game Theory",
-      "url": "https://www.youtube.com/watch?v=lXpMd8ay3po"
-    }],
-    "buecher": [{
-      "titel": "Thinking, Fast and Slow (Daniel Kahneman)",
-      "url": "https://www.penguinrandomhouse.com/books/89308/thinking-fast-and-slow-by-daniel-kahneman/"
-    }]
-  },
-  {
-    "id": "prof-abdurrahman-reidegeld",
-    "name": "Abdurrahman Reidegeld",
-    "sprache": "Deutsch",
-    "spezialisierung": "Allrounder (Interdisziplinärer Experte)",
-    "themen": [],
-    "anmerkung": "Sehr gehoben und wissenschaftlich. teilweise sehr kompliziert",
-    "videos": [{
-      "titel": "Der jüngste Tag",
-      "url": "https://www.youtube.com/watch?v=6T38lO0IohU"
-    }],
-    "buecher": []
+    "videos": [
+      {
+        "titel": "Introduction to Game Theory",
+        "url": "https://www.youtube.com/watch?v=lXpMd8ay3po",
+        "themen": ["Spieltheorie"]
+      }
+    ],
+    "buecher": [
+      {
+        "titel": "Thinking, Fast and Slow (Daniel Kahneman)",
+        "url": "https://www.penguinrandomhouse.com/books/89308/thinking-fast-and-slow-by-daniel-kahneman/",
+        "themen": ["Verhaltensökonomik"]
+      }
+    ]
   }
 ]

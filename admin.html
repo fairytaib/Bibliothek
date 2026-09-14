@@ -12,10 +12,11 @@
   <div class="container">
     <a class="brand" href="index.html">
       <span class="mark">A</span>
-      Archiv <small>HDI-Bibliothek</small>
+      Archiv <small>Web-Bibliothek</small>
     </a>
     <nav class="nav-links">
       <a href="index.html">Katalog</a>
+      <a href="themen.html">Themen</a>
       <a href="admin.html" class="active">Admin</a>
     </nav>
   </div>
@@ -79,12 +80,14 @@
 
         <div class="form-section">
           <h2>Videos</h2>
+          <p class="field-hint" style="margin: -8px 0 14px;">Themen pro Video helfen, es auf der Themen-Seite auffindbar zu machen — nutze möglichst dieselbe Schreibweise wie bei bestehenden Themen.</p>
           <div id="videos-container"></div>
           <button type="button" class="add-row-btn" id="add-video-btn">+ Video hinzufügen</button>
         </div>
 
         <div class="form-section">
           <h2>Bücher & Quellen</h2>
+          <p class="field-hint" style="margin: -8px 0 14px;">Auch hier: Themen zuordnen, damit das Buch bei der passenden Themen-Detailseite erscheint.</p>
           <div id="buecher-container"></div>
           <button type="button" class="add-row-btn" id="add-buch-btn">+ Buch / Quelle hinzufügen</button>
         </div>
@@ -147,6 +150,7 @@ function createDynamicRow(container, prefix, index, placeholderTitel, placeholde
   row.innerHTML = `
     <input type="text" class="${prefix}-titel" placeholder="${placeholderTitel}" />
     <input type="url" class="${prefix}-url" placeholder="${placeholderUrl}" />
+    <input type="text" class="${prefix}-themen" placeholder="Themen (kommagetrennt)" />
     <button type="button" class="icon-btn" aria-label="Zeile entfernen">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
     </button>
@@ -196,8 +200,12 @@ function collectResourceRows(containerId, prefix) {
   rows.forEach(row => {
     const titel = row.querySelector(`.${prefix}-titel`).value.trim();
     const url = row.querySelector(`.${prefix}-url`).value.trim();
+    const themenRaw = row.querySelector(`.${prefix}-themen`).value.trim();
+    const themen = themenRaw
+      ? themenRaw.split(',').map(t => t.trim()).filter(Boolean)
+      : [];
     if (titel && url) {
-      result.push({ titel, url });
+      result.push({ titel, url, themen });
     }
   });
   return result;

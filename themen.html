@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ARCHIV — Web-Bibliothekssystem</title>
-<meta name="description" content="Durchsuche Professoren nach Sprache, Spezialisierung und Thema — mit Videos und Buchempfehlungen." />
+<title>Themen — ARCHIV</title>
+<meta name="description" content="Durchsuche alle Themen und finde direkt passende Videos, Bücher und Professoren." />
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -16,8 +16,8 @@
       Archiv <small>Web-Bibliothek</small>
     </a>
     <nav class="nav-links">
-      <a href="index.html" class="active">Katalog</a>
-      <a href="themen.html">Themen</a>
+      <a href="index.html">Katalog</a>
+      <a href="themen.html" class="active">Themen</a>
       <a href="admin.html">Admin</a>
     </nav>
   </div>
@@ -25,25 +25,16 @@
 
 <section class="hero">
   <div class="container">
-    <p class="hero-eyebrow">Katalog</p>
-    <h1>Finde die richtige Stimme für dein Thema</h1>
-    <p>Durchsuche Professoren nach Name, Sprache, Spezialisierung oder Thema und gelange direkt zu ihren Video- und Buchempfehlungen.</p>
+    <p class="hero-eyebrow">Themen-Wolke</p>
+    <h1>Stöbere nach Thema</h1>
+    <p>Jedes Thema führt direkt zu allen passenden Videos, Büchern und Professoren im Archiv — unabhängig davon, bei wem sie ursprünglich gelistet sind.</p>
 
     <div class="search-panel">
       <div class="search-row">
         <div class="search-input-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <input type="text" id="search-input" placeholder="Suche nach Name, Sprache, Thema…" autocomplete="off" />
+          <input type="text" id="themen-search" placeholder="Thema suchen…" autocomplete="off" />
         </div>
-      </div>
-      <div class="filters-row">
-        <select id="filter-lang" class="filter-select">
-          <option value="">Alle Sprachen</option>
-        </select>
-        <select id="filter-spez" class="filter-select">
-          <option value="">Alle Spezialisierungen</option>
-        </select>
-        <button type="button" id="clear-filters" class="clear-filters">Filter zurücksetzen</button>
       </div>
     </div>
   </div>
@@ -52,10 +43,10 @@
 <section class="results-section">
   <div class="container">
     <div class="results-meta">
-      <span><strong id="result-count">0</strong> Profile gefunden</span>
+      <span><strong id="themen-count">0</strong> Themen gefunden</span>
     </div>
-    <div class="card-grid" id="card-grid">
-      <!-- Karten werden dynamisch von app.js gerendert -->
+    <div class="themen-cloud" id="themen-cloud">
+      <!-- Themen-Kacheln werden dynamisch von app.js gerendert -->
     </div>
   </div>
 </section>
