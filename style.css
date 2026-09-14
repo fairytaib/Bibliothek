@@ -215,7 +215,7 @@ textarea:focus-visible{
   pointer-events: none;
 }
 
-#search-input, #themen-search{
+.search-field{
   width: 100%;
   height: 50px;
   padding: 0 16px 0 46px;
@@ -227,10 +227,9 @@ textarea:focus-visible{
   font-family: var(--font-body);
 }
 
-#search-input::placeholder{ color: var(--text-faint); }
-#themen-search::placeholder{ color: var(--text-faint); }
+.search-field::placeholder{ color: var(--text-faint); }
 
-#search-input:focus, #themen-search:focus{
+.search-field:focus{
   border-color: var(--accent);
 }
 
@@ -758,7 +757,8 @@ a.badge:hover{
 .field input[type="text"],
 .field input[type="url"],
 .field select,
-.field textarea{
+.field textarea,
+.input-control{
   width: 100%;
   padding: 11px 14px;
   border-radius: var(--radius-sm);
@@ -771,16 +771,73 @@ a.badge:hover{
 
 .field textarea{ resize: vertical; min-height: 90px; }
 
-.field input:focus, .field select:focus, .field textarea:focus{ border-color: var(--accent); }
+.field input:focus, .field select:focus, .field textarea:focus, .input-control:focus{ border-color: var(--accent); }
 
 .field-hint{ font-size: 12px; color: var(--text-faint); margin-top: 4px; }
 
+/* ---------- Dynamische Zeilen (Video/Buch) ---------- */
 .dynamic-row{
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr auto;
-  gap: 10px;
-  margin-bottom: 10px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  padding: 18px;
+  margin-bottom: 16px;
+}
+
+.dynamic-row-header{
+  display: flex;
   align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.dynamic-row-kind{
+  font-family: var(--font-display);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.dynamic-row .field input[type="text"],
+.dynamic-row .field input[type="url"]{
+  background: var(--bg-card);
+}
+
+/* ---------- Tag-Auswahl (vorgefertigte Themen, schreibgeschützt) ---------- */
+.tag-picker{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-picker-empty{
+  font-size: 12.5px;
+  color: var(--text-faint);
+  font-style: italic;
+}
+
+.tag-chip{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: border-color .15s ease, background-color .15s ease, color .15s ease;
+}
+
+.tag-chip:hover{ border-color: var(--accent); color: var(--text); }
+
+.tag-chip.selected{
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-strong);
 }
 
 .icon-btn{
@@ -895,7 +952,6 @@ pre#json-output{
   .search-row{ flex-direction: column; }
   .card-grid{ grid-template-columns: 1fr; }
   .themen-cloud{ grid-template-columns: 1fr; }
-  .dynamic-row{ grid-template-columns: 1fr; }
   .profile-head{ flex-direction: column; }
   .resource-themes{ padding-left: 14px; }
 }

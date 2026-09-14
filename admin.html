@@ -26,7 +26,7 @@
   <div class="container">
     <p class="hero-eyebrow">Admin-Generator</p>
     <h1>Neuen Profil-Eintrag erstellen</h1>
-    <p>Fülle das Formular aus und kopiere den generierten JSON-Code in deine <code>data.json</code>, um einen neuen Professoren-Eintrag hinzuzufügen.</p>
+    <p>Fülle das Formular aus und kopiere den generierten JSON-Code in deine <code>data.json</code>, um einen neuen Professoren-Eintrag hinzuzufügen. Verfügbare Themen-Tags stammen aus <code>tags.json</code> — um neue Tags zu ergänzen, bearbeite diese Datei direkt.</p>
   </div>
 </section>
 
@@ -68,8 +68,9 @@
           </div>
 
           <div class="field">
-            <label for="f-themen">Themen (kommagetrennt)</label>
+            <label for="f-themen">Allgemeine Themen des Professors (kommagetrennt)</label>
             <input type="text" id="f-themen" placeholder="Deep Learning, Ethik, Algorithmen" />
+            <p class="field-hint">Dieses Feld bleibt bewusst frei editierbar. Die Tag-Auswahl weiter unten gilt nur für einzelne Videos und Bücher.</p>
           </div>
 
           <div class="field">
@@ -80,14 +81,14 @@
 
         <div class="form-section">
           <h2>Videos</h2>
-          <p class="field-hint" style="margin: -8px 0 14px;">Themen pro Video helfen, es auf der Themen-Seite auffindbar zu machen — nutze möglichst dieselbe Schreibweise wie bei bestehenden Themen.</p>
+          <p class="field-hint" style="margin: -8px 0 16px;">Wähle pro Video passende Tags aus der vorgefertigten Liste, damit es auf der Themen-Seite auffindbar ist.</p>
           <div id="videos-container"></div>
           <button type="button" class="add-row-btn" id="add-video-btn">+ Video hinzufügen</button>
         </div>
 
         <div class="form-section">
           <h2>Bücher & Quellen</h2>
-          <p class="field-hint" style="margin: -8px 0 14px;">Auch hier: Themen zuordnen, damit das Buch bei der passenden Themen-Detailseite erscheint.</p>
+          <p class="field-hint" style="margin: -8px 0 16px;">Auch hier: Tags zuordnen, damit das Buch bei der passenden Themen-Detailseite erscheint.</p>
           <div id="buecher-container"></div>
           <button type="button" class="add-row-btn" id="add-buch-btn">+ Buch / Quelle hinzufügen</button>
         </div>
@@ -127,10 +128,25 @@
 /* =========================================================
    admin.html — Formular-Logik zur JSON-Generierung
    (eigenständig, benötigt kein app.js)
+
+   Tags sind bewusst schreibgeschützt: Sie werden nur aus
+   tags.json geladen und angezeigt. Es gibt in diesem Formular
+   keine Möglichkeit, Tags hinzuzufügen oder zu entfernen —
+   das passiert ausschließlich direkt in der Datei tags.json.
    ========================================================= */
 
 let videoRowCount = 0;
 let buchRowCount = 0;
+let masterTags = []; // vorgefertigte, schreibgeschützte Tag-Liste aus tags.json
+
+function escapeHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
 
 function slugify(text) {
   return text
@@ -143,21 +159,110 @@ function slugify(text) {
     .replace(/-+/g, '-');
 }
 
-function createDynamicRow(container, prefix, index, placeholderTitel, placeholderUrl) {
+/* ---------- Vorgefertigte Tags laden (read-only) ---------- */
+
+async function loadMasterTags() {
+  try {
+    const res = await fetch('tags.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    masterTags = Array.isArray(json) ? [...json].sort((a, b) => a.localeCompare(b, 'de')) : [];
+  } catch (err) {
+    console.warn('Konnte tags.json nicht laden — starte mit leerer Tag-Liste.', err);
+    masterTags = [];
+  }
+}
+
+/* ---------- Tag-Auswahl pro Video-/Buch-Zeile ---------- */
+
+function renderTagPickerForRow(row) {
+  const picker = row.querySelector('[data-role="tag-picker"]');
+
+  if (masterTags.length === 0) {
+    picker.innerHTML = '<span class="tag-picker-empty">Keine Tags vorhanden. Ergänze Tags direkt in tags.json.</span>';
+    return;
+  }
+
+  picker.innerHTML = masterTags.map(tag => `
+    <button type="button" class="tag-chip" data-tag="${escapeHtml(tag)}">${escapeHtml(tag)}</button>
+  `).join('');
+
+  picker.querySelectorAll('.tag-chip').forEach(chip => {
+    chip.addEventListener('click', () => chip.classList.toggle('selected'));
+  });
+}
+
+/* ---------- Dynamische Video-/Buch-Zeilen ---------- */
+
+function createDynamicRow(container, prefix, index, kindLabel, placeholderTitel, placeholderUrl) {
   const row = document.createElement('div');
   row.className = 'dynamic-row';
   row.dataset.index = index;
   row.innerHTML = `
-    <input type="text" class="${prefix}-titel" placeholder="${placeholderTitel}" />
-    <input type="url" class="${prefix}-url" placeholder="${placeholderUrl}" />
-    <input type="text" class="${prefix}-themen" placeholder="Themen (kommagetrennt)" />
-    <button type="button" class="icon-btn" aria-label="Zeile entfernen">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-    </button>
+    <div class="dynamic-row-header">
+      <span class="dynamic-row-kind">${kindLabel}</span>
+      <button type="button" class="icon-btn" aria-label="Eintrag entfernen">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+
+    <div class="field">
+      <label>Titel</label>
+      <input type="text" class="${prefix}-titel" placeholder="${placeholderTitel}" />
+    </div>
+
+    <div class="field">
+      <label>URL</label>
+      <input type="url" class="${prefix}-url" placeholder="${placeholderUrl}" />
+    </div>
+
+    <div class="field" style="margin-bottom: 0;">
+      <label>Themen (aus vorgefertigter Liste)</label>
+      <div class="tag-picker" data-role="tag-picker"></div>
+    </div>
   `;
   row.querySelector('.icon-btn').addEventListener('click', () => row.remove());
   container.appendChild(row);
+  renderTagPickerForRow(row);
 }
+
+document.getElementById('add-video-btn').addEventListener('click', () => {
+  createDynamicRow(
+    document.getElementById('videos-container'),
+    'video',
+    videoRowCount++,
+    'Video',
+    'Video-Titel',
+    'https://www.youtube.com/watch?v=…'
+  );
+});
+
+document.getElementById('add-buch-btn').addEventListener('click', () => {
+  createDynamicRow(
+    document.getElementById('buecher-container'),
+    'buch',
+    buchRowCount++,
+    'Buch',
+    'Buch-/Quellentitel',
+    'https://…'
+  );
+});
+
+function collectResourceRows(containerId, prefix) {
+  const rows = document.querySelectorAll(`#${containerId} .dynamic-row`);
+  const result = [];
+  rows.forEach(row => {
+    const titel = row.querySelector(`.${prefix}-titel`).value.trim();
+    const url = row.querySelector(`.${prefix}-url`).value.trim();
+    const themen = [...row.querySelectorAll('.tag-chip.selected')].map(c => c.dataset.tag);
+    if (titel && url) {
+      result.push({ titel, url, themen });
+    }
+  });
+  return result;
+}
+
+/* ---------- Name → ID-Vorschlag ---------- */
 
 document.getElementById('f-name').addEventListener('input', (e) => {
   const idField = document.getElementById('f-id');
@@ -170,46 +275,7 @@ document.getElementById('f-id').addEventListener('input', (e) => {
   e.target.dataset.manuallyEdited = 'true';
 });
 
-document.getElementById('add-video-btn').addEventListener('click', () => {
-  createDynamicRow(
-    document.getElementById('videos-container'),
-    'video',
-    videoRowCount++,
-    'Video-Titel',
-    'https://www.youtube.com/watch?v=…'
-  );
-});
-
-document.getElementById('add-buch-btn').addEventListener('click', () => {
-  createDynamicRow(
-    document.getElementById('buecher-container'),
-    'buch',
-    buchRowCount++,
-    'Buch-/Quellentitel',
-    'https://…'
-  );
-});
-
-// Jeweils eine Zeile beim Laden vorbereiten
-createDynamicRow(document.getElementById('videos-container'), 'video', videoRowCount++, 'Video-Titel', 'https://www.youtube.com/watch?v=…');
-createDynamicRow(document.getElementById('buecher-container'), 'buch', buchRowCount++, 'Buch-/Quellentitel', 'https://…');
-
-function collectResourceRows(containerId, prefix) {
-  const rows = document.querySelectorAll(`#${containerId} .dynamic-row`);
-  const result = [];
-  rows.forEach(row => {
-    const titel = row.querySelector(`.${prefix}-titel`).value.trim();
-    const url = row.querySelector(`.${prefix}-url`).value.trim();
-    const themenRaw = row.querySelector(`.${prefix}-themen`).value.trim();
-    const themen = themenRaw
-      ? themenRaw.split(',').map(t => t.trim()).filter(Boolean)
-      : [];
-    if (titel && url) {
-      result.push({ titel, url, themen });
-    }
-  });
-  return result;
-}
+/* ---------- JSON-Generierung ---------- */
 
 document.getElementById('generate-btn').addEventListener('click', () => {
   const name = document.getElementById('f-name').value.trim();
@@ -234,9 +300,15 @@ document.getElementById('generate-btn').addEventListener('click', () => {
 
 document.getElementById('copy-btn').addEventListener('click', async () => {
   const text = document.getElementById('json-output').textContent;
+  await copyToClipboard(text);
+  showToast('In die Zwischenablage kopiert.');
+});
+
+/* ---------- Hilfsfunktionen ---------- */
+
+async function copyToClipboard(text) {
   try {
     await navigator.clipboard.writeText(text);
-    showToast();
   } catch (err) {
     // Fallback für Umgebungen ohne Clipboard-API
     const textarea = document.createElement('textarea');
@@ -245,15 +317,25 @@ document.getElementById('copy-btn').addEventListener('click', async () => {
     textarea.select();
     document.execCommand('copy');
     document.body.removeChild(textarea);
-    showToast();
   }
-});
+}
 
-function showToast() {
+function showToast(message) {
   const toast = document.getElementById('toast');
+  if (message) toast.textContent = message;
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 2200);
 }
+
+/* ---------- Initialisierung ---------- */
+
+(async function init() {
+  await loadMasterTags();
+
+  // Jeweils eine Start-Zeile für Videos und Bücher anlegen
+  createDynamicRow(document.getElementById('videos-container'), 'video', videoRowCount++, 'Video', 'Video-Titel', 'https://www.youtube.com/watch?v=…');
+  createDynamicRow(document.getElementById('buecher-container'), 'buch', buchRowCount++, 'Buch', 'Buch-/Quellentitel', 'https://…');
+})();
 </script>
 
 </body>

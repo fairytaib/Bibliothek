@@ -21,6 +21,23 @@ async function loadData() {
   }
 }
 
+/**
+ * Lädt die vorgefertigte Tag-Liste (tags.json). Diese Datei ist optional —
+ * fehlt sie, arbeitet das System einfach nur mit den Themen, die in
+ * data.json tatsächlich verwendet werden.
+ */
+async function loadTags() {
+  try {
+    const res = await fetch('tags.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    return Array.isArray(json) ? json : [];
+  } catch (err) {
+    console.warn('Konnte tags.json nicht laden (optional):', err);
+    return [];
+  }
+}
+
 function escapeHtml(str) {
   return String(str ?? '')
     .replace(/&/g, '&amp;')
@@ -49,8 +66,11 @@ function themeBadgesHtml(themen, extraClass = '') {
  * sowohl von Professoren als auch von einzelnen Videos/Büchern —
  * inklusive Zähler, wie viele Professoren/Videos/Bücher dazu gehören.
  * Themen werden case-insensitiv zusammengeführt, die erste Schreibweise gewinnt.
+ *
+ * `predefinedTags` (aus tags.json) wird zuerst eingetragen, damit auch
+ * vorgefertigte Tags erscheinen, die noch niemandem zugewiesen wurden.
  */
-function collectAllThemes(data) {
+function collectAllThemes(data, predefinedTags = []) {
   const map = new Map(); // key: lowercase, value: { label, professoren:Set, videos:0, buecher:0 }
 
   function touch(name) {
@@ -60,6 +80,8 @@ function collectAllThemes(data) {
     }
     return map.get(key);
   }
+
+  predefinedTags.forEach(t => touch(t));
 
   data.forEach(prof => {
     (prof.themen || []).forEach(t => {
@@ -439,7 +461,7 @@ const ThemenPage = (() => {
 
   async function init() {
     cacheEls();
-    const data = await loadData();
+    const [data, tags] = await Promise.all([loadData(), loadTags()]);
 
     if (data === null) {
       els.cloud.innerHTML = `
@@ -450,7 +472,7 @@ const ThemenPage = (() => {
       return;
     }
 
-    allThemes = collectAllThemes(data);
+    allThemes = collectAllThemes(data, tags || []);
     render();
 
     els.searchInput.addEventListener('input', () => render(els.searchInput.value));
