@@ -12,7 +12,7 @@
   <div class="container">
     <a class="brand" href="index.html">
       <span class="mark">A</span>
-      Archiv <small>HDI-Bibliothek</small>
+      Archiv <small>Web-Bibliothek</small>
     </a>
     <nav class="nav-links">
       <a href="index.html">Katalog</a>
@@ -25,8 +25,8 @@
 <section class="hero" style="padding-bottom: 24px;">
   <div class="container">
     <p class="hero-eyebrow">Admin-Generator</p>
-    <h1>Neuen Profil-Eintrag erstellen</h1>
-    <p>Fülle das Formular aus und kopiere den generierten JSON-Code in deine <code>data.json</code>, um einen neuen Professoren-Eintrag hinzuzufügen. Verfügbare Themen-Tags stammen aus <code>tags.json</code> — um neue Tags zu ergänzen, bearbeite diese Datei direkt.</p>
+    <h1>Profil-Einträge erstellen & ergänzen</h1>
+    <p>Lege einen komplett neuen Professor an, oder ergänze bei einem bereits vorhandenen Professor nur ein einzelnes Video bzw. Buch. Verfügbare Themen-Tags stammen aus <code>tags.json</code> — um neue Tags zu ergänzen, bearbeite diese Datei direkt.</p>
   </div>
 </section>
 
@@ -37,65 +37,123 @@
       <!-- Formular-Spalte -->
       <div class="col-form">
 
-        <div class="form-section">
-          <h2>Grunddaten</h2>
-
-          <div class="field">
-            <label for="f-name">Name</label>
-            <input type="text" id="f-name" placeholder="Prof. Dr. Max Mustermann" />
-          </div>
-
-          <div class="field">
-            <label for="f-id">ID (URL-Kennung)</label>
-            <input type="text" id="f-id" placeholder="prof-mustermann" />
-            <p class="field-hint">Wird automatisch aus dem Namen generiert, kann aber angepasst werden.</p>
-          </div>
-
-          <div class="field">
-            <label for="f-sprache">Sprache</label>
-            <select id="f-sprache">
-              <option value="Deutsch">Deutsch</option>
-              <option value="Englisch">Englisch</option>
-              <option value="Französisch">Französisch</option>
-              <option value="Spanisch">Spanisch</option>
-              <option value="Andere">Andere</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="f-spez">Spezialisierung</label>
-            <input type="text" id="f-spez" placeholder="Künstliche Intelligenz" />
-          </div>
-
-          <div class="field">
-            <label for="f-themen">Allgemeine Themen des Professors (kommagetrennt)</label>
-            <input type="text" id="f-themen" placeholder="Deep Learning, Ethik, Algorithmen" />
-            <p class="field-hint">Dieses Feld bleibt bewusst frei editierbar. Die Tag-Auswahl weiter unten gilt nur für einzelne Videos und Bücher.</p>
-          </div>
-
-          <div class="field">
-            <label for="f-anmerkung">Anmerkung</label>
-            <textarea id="f-anmerkung" placeholder="Persönliche Notizen oder Kontext zu diesem Professor…"></textarea>
-          </div>
+        <div class="mode-tabs">
+          <button type="button" class="mode-tab active" id="tab-new-professor">Neuen Professor anlegen</button>
+          <button type="button" class="mode-tab" id="tab-existing-professor">Video/Buch zu bestehendem Professor</button>
         </div>
 
-        <div class="form-section">
-          <h2>Videos</h2>
-          <p class="field-hint" style="margin: -8px 0 16px;">Wähle pro Video passende Tags aus der vorgefertigten Liste, damit es auf der Themen-Seite auffindbar ist.</p>
-          <div id="videos-container"></div>
-          <button type="button" class="add-row-btn" id="add-video-btn">+ Video hinzufügen</button>
+        <!-- ============ MODUS 1: NEUER PROFESSOR ============ -->
+        <div id="new-professor-panel">
+
+          <div class="form-section">
+            <h2>Grunddaten</h2>
+
+            <div class="field">
+              <label for="f-name">Name</label>
+              <input type="text" id="f-name" placeholder="Prof. Dr. Max Mustermann" />
+            </div>
+
+            <div class="field">
+              <label for="f-id">ID (URL-Kennung)</label>
+              <input type="text" id="f-id" placeholder="prof-mustermann" />
+              <p class="field-hint">Wird automatisch aus dem Namen generiert, kann aber angepasst werden.</p>
+            </div>
+
+            <div class="field">
+              <label for="f-sprache">Sprache</label>
+              <select id="f-sprache">
+                <option value="Deutsch">Deutsch</option>
+                <option value="Englisch">Englisch</option>
+                <option value="Französisch">Französisch</option>
+                <option value="Spanisch">Spanisch</option>
+                <option value="Andere">Andere</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="f-spez">Spezialisierung</label>
+              <input type="text" id="f-spez" placeholder="Künstliche Intelligenz" />
+            </div>
+
+            <div class="field">
+              <label for="f-themen">Allgemeine Themen des Professors (kommagetrennt)</label>
+              <input type="text" id="f-themen" placeholder="Deep Learning, Ethik, Algorithmen" />
+              <p class="field-hint">Dieses Feld bleibt bewusst frei editierbar. Die Tag-Auswahl weiter unten gilt nur für einzelne Videos und Bücher.</p>
+            </div>
+
+            <div class="field">
+              <label for="f-anmerkung">Anmerkung</label>
+              <textarea id="f-anmerkung" placeholder="Persönliche Notizen oder Kontext zu diesem Professor…"></textarea>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h2>Videos</h2>
+            <p class="field-hint" style="margin: -8px 0 16px;">Wähle pro Video passende Tags aus der vorgefertigten Liste, damit es auf der Themen-Seite auffindbar ist.</p>
+            <div id="videos-container"></div>
+            <button type="button" class="add-row-btn" id="add-video-btn">+ Video hinzufügen</button>
+          </div>
+
+          <div class="form-section">
+            <h2>Bücher & Quellen</h2>
+            <p class="field-hint" style="margin: -8px 0 16px;">Auch hier: Tags zuordnen, damit das Buch bei der passenden Themen-Detailseite erscheint.</p>
+            <div id="buecher-container"></div>
+            <button type="button" class="add-row-btn" id="add-buch-btn">+ Buch / Quelle hinzufügen</button>
+          </div>
+
+          <button type="button" class="btn" id="generate-btn" style="width: 100%; justify-content: center;">
+            JSON generieren
+          </button>
         </div>
 
-        <div class="form-section">
-          <h2>Bücher & Quellen</h2>
-          <p class="field-hint" style="margin: -8px 0 16px;">Auch hier: Tags zuordnen, damit das Buch bei der passenden Themen-Detailseite erscheint.</p>
-          <div id="buecher-container"></div>
-          <button type="button" class="add-row-btn" id="add-buch-btn">+ Buch / Quelle hinzufügen</button>
+        <!-- ============ MODUS 2: BESTEHENDER PROFESSOR ============ -->
+        <div id="existing-professor-panel" style="display:none;">
+
+          <div class="form-section">
+            <h2>Professor auswählen</h2>
+
+            <div class="field">
+              <label for="existing-prof-select">Bestehender Professor</label>
+              <select id="existing-prof-select">
+                <option value="">Wird geladen …</option>
+              </select>
+            </div>
+
+            <div class="existing-prof-summary" id="existing-prof-summary"></div>
+          </div>
+
+          <div class="form-section">
+            <h2>Neuen Eintrag hinzufügen</h2>
+
+            <div class="field">
+              <label>Art des Eintrags</label>
+              <div class="mode-tabs" style="margin-top: 6px;">
+                <button type="button" class="mode-tab active" id="kind-video-btn">Video</button>
+                <button type="button" class="mode-tab" id="kind-buch-btn">Buch</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="existing-titel">Titel</label>
+              <input type="text" id="existing-titel" placeholder="Video-Titel" />
+            </div>
+
+            <div class="field">
+              <label for="existing-url">URL</label>
+              <input type="url" id="existing-url" placeholder="https://www.youtube.com/watch?v=…" />
+            </div>
+
+            <div class="field" style="margin-bottom: 0;">
+              <label>Themen (aus vorgefertigter Liste)</label>
+              <div class="tag-picker" id="existing-tag-picker"></div>
+            </div>
+          </div>
+
+          <button type="button" class="btn" id="generate-existing-btn" style="width: 100%; justify-content: center;">
+            JSON generieren
+          </button>
         </div>
 
-        <button type="button" class="btn" id="generate-btn" style="width: 100%; justify-content: center;">
-          JSON generieren
-        </button>
       </div>
 
       <!-- Output-Spalte -->
@@ -106,7 +164,7 @@
             <button type="button" class="btn secondary" id="copy-btn">Kopieren</button>
           </div>
           <pre id="json-output">// Fülle das Formular aus und klicke auf "JSON generieren".</pre>
-          <p class="field-hint" style="margin-top: 12px;">
+          <p class="field-hint" id="output-hint" style="margin-top: 12px;">
             Füge diesen Code als neues Objekt in das Array deiner <code>data.json</code> ein.
           </p>
         </div>
@@ -120,7 +178,7 @@
 
 <footer class="site-footer">
   <div class="container">
-    Archiv · Unsere muslimische Bibliothek
+    Archiv · Ein statisches Bibliothekssystem ohne Backend
   </div>
 </footer>
 
@@ -128,6 +186,12 @@
 /* =========================================================
    admin.html — Formular-Logik zur JSON-Generierung
    (eigenständig, benötigt kein app.js)
+
+   Zwei Modi:
+   1) Neuen Professor anlegen (komplettes Objekt für data.json)
+   2) Ein Video/Buch bei einem bestehenden Professor ergänzen
+      (lädt data.json, hängt den neuen Eintrag an und gibt das
+      komplette, aktualisierte Professor-Objekt zum Ersetzen aus)
 
    Tags sind bewusst schreibgeschützt: Sie werden nur aus
    tags.json geladen und angezeigt. Es gibt in diesem Formular
@@ -137,7 +201,9 @@
 
 let videoRowCount = 0;
 let buchRowCount = 0;
-let masterTags = []; // vorgefertigte, schreibgeschützte Tag-Liste aus tags.json
+let masterTags = [];   // vorgefertigte, schreibgeschützte Tag-Liste aus tags.json
+let allProfessors = []; // aus data.json geladen, für Modus 2
+let currentResourceKind = 'video'; // 'video' oder 'buch', für Modus 2
 
 function escapeHtml(str) {
   return String(str ?? '')
@@ -159,6 +225,27 @@ function slugify(text) {
     .replace(/-+/g, '-');
 }
 
+/* ---------- Modus-Umschaltung ---------- */
+
+function setMode(mode) {
+  const isNew = mode === 'new';
+  document.getElementById('new-professor-panel').style.display = isNew ? '' : 'none';
+  document.getElementById('existing-professor-panel').style.display = isNew ? 'none' : '';
+  document.getElementById('tab-new-professor').classList.toggle('active', isNew);
+  document.getElementById('tab-existing-professor').classList.toggle('active', !isNew);
+
+  document.getElementById('json-output').textContent = isNew
+    ? '// Fülle das Formular aus und klicke auf "JSON generieren".'
+    : '// Wähle einen Professor, ergänze Titel/URL/Tags und klicke auf "JSON generieren".';
+
+  document.getElementById('output-hint').innerHTML = isNew
+    ? 'Füge diesen Code als neues Objekt in das Array deiner <code>data.json</code> ein.'
+    : 'Ersetze in deiner <code>data.json</code> das bestehende Objekt mit passender ID durch diesen aktualisierten Code (er enthält alle bisherigen Einträge plus den neuen).';
+}
+
+document.getElementById('tab-new-professor').addEventListener('click', () => setMode('new'));
+document.getElementById('tab-existing-professor').addEventListener('click', () => setMode('existing'));
+
 /* ---------- Vorgefertigte Tags laden (read-only) ---------- */
 
 async function loadMasterTags() {
@@ -173,26 +260,22 @@ async function loadMasterTags() {
   }
 }
 
-/* ---------- Tag-Auswahl pro Video-/Buch-Zeile ---------- */
-
-function renderTagPickerForRow(row) {
-  const picker = row.querySelector('[data-role="tag-picker"]');
-
+function renderTagPicker(pickerEl) {
   if (masterTags.length === 0) {
-    picker.innerHTML = '<span class="tag-picker-empty">Keine Tags vorhanden. Ergänze Tags direkt in tags.json.</span>';
+    pickerEl.innerHTML = '<span class="tag-picker-empty">Keine Tags vorhanden. Ergänze Tags direkt in tags.json.</span>';
     return;
   }
 
-  picker.innerHTML = masterTags.map(tag => `
+  pickerEl.innerHTML = masterTags.map(tag => `
     <button type="button" class="tag-chip" data-tag="${escapeHtml(tag)}">${escapeHtml(tag)}</button>
   `).join('');
 
-  picker.querySelectorAll('.tag-chip').forEach(chip => {
+  pickerEl.querySelectorAll('.tag-chip').forEach(chip => {
     chip.addEventListener('click', () => chip.classList.toggle('selected'));
   });
 }
 
-/* ---------- Dynamische Video-/Buch-Zeilen ---------- */
+/* ---------- Modus 1: Dynamische Video-/Buch-Zeilen ---------- */
 
 function createDynamicRow(container, prefix, index, kindLabel, placeholderTitel, placeholderUrl) {
   const row = document.createElement('div');
@@ -223,7 +306,7 @@ function createDynamicRow(container, prefix, index, kindLabel, placeholderTitel,
   `;
   row.querySelector('.icon-btn').addEventListener('click', () => row.remove());
   container.appendChild(row);
-  renderTagPickerForRow(row);
+  renderTagPicker(row.querySelector('[data-role="tag-picker"]'));
 }
 
 document.getElementById('add-video-btn').addEventListener('click', () => {
@@ -262,7 +345,7 @@ function collectResourceRows(containerId, prefix) {
   return result;
 }
 
-/* ---------- Name → ID-Vorschlag ---------- */
+/* ---------- Name → ID-Vorschlag (Modus 1) ---------- */
 
 document.getElementById('f-name').addEventListener('input', (e) => {
   const idField = document.getElementById('f-id');
@@ -275,7 +358,7 @@ document.getElementById('f-id').addEventListener('input', (e) => {
   e.target.dataset.manuallyEdited = 'true';
 });
 
-/* ---------- JSON-Generierung ---------- */
+/* ---------- Modus 1: JSON-Generierung ---------- */
 
 document.getElementById('generate-btn').addEventListener('click', () => {
   const name = document.getElementById('f-name').value.trim();
@@ -294,17 +377,112 @@ document.getElementById('generate-btn').addEventListener('click', () => {
 
   const entry = { id, name, sprache, spezialisierung, themen, anmerkung, videos, buecher };
 
-  const jsonString = JSON.stringify(entry, null, 2);
-  document.getElementById('json-output').textContent = jsonString;
+  document.getElementById('json-output').textContent = JSON.stringify(entry, null, 2);
+  document.getElementById('output-hint').innerHTML = 'Füge diesen Code als neues Objekt in das Array deiner <code>data.json</code> ein.';
 });
+
+/* ---------- Modus 2: Bestehenden Professor laden ---------- */
+
+async function loadProfessors() {
+  try {
+    const res = await fetch('data.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    allProfessors = Array.isArray(json) ? json : [];
+  } catch (err) {
+    console.warn('Konnte data.json nicht laden.', err);
+    allProfessors = [];
+  }
+}
+
+function renderProfessorSelect() {
+  const select = document.getElementById('existing-prof-select');
+
+  if (allProfessors.length === 0) {
+    select.innerHTML = '<option value="">Keine Professoren gefunden — prüfe data.json</option>';
+    return;
+  }
+
+  select.innerHTML =
+    '<option value="">Bitte wählen …</option>' +
+    allProfessors.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`).join('');
+}
+
+function updateProfessorSummary() {
+  const id = document.getElementById('existing-prof-select').value;
+  const summaryEl = document.getElementById('existing-prof-summary');
+  const prof = allProfessors.find(p => p.id === id);
+
+  if (!prof) {
+    summaryEl.textContent = '';
+    return;
+  }
+
+  const videosCount = (prof.videos || []).length;
+  const buecherCount = (prof.buecher || []).length;
+  summaryEl.textContent =
+    `${prof.spezialisierung || '–'} · ${prof.sprache || '–'} · bereits ${videosCount} Video(s) und ${buecherCount} Buch/Bücher hinterlegt.`;
+}
+
+document.getElementById('existing-prof-select').addEventListener('change', updateProfessorSummary);
+
+/* ---------- Modus 2: Art des Eintrags (Video/Buch) ---------- */
+
+function setResourceKind(kind) {
+  currentResourceKind = kind;
+  document.getElementById('kind-video-btn').classList.toggle('active', kind === 'video');
+  document.getElementById('kind-buch-btn').classList.toggle('active', kind === 'buch');
+
+  const titelInput = document.getElementById('existing-titel');
+  const urlInput = document.getElementById('existing-url');
+  titelInput.placeholder = kind === 'video' ? 'Video-Titel' : 'Buch-/Quellentitel';
+  urlInput.placeholder = kind === 'video' ? 'https://www.youtube.com/watch?v=…' : 'https://…';
+}
+
+document.getElementById('kind-video-btn').addEventListener('click', () => setResourceKind('video'));
+document.getElementById('kind-buch-btn').addEventListener('click', () => setResourceKind('buch'));
+
+/* ---------- Modus 2: JSON-Generierung ---------- */
+
+document.getElementById('generate-existing-btn').addEventListener('click', () => {
+  const output = document.getElementById('json-output');
+  const profId = document.getElementById('existing-prof-select').value;
+  const prof = allProfessors.find(p => p.id === profId);
+
+  if (!prof) {
+    output.textContent = '// Bitte zuerst einen bestehenden Professor auswählen.';
+    return;
+  }
+
+  const titel = document.getElementById('existing-titel').value.trim();
+  const url = document.getElementById('existing-url').value.trim();
+
+  if (!titel || !url) {
+    output.textContent = '// Bitte Titel und URL ausfüllen.';
+    return;
+  }
+
+  const themen = [...document.querySelectorAll('#existing-tag-picker .tag-chip.selected')].map(c => c.dataset.tag);
+  const newResource = { titel, url, themen };
+
+  // Tiefe Kopie, damit das Original in allProfessors unangetastet bleibt
+  const updatedProf = JSON.parse(JSON.stringify(prof));
+  const arrayKey = currentResourceKind === 'video' ? 'videos' : 'buecher';
+  if (!Array.isArray(updatedProf[arrayKey])) updatedProf[arrayKey] = [];
+  updatedProf[arrayKey].push(newResource);
+
+  output.textContent = JSON.stringify(updatedProf, null, 2);
+  document.getElementById('output-hint').innerHTML =
+    `Ersetze in deiner <code>data.json</code> das komplette Objekt mit der ID <code>${escapeHtml(profId)}</code> durch diesen Code — er enthält alle bisherigen Einträge plus den neuen.`;
+});
+
+/* ---------- Kopieren & Toast ---------- */
 
 document.getElementById('copy-btn').addEventListener('click', async () => {
   const text = document.getElementById('json-output').textContent;
   await copyToClipboard(text);
   showToast('In die Zwischenablage kopiert.');
 });
-
-/* ---------- Hilfsfunktionen ---------- */
 
 async function copyToClipboard(text) {
   try {
@@ -330,11 +508,15 @@ function showToast(message) {
 /* ---------- Initialisierung ---------- */
 
 (async function init() {
-  await loadMasterTags();
+  await Promise.all([loadMasterTags(), loadProfessors()]);
 
-  // Jeweils eine Start-Zeile für Videos und Bücher anlegen
+  // Modus 1: Start-Zeilen für Videos und Bücher
   createDynamicRow(document.getElementById('videos-container'), 'video', videoRowCount++, 'Video', 'Video-Titel', 'https://www.youtube.com/watch?v=…');
   createDynamicRow(document.getElementById('buecher-container'), 'buch', buchRowCount++, 'Buch', 'Buch-/Quellentitel', 'https://…');
+
+  // Modus 2: Professor-Auswahl und Tag-Picker vorbereiten
+  renderProfessorSelect();
+  renderTagPicker(document.getElementById('existing-tag-picker'));
 })();
 </script>
 
