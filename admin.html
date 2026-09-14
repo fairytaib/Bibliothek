@@ -377,8 +377,10 @@ document.getElementById('generate-btn').addEventListener('click', () => {
 
   const entry = { id, name, sprache, spezialisierung, themen, anmerkung, videos, buecher };
 
-  document.getElementById('json-output').textContent = JSON.stringify(entry, null, 2);
-  document.getElementById('output-hint').innerHTML = 'Füge diesen Code als neues Objekt in das Array deiner <code>data.json</code> ein.';
+  const comment = `// NEU — kompletter neuer Professoren-Eintrag (ID: ${id})\n// Vor dem Einfügen in data.json diese Kommentarzeile entfernen!`;
+
+  document.getElementById('json-output').textContent = `${comment}\n\n${JSON.stringify(entry, null, 2)}`;
+  document.getElementById('output-hint').innerHTML = 'Entferne zuerst die Kommentarzeile, dann füge den restlichen Code als neues Objekt in das Array deiner <code>data.json</code> ein.';
 });
 
 /* ---------- Modus 2: Bestehenden Professor laden ---------- */
@@ -471,9 +473,12 @@ document.getElementById('generate-existing-btn').addEventListener('click', () =>
   if (!Array.isArray(updatedProf[arrayKey])) updatedProf[arrayKey] = [];
   updatedProf[arrayKey].push(newResource);
 
-  output.textContent = JSON.stringify(updatedProf, null, 2);
+  const kindLabel = currentResourceKind === 'video' ? 'Video' : 'Buch';
+  const comment = `// BESTEHEND — aktualisierter Professor "${prof.name}" (ID: ${profId})\n// Enthält alle bisherigen Einträge plus 1 neues ${kindLabel}.\n// Vor dem Einfügen in data.json diese Kommentarzeile entfernen!`;
+
+  output.textContent = `${comment}\n\n${JSON.stringify(updatedProf, null, 2)}`;
   document.getElementById('output-hint').innerHTML =
-    `Ersetze in deiner <code>data.json</code> das komplette Objekt mit der ID <code>${escapeHtml(profId)}</code> durch diesen Code — er enthält alle bisherigen Einträge plus den neuen.`;
+    `Entferne zuerst die Kommentarzeile, dann ersetze in deiner <code>data.json</code> das komplette Objekt mit der ID <code>${escapeHtml(profId)}</code> durch den restlichen Code.`;
 });
 
 /* ---------- Kopieren & Toast ---------- */
