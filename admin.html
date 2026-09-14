@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — ARCHIV</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="index.html">
+      <span class="mark">A</span>
+      Archiv <small>HDI-Bibliothek</small>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Katalog</a>
+      <a href="admin.html" class="active">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" style="padding-bottom: 24px;">
+  <div class="container">
+    <p class="hero-eyebrow">Admin-Generator</p>
+    <h1>Neuen Profil-Eintrag erstellen</h1>
+    <p>Fülle das Formular aus und kopiere den generierten JSON-Code in deine <code>data.json</code>, um einen neuen Professoren-Eintrag hinzuzufügen.</p>
+  </div>
+</section>
+
+<div class="admin-body">
+  <div class="container">
+    <div class="admin-grid">
+
+      <!-- Formular-Spalte -->
+      <div class="col-form">
+
+        <div class="form-section">
+          <h2>Grunddaten</h2>
+
+          <div class="field">
+            <label for="f-name">Name</label>
+            <input type="text" id="f-name" placeholder="Prof. Dr. Max Mustermann" />
+          </div>
+
+          <div class="field">
+            <label for="f-id">ID (URL-Kennung)</label>
+            <input type="text" id="f-id" placeholder="prof-mustermann" />
+            <p class="field-hint">Wird automatisch aus dem Namen generiert, kann aber angepasst werden.</p>
+          </div>
+
+          <div class="field">
+            <label for="f-sprache">Sprache</label>
+            <select id="f-sprache">
+              <option value="Deutsch">Deutsch</option>
+              <option value="Englisch">Englisch</option>
+              <option value="Französisch">Französisch</option>
+              <option value="Spanisch">Spanisch</option>
+              <option value="Andere">Andere</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="f-spez">Spezialisierung</label>
+            <input type="text" id="f-spez" placeholder="Künstliche Intelligenz" />
+          </div>
+
+          <div class="field">
+            <label for="f-themen">Themen (kommagetrennt)</label>
+            <input type="text" id="f-themen" placeholder="Deep Learning, Ethik, Algorithmen" />
+          </div>
+
+          <div class="field">
+            <label for="f-anmerkung">Anmerkung</label>
+            <textarea id="f-anmerkung" placeholder="Persönliche Notizen oder Kontext zu diesem Professor…"></textarea>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h2>Videos</h2>
+          <div id="videos-container"></div>
+          <button type="button" class="add-row-btn" id="add-video-btn">+ Video hinzufügen</button>
+        </div>
+
+        <div class="form-section">
+          <h2>Bücher & Quellen</h2>
+          <div id="buecher-container"></div>
+          <button type="button" class="add-row-btn" id="add-buch-btn">+ Buch / Quelle hinzufügen</button>
+        </div>
+
+        <button type="button" class="btn" id="generate-btn" style="width: 100%; justify-content: center;">
+          JSON generieren
+        </button>
+      </div>
+
+      <!-- Output-Spalte -->
+      <div class="col-output">
+        <div class="form-section output-panel">
+          <div class="output-header">
+            <h2>Generierter JSON-Code</h2>
+            <button type="button" class="btn secondary" id="copy-btn">Kopieren</button>
+          </div>
+          <pre id="json-output">// Fülle das Formular aus und klicke auf "JSON generieren".</pre>
+          <p class="field-hint" style="margin-top: 12px;">
+            Füge diesen Code als neues Objekt in das Array deiner <code>data.json</code> ein.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">In die Zwischenablage kopiert.</div>
+
+<footer class="site-footer">
+  <div class="container">
+    Archiv · Ein statisches Bibliothekssystem ohne Backend
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   admin.html — Formular-Logik zur JSON-Generierung
+   (eigenständig, benötigt kein app.js)
+   ========================================================= */
+
+let videoRowCount = 0;
+let buchRowCount = 0;
+
+function slugify(text) {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Umlaute/Akzente entfernen
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
+
+function createDynamicRow(container, prefix, index, placeholderTitel, placeholderUrl) {
+  const row = document.createElement('div');
+  row.className = 'dynamic-row';
+  row.dataset.index = index;
+  row.innerHTML = `
+    <input type="text" class="${prefix}-titel" placeholder="${placeholderTitel}" />
+    <input type="url" class="${prefix}-url" placeholder="${placeholderUrl}" />
+    <button type="button" class="icon-btn" aria-label="Zeile entfernen">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+  `;
+  row.querySelector('.icon-btn').addEventListener('click', () => row.remove());
+  container.appendChild(row);
+}
+
+document.getElementById('f-name').addEventListener('input', (e) => {
+  const idField = document.getElementById('f-id');
+  if (!idField.dataset.manuallyEdited) {
+    idField.value = e.target.value ? `prof-${slugify(e.target.value.replace(/^prof\.?\s*(dr\.?)?\s*/i, ''))}` : '';
+  }
+});
+
+document.getElementById('f-id').addEventListener('input', (e) => {
+  e.target.dataset.manuallyEdited = 'true';
+});
+
+document.getElementById('add-video-btn').addEventListener('click', () => {
+  createDynamicRow(
+    document.getElementById('videos-container'),
+    'video',
+    videoRowCount++,
+    'Video-Titel',
+    'https://www.youtube.com/watch?v=…'
+  );
+});
+
+document.getElementById('add-buch-btn').addEventListener('click', () => {
+  createDynamicRow(
+    document.getElementById('buecher-container'),
+    'buch',
+    buchRowCount++,
+    'Buch-/Quellentitel',
+    'https://…'
+  );
+});
+
+// Jeweils eine Zeile beim Laden vorbereiten
+createDynamicRow(document.getElementById('videos-container'), 'video', videoRowCount++, 'Video-Titel', 'https://www.youtube.com/watch?v=…');
+createDynamicRow(document.getElementById('buecher-container'), 'buch', buchRowCount++, 'Buch-/Quellentitel', 'https://…');
+
+function collectResourceRows(containerId, prefix) {
+  const rows = document.querySelectorAll(`#${containerId} .dynamic-row`);
+  const result = [];
+  rows.forEach(row => {
+    const titel = row.querySelector(`.${prefix}-titel`).value.trim();
+    const url = row.querySelector(`.${prefix}-url`).value.trim();
+    if (titel && url) {
+      result.push({ titel, url });
+    }
+  });
+  return result;
+}
+
+document.getElementById('generate-btn').addEventListener('click', () => {
+  const name = document.getElementById('f-name').value.trim();
+  const id = document.getElementById('f-id').value.trim() || slugify(name ? `prof-${name}` : 'neuer-eintrag');
+  const sprache = document.getElementById('f-sprache').value;
+  const spezialisierung = document.getElementById('f-spez').value.trim();
+  const themenRaw = document.getElementById('f-themen').value.trim();
+  const anmerkung = document.getElementById('f-anmerkung').value.trim();
+
+  const themen = themenRaw
+    ? themenRaw.split(',').map(t => t.trim()).filter(Boolean)
+    : [];
+
+  const videos = collectResourceRows('videos-container', 'video');
+  const buecher = collectResourceRows('buecher-container', 'buch');
+
+  const entry = { id, name, sprache, spezialisierung, themen, anmerkung, videos, buecher };
+
+  const jsonString = JSON.stringify(entry, null, 2);
+  document.getElementById('json-output').textContent = jsonString;
+});
+
+document.getElementById('copy-btn').addEventListener('click', async () => {
+  const text = document.getElementById('json-output').textContent;
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast();
+  } catch (err) {
+    // Fallback für Umgebungen ohne Clipboard-API
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    showToast();
+  }
+});
+
+function showToast() {
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+}
+</script>
+
+</body>
+</html>
