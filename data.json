@@ -1,93 +1,9 @@
 [{
-    "id": "prof-mustermann",
-    "name": "Prof. Dr. Max Mustermann",
-    "sprache": "Deutsch",
-    "spezialisierung": "Künstliche Intelligenz",
-    "themen": ["Deep Learning", "Ethik", "Algorithmen", "Neuronale Netze"],
-    "anmerkung": "Prof. Mustermann gilt als einer der zugänglichsten Dozenten im Bereich KI. Seine Vorlesungen kombinieren mathematische Tiefe mit anschaulichen Praxisbeispielen. Besonders empfehlenswert für Einsteiger, die einen roten Faden durch das Thema suchen.",
-    "videos": [{
-        "titel": "Einführung in neuronale Netze",
-        "url": "https://www.youtube.com/watch?v=aircAruvnKk",
-        "themen": ["Neuronale Netze", "Deep Learning"]
-      },
-      {
-        "titel": "Backpropagation einfach erklärt",
-        "url": "https://www.youtube.com/watch?v=Ilg3gGewQ5U",
-        "themen": ["Neuronale Netze", "Algorithmen"]
-      },
-      {
-        "titel": "Ethik der Künstlichen Intelligenz",
-        "url": "https://www.youtube.com/watch?v=UwsrzCVZAb8",
-        "themen": ["Ethik"]
-      }
-    ],
-    "buecher": [{
-        "titel": "Deep Learning (Goodfellow, Bengio, Courville)",
-        "url": "https://www.deeplearningbook.org/",
-        "themen": ["Deep Learning", "Neuronale Netze"]
-      },
-      {
-        "titel": "Artificial Intelligence: A Modern Approach",
-        "url": "http://aima.cs.berkeley.edu/",
-        "themen": ["Algorithmen", "Ethik"]
-      }
-    ]
-  },
-  {
-    "id": "prof-schneider",
-    "name": "Prof. Dr. Anna Schneider",
-    "sprache": "Englisch",
-    "spezialisierung": "Kognitionswissenschaft",
-    "themen": ["Wahrnehmung", "Gedächtnis", "Sprachverarbeitung", "Neurolinguistik"],
-    "anmerkung": "Prof. Schneiders Seminare sind stark diskussionsbasiert. Sie legt großen Wert auf Primärliteratur und erwartet aktive Beteiligung. Ihre Vorlesungsreihe zur Sprachverarbeitung ist fachübergreifend sehr beliebt.",
-    "videos": [{
-        "titel": "How the Brain Processes Language",
-        "url": "https://www.youtube.com/watch?v=q2_o-M3joIY",
-        "themen": ["Sprachverarbeitung", "Neurolinguistik"]
-      },
-      {
-        "titel": "Memory and Cognition Basics",
-        "url": "https://www.youtube.com/watch?v=eIho2S0ZahI",
-        "themen": ["Gedächtnis", "Wahrnehmung"]
-      }
-    ],
-    "buecher": [{
-        "titel": "Cognitive Psychology: A Student's Handbook",
-        "url": "https://www.routledge.com/Cognitive-Psychology-A-Students-Handbook/Eysenck-Groome/p/book/9780367136957",
-        "themen": ["Wahrnehmung", "Gedächtnis"]
-      },
-      {
-        "titel": "The Language Instinct (Steven Pinker)",
-        "url": "https://stevenpinker.com/publications/language-instinct",
-        "themen": ["Sprachverarbeitung", "Neurolinguistik"]
-      }
-    ]
-  },
-  {
-    "id": "prof-lindqvist",
-    "name": "Prof. Dr. Erik Lindqvist",
-    "sprache": "Englisch",
-    "spezialisierung": "Volkswirtschaftslehre",
-    "themen": ["Makroökonomie", "Spieltheorie", "Verhaltensökonomik"],
-    "anmerkung": "Sehr klare, strukturierte Vorlesungen mit vielen aktuellen Fallbeispielen aus der Wirtschaftspresse. Klausuren orientieren sich eng an den Vorlesungsfolien.",
-    "videos": [{
-      "titel": "Introduction to Game Theory",
-      "url": "https://www.youtube.com/watch?v=lXpMd8ay3po",
-      "themen": ["Spieltheorie"]
-    }],
-    "buecher": [{
-      "titel": "Thinking, Fast and Slow (Daniel Kahneman)",
-      "url": "https://www.penguinrandomhouse.com/books/89308/thinking-fast-and-slow-by-daniel-kahneman/",
-      "themen": ["Verhaltensökonomik"]
-    }]
-  },
-  {
     "id": "allgemein",
     "name": "Allgemein",
     "sprache": "Andere",
     "spezialisierung": "",
-    "themen": [],
-    "anmerkung": "",
+    "anmerkung": "Hier ist alles mögliche, was interessant sein kann.",
     "videos": [{
         "titel": "Quranrezitation",
         "url": "https://youtube.com/playlist?list=PLueyk3wWkc9oijjARi_czPfItqavP-8ty&si=OOYOPbIUxxQKHIE5",
@@ -99,16 +15,14 @@
         "titel": "Die Liebe zum Paradies",
         "url": "https://youtube.com/playlist?list=PL2DBB7E3CB9C076EF&si=pTGYudpyhCA0qbdO",
         "themen": [
-          "Hörbuch",
-          "Paradis"
+          "Akhira"
         ]
       },
       {
         "titel": "Kommentar zur westlich-historischen Einordnung der islamischen Entstehungsgeschichte",
         "url": "https://youtu.be/6SVGKQ-xiGs?si=g-tcTGq03R_dm0Xp",
         "themen": [
-          "Wissenschaftlich",
-          "Debatieren"
+          "Wissenschaftlich"
         ]
       }
     ],
@@ -119,7 +33,6 @@
     "name": "Abdurrahman Reidegeld",
     "sprache": "Deutsch",
     "spezialisierung": "Allrounder (Interdisziplinärer Experte)",
-    "themen": [],
     "anmerkung": "Sehr gehoben und wissenschaftlich. teilweise sehr kompliziert)",
     "videos": [{
         "titel": "Traumwelten & Traumdeutung",
@@ -147,6 +60,310 @@
         "themen": [
           "Einzelvideo",
           "Akhira"
+        ]
+      }
+    ],
+    "buecher": []
+  },
+  {
+    "id": "prof-ferid-heider",
+    "name": "Ferid Heider",
+    "sprache": "Deutsch",
+    "spezialisierung": "",
+    "anmerkung": "",
+    "videos": [{
+        "titel": "Einführen in das Erlernen des Fiqh",
+        "url": "https://youtube.com/playlist?list=PLi_ePUoh6SAuwi33nj18I5-c14su32V0M&si=w3_PkwRkXUBiPExG",
+        "themen": [
+          "Fiqah"
+        ]
+      },
+      {
+        "titel": "Wenn der Prophet lachte",
+        "url": "https://youtu.be/6M-31JKYD3w?si=qppKIgU9hwCR93r2",
+        "themen": [
+          "Einzelvideo", "Sirah"
+        ]
+      }
+    ],
+    "buecher": []
+  },
+  {
+    "id": "Hamza Yusuf",
+    "name": "",
+    "sprache": "Deutsch",
+    "spezialisierung": "",
+    "anmerkung": "",
+    "videos": [{
+      "titel": "Islamische Fundament",
+      "url": "https://youtube.com/playlist?list=PLLWosYrkNwE9_IdtxX_sI2BuOdmr8P8xQ&si=yrFR23G26ir5Dz9O",
+      "themen": [
+        "Fiqh",
+        "Wissenschaftlich"
+      ]
+    }],
+    "buecher": []
+  },
+  {
+    "id": "prof-hassan-elwan",
+    "name": "Hassan Elwan",
+    "sprache": "Englisch",
+    "spezialisierung": "Hadith",
+    "anmerkung": "Arbeitet im selben Institut wie Omar Suleiman",
+    "videos": [{
+      "titel": "Die Generation Salahuddins",
+      "url": "https://youtube.com/playlist?list=PLQ02IYL5pmhHhA6ZoXuLLf49ozb4pHxpr&si=gDqJJGi0XC2dSGme",
+      "themen": ["Geschichte"]
+    }],
+    "buecher": []
+  },
+  {
+    "id": "prof-katrin-klausing",
+    "name": "Katrin Klausing",
+    "sprache": "Deutsch",
+    "spezialisierung": "",
+    "anmerkung": "Im selben Verein wie Mahmud Kellner",
+    "videos": [{
+        "titel": "Positives Denken",
+        "url": "https://youtu.be/ECCaGDDVwGc?si=kBYJJdanbMn0xNST",
+        "themen": [
+          "Einzelvideo",
+          "Wissenschaftlich"
+        ]
+      },
+      {
+        "titel": "Asya, die Frau des Pharaos",
+        "url": "https://youtu.be/Wf-mm2A0gYk?si=qTncOcsIoFXCFpSa",
+        "themen": [
+          "Einzelvideo",
+          "Geschichte"
+        ]
+      }
+    ],
+    "buecher": []
+  },
+
+  {
+    "id": "prof-mariam-bint-ali-dhouib",
+    "name": "Mariam bint Ali Dhouib",
+    "sprache": "Deutsch",
+    "spezialisierung": "",
+    "anmerkung": "Frau von Mahmud Kellner",
+    "videos": [{
+      "titel": "Menstruation (Hanafi Fiqh)",
+      "url": "https://youtube.com/playlist?list=PLz-qwtLIQTl7y2gAMo6XwL5NiRWwL089a&si=FYAw10UMgUDTLxM-",
+      "themen": [
+        "Fiqh"
+      ]
+    }],
+    "buecher": []
+  },
+  {
+    "id": "prof-mahmud-kellner",
+    "name": "Mahmud Kellner",
+    "sprache": "Deutsch",
+    "spezialisierung": "Reinigung des Herzens/Tazzkia & Hadith",
+    "anmerkung": "Gründer von Madrasah e.V.",
+    "videos": [{
+        "titel": "Ash-Shifa",
+        "url": "https://youtube.com/playlist?list=PLz-qwtLIQTl4AGXX1dRQgp0-_j1Lw0Dep&si=7NoKRNT7B1qqQ79o",
+        "themen": []
+      },
+      {
+        "titel": "Die Zustände des Herzens nach Ghazali",
+        "url": "https://youtube.com/playlist?list=PLz-qwtLIQTl4fzgG2PGcTmuF3vUkHZfUY&si=Zbg7gIKlj9iABZSP",
+        "themen": [
+          "Wissenschaftlich"
+        ]
+      },
+      {
+        "titel": "Das Allerwesenslichste im Islam",
+        "url": "https://youtube.com/playlist?list=PLz-qwtLIQTl52E1Cd0a-Uf-cL60tHFaNI&si=hMbV2F8P35MTTqQi",
+        "themen": [
+          "Fiqh"
+        ]
+      }
+    ],
+    "buecher": []
+  },
+  {
+    "id": "prof-mufti-menk",
+    "name": "Mufti Menk",
+    "sprache": "Englisch",
+    "spezialisierung": "Allrounder",
+    "anmerkung": "",
+    "videos": [],
+    "buecher": []
+  },
+  {
+    "id": "prof-nouman-ali-khan",
+    "name": "Nouman Ali Khan",
+    "sprache": "Englisch",
+    "spezialisierung": "Quranwissenschaften",
+    "anmerkung": "",
+    "videos": [{
+        "titel": "Tafsir Surah Yasin",
+        "url": "https://youtube.com/playlist?list=PLHPW7nn9Wmb66OICiQfWwlSUU4rM1rY3D&si=knty9Kys70ZHHceK",
+        "themen": [
+          "Quran"
+        ]
+      },
+      {
+        "titel": "“Aus dem Kontext genommen”",
+        "url": "https://youtube.com/playlist?list=PLutdSTmJ7bAJQaNrfGlijtvLsDcERufni&si=cSYjVSsNwXnziLZD",
+        "themen": [
+          "Fiqh",
+          "Quran"
+        ]
+      },
+      {
+        "titel": "Taqwa",
+        "url": "https://www.youtube.com/watch?v=hU4zZQtfGRo",
+        "themen": [
+          "Einzelvideo",
+          "Fiqh"
+        ]
+      },
+      {
+        "titel": "Wie man sich auf den Ramadan vorbereitet",
+        "url": "https://youtu.be/_OoHj6aEzmU?si=ydzAxt2yOKeoB9qP",
+        "themen": [
+          "Einzelvideo",
+          "Wissenschaftlich"
+        ]
+      },
+      {
+        "titel": "Alle Khutbas von Nouman Ali Khan",
+        "url": "https://youtube.com/playlist?list=PLutdSTmJ7bAJi20r4ZAVKR-DfzJm99Tlv&si=y9lkRLCmHrEP7XDk",
+        "themen": [
+          "Wissenschaftlich"
+        ]
+      }
+    ],
+    "buecher": []
+  },
+  {
+    "id": "prof-shadee-elmasry",
+    "name": "Shadee Elmasry",
+    "sprache": "Englisch",
+    "spezialisierung": "",
+    "anmerkung": "",
+    "videos": [{
+      "titel": "“Jüdische” Propheten",
+      "url": "https://youtube.com/playlist?list=PLZ6keVEpgaQudSpBndyDMV1j8RfesYXSD&si=5pDNhHy-IS-YVQwn",
+      "themen": [
+        "Geschichte",
+        "Wissenschaftlich"
+      ]
+    }],
+    "buecher": []
+  },
+
+  {
+    "id": "prof-omar-suleiman",
+    "name": "Omar Suleiman",
+    "sprache": "Englisch",
+    "spezialisierung": "Allrounder",
+    "anmerkung": "Gründer des \"Yaqeen-Institutes\"",
+    "videos": [{
+        "titel": "Das Paradies",
+        "url": "https://youtube.com/playlist?list=PLQ02IYL5pmhGLpO-oUMpZbuI_5dT9m4fi&si=WJbkQ1o1EINsUuyo",
+        "themen": [
+          "Akhira"
+        ]
+      },
+      {
+        "titel": "Menschen des Quran",
+        "url": "https://youtube.com/playlist?list=PLutdSTmJ7bALsxxmygqLzM15tzY2uL-h4&si=sjYUp5ILIW7eEm82",
+        "themen": [
+          "Geschichte",
+          "Quran"
+        ]
+      },
+      {
+        "titel": "\"Für diejenigen, die jemanden verloren haben\"",
+        "url": "https://youtube.com/playlist?list=PLQ02IYL5pmhExgMFX9tTxaKRYcU18W0zJ&si=_eJ0SkaxIcuYIS6b",
+        "themen": [
+          "Akhira",
+          "Geschichte"
+        ]
+      },
+      {
+        "titel": "Allah liebt",
+        "url": "https://youtube.com/playlist?list=PLQ02IYL5pmhHLgbkpUu1a5igh6Hsff0eY&si=GbcPRaWm9I-sq2LP",
+        "themen": [
+          "Geschichte",
+          "Quran"
+        ]
+      },
+      {
+        "titel": "Die Engel II",
+        "url": "https://youtube.com/playlist?list=PLLQgemAUoz0iLc-wLaTpjz9L4nhIbN-bK&si=olJ9CmE8TR8Jwv2X",
+        "themen": [
+          "Akhira",
+          "Geschichte"
+        ]
+      },
+      {
+        "titel": "Soziale Gerechtigkeit",
+        "url": "https://youtube.com/playlist?list=PLQ02IYL5pmhGxqbRtm6IvObV2Ysu9oLVa&si=YCcmmxxeuYkK509g",
+        "themen": [
+          "Fiqh"
+        ]
+      },
+      {
+        "titel": "Iman wiederbeleben",
+        "url": "https://youtube.com/playlist?list=PLQ02IYL5pmhFIX9rUv_TZq60pWmItUAT0&si=gVTcOwaVn_5Z1QSb",
+        "themen": [
+          "Fiqh",
+          "Geschichte",
+          "Quran"
+        ]
+      },
+      {
+        "titel": "Die Duas der Gottesfürchtigen",
+        "url": "https://youtube.com/playlist?list=PLQ02IYL5pmhHEn4GzFZVxsQyofhIFUA3M&si=MivbEsaQSfJVykMf",
+        "themen": [
+          "Geschichte"
+        ]
+      },
+      {
+        "titel": "Der Anfang und das Ende",
+        "url": "https://youtube.com/playlist?list=PLutdSTmJ7bALsUhQRrcMIMLXbG6GPXpGv&si=NswAj58V8rcicgha",
+        "themen": [
+          "Geschichte"
+        ]
+      },
+      {
+        "titel": "Engel Jibreel",
+        "url": "https://youtu.be/p09QoMRkt9g?si=l6wWHsHJJ5KIoeNl",
+        "themen": [
+          "Geschichte"
+        ]
+      }
+    ],
+    "buecher": []
+  },
+
+  {
+    "id": "prof-yasir-qadhi",
+    "name": "Yasir Qadhi",
+    "sprache": "Englisch",
+    "spezialisierung": "Fiqh",
+    "anmerkung": "",
+    "videos": [{
+        "titel": "Sirah",
+        "url": "https://youtube.com/playlist?list=PLAEA99D24CA2F9A8F&si=piqCMllJLF6xlyIn",
+        "themen": [
+          "Geschichte",
+          "Sirah"
+        ]
+      },
+      {
+        "titel": "Adab",
+        "url": "https://youtube.com/playlist?list=PLYZxc42QNctWxkUZ7WSsUYC7yo8D85igl&si=aWMIlfvxfJKTqbUU",
+        "themen": [
+          "Fiqh"
         ]
       }
     ],
