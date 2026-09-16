@@ -258,7 +258,6 @@
     }],
     "buecher": []
   },
-
   {
     "id": "prof-omar-suleiman",
     "name": "Omar Suleiman",
@@ -344,7 +343,7 @@
     ],
     "buecher": []
   },
-
+  
   {
     "id": "prof-yasir-qadhi",
     "name": "Yasir Qadhi",
@@ -367,7 +366,11 @@
         ]
       }
     ],
-    "buecher": []
+    "buecher": [{
+      "titel": "Transkript der Sirah-Reihe",
+      "url": "https://hausdesislamev.sharepoint.com/:b:/s/HDI-Dokumente/IQDr2fgvndG7QKporvJyup8vAXAwVI9dBDCxgCZei8l21UI?e=c2byVH",
+      "themen": []
+    }]
   },
 
   {
