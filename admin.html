@@ -75,11 +75,7 @@
               <input type="text" id="f-spez" placeholder="Künstliche Intelligenz" />
             </div>
 
-            <div class="field">
-              <label for="f-themen">Allgemeine Themen des Professors (kommagetrennt)</label>
-              <input type="text" id="f-themen" placeholder="Deep Learning, Ethik, Algorithmen" />
-              <p class="field-hint">Dieses Feld bleibt bewusst frei editierbar. Die Tag-Auswahl weiter unten gilt nur für einzelne Videos und Bücher.</p>
-            </div>
+            
 
             <div class="field">
               <label for="f-anmerkung">Anmerkung</label>
@@ -365,17 +361,13 @@ document.getElementById('generate-btn').addEventListener('click', () => {
   const id = document.getElementById('f-id').value.trim() || slugify(name ? `prof-${name}` : 'neuer-eintrag');
   const sprache = document.getElementById('f-sprache').value;
   const spezialisierung = document.getElementById('f-spez').value.trim();
-  const themenRaw = document.getElementById('f-themen').value.trim();
-  const anmerkung = document.getElementById('f-anmerkung').value.trim();
 
-  const themen = themenRaw
-    ? themenRaw.split(',').map(t => t.trim()).filter(Boolean)
-    : [];
+  const anmerkung = document.getElementById('f-anmerkung').value.trim();
 
   const videos = collectResourceRows('videos-container', 'video');
   const buecher = collectResourceRows('buecher-container', 'buch');
 
-  const entry = { id, name, sprache, spezialisierung, themen, anmerkung, videos, buecher };
+  const entry = { id, name, sprache, spezialisierung, anmerkung, videos, buecher };
 
   const comment = `// NEU — kompletter neuer Professoren-Eintrag (ID: ${id})\n// Vor dem Einfügen in data.json diese Kommentarzeile entfernen!`;
 

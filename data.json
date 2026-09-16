@@ -343,7 +343,7 @@
     ],
     "buecher": []
   },
-  
+
   {
     "id": "prof-yasir-qadhi",
     "name": "Yasir Qadhi",
@@ -369,7 +369,9 @@
     "buecher": [{
       "titel": "Transkript der Sirah-Reihe",
       "url": "https://hausdesislamev.sharepoint.com/:b:/s/HDI-Dokumente/IQDr2fgvndG7QKporvJyup8vAXAwVI9dBDCxgCZei8l21UI?e=c2byVH",
-      "themen": []
+      "themen": ["Geschichte",
+        "Sirah"
+      ]
     }]
   },
 
@@ -403,5 +405,22 @@
       ]
     }],
     "buecher": []
+  },
+
+  {
+    "id": "prof-muhammad-bin-al-qasim-al-qundusi",
+    "name": "Muhammad bin Al-Qasim al-Qundusi",
+    "sprache": "Andere",
+    "spezialisierung": "",
+    "anmerkung": "Muhammad Bin Al-Qāsim al-Qundūsi (1790–1861) war ein algerischer Sufi, Kalligraph und Gelehrter, der in Qanaadasa im Südwesten Algeriens geboren wurde.",
+    "videos": [],
+    "buecher": [{
+      "titel": "The Drink of the People of Purity",
+      "url": "https://hausdesislamev.sharepoint.com/:b:/s/HDI-Dokumente/IQC0p9xvS7d9QrWnk9RIjGkuAXIHNqEnWStHu12XfSAY_TA?e=NcaIwB",
+      "themen": [
+        "Geschichte",
+        "Sirah"
+      ]
+    }]
   }
 ]
