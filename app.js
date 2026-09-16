@@ -14,7 +14,11 @@ async function loadData() {
     const res = await fetch(DATA_URL, { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const json = await res.json();
-    return Array.isArray(json) ? json : [];
+    if (!Array.isArray(json)) return [];
+    // Leere/kaputte Einträge (z. B. durch ein überzähliges Komma in data.json
+    // entstandene "null"-Elemente) direkt hier herausfiltern, damit sich ein
+    // einzelner fehlerhafter Eintrag nicht auf die ganze Seite auswirkt.
+    return json.filter(entry => entry && typeof entry === 'object');
   } catch (err) {
     console.error('Konnte data.json nicht laden:', err);
     return null; // null signalisiert einen echten Ladefehler (anders als "leere Liste")
@@ -284,22 +288,39 @@ const IndexPage = (() => {
       return;
     }
 
-    allEntries = data;
-    filtered = [...allEntries];
+    try {
+      // Fehlerhafte/leere Einträge (z. B. durch ein Tippfehler-Komma in data.json)
+      // aussortieren, damit ein einzelner kaputter Eintrag nicht die ganze Seite lahmlegt.
+      const validEntries = data.filter(e => e && typeof e === 'object');
 
-    populateFilterOptions();
-    render();
-    bindCardNavigation();
+      // Alphabetisch nach Namen sortieren (deutsche Sortierregeln, z. B. für Umlaute)
+      allEntries = [...validEntries].sort((a, b) =>
+        String(a.name || '').localeCompare(String(b.name || ''), 'de', { sensitivity: 'base' })
+      );
+      filtered = [...allEntries];
 
-    els.searchInput.addEventListener('input', applyFilters);
-    els.langSelect.addEventListener('change', applyFilters);
-    els.spezSelect.addEventListener('change', applyFilters);
-    els.clearBtn.addEventListener('click', () => {
-      els.searchInput.value = '';
-      els.langSelect.value = '';
-      els.spezSelect.value = '';
-      applyFilters();
-    });
+      populateFilterOptions();
+      render();
+      bindCardNavigation();
+
+      els.searchInput.addEventListener('input', applyFilters);
+      els.langSelect.addEventListener('change', applyFilters);
+      els.spezSelect.addEventListener('change', applyFilters);
+      els.clearBtn.addEventListener('click', () => {
+        els.searchInput.value = '';
+        els.langSelect.value = '';
+        els.spezSelect.value = '';
+        applyFilters();
+      });
+    } catch (err) {
+      console.error('Fehler beim Aufbau des Katalogs:', err);
+      els.grid.innerHTML = `
+        <div class="empty-state" style="grid-column: 1 / -1;">
+          <h3>Beim Anzeigen der Profile ist ein Fehler aufgetreten</h3>
+          <p>Prüfe, ob "data.json" gültiges JSON enthält (z. B. keine überzähligen Kommas). Details stehen in der Browser-Konsole.</p>
+        </div>`;
+      els.resultCount.textContent = '0';
+    }
   }
 
   return { init };
@@ -398,14 +419,19 @@ const ProfilePage = (() => {
       return;
     }
 
-    const entry = data.find(e => e.id === id);
+    try {
+      const entry = data.find(e => e.id === id);
 
-    if (!entry) {
+      if (!entry) {
+        renderNotFound();
+        return;
+      }
+
+      renderProfile(entry);
+    } catch (err) {
+      console.error('Fehler beim Anzeigen des Profils:', err);
       renderNotFound();
-      return;
     }
-
-    renderProfile(entry);
   }
 
   return { init };
@@ -472,10 +498,18 @@ const ThemenPage = (() => {
       return;
     }
 
-    allThemes = collectAllThemes(data, tags || []);
-    render();
-
-    els.searchInput.addEventListener('input', () => render(els.searchInput.value));
+    try {
+      allThemes = collectAllThemes(data, tags || []);
+      render();
+      els.searchInput.addEventListener('input', () => render(els.searchInput.value));
+    } catch (err) {
+      console.error('Fehler beim Aufbau der Themen-Übersicht:', err);
+      els.cloud.innerHTML = `
+        <div class="empty-state" style="grid-column: 1 / -1;">
+          <h3>Beim Anzeigen der Themen ist ein Fehler aufgetreten</h3>
+          <p>Prüfe, ob "data.json" und "tags.json" gültiges JSON enthalten. Details stehen in der Browser-Konsole.</p>
+        </div>`;
+    }
   }
 
   return { init };
@@ -575,8 +609,13 @@ const ThemaPage = (() => {
       return;
     }
 
-    const matches = findThemeMatches(data, thema);
-    render(thema, matches);
+    try {
+      const matches = findThemeMatches(data, thema);
+      render(thema, matches);
+    } catch (err) {
+      console.error('Fehler beim Anzeigen der Themen-Seite:', err);
+      renderNotFound();
+    }
   }
 
   return { init };
