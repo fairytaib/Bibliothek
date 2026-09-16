@@ -368,5 +368,37 @@
       }
     ],
     "buecher": []
+  },
+
+  {
+    "id": "prof-redefarbrik",
+    "name": "RedeFarbrik",
+    "sprache": "Deutsch",
+    "spezialisierung": "Artikulation und Körpersprache",
+    "anmerkung": "Nicht islamischer Kontent - Experte in Didaktik",
+    "videos": [{
+      "titel": "Präsentationen, Vorträge & Referate",
+      "url": "https://youtube.com/playlist?list=PLoQ2ojtbiJx7AOYGuYSuhwAD-ymPtU-V8&si=dcHPscQTYG99t5sZ",
+      "themen": ["Sprache", "Didaktik"]
+    }],
+    "buecher": []
+  },
+
+  {
+    "id": "prof-vinh-giang",
+    "name": "Vinh Giang",
+    "sprache": "Englisch",
+    "spezialisierung": "Kommunikation",
+    "anmerkung": "Nicht islamischer Kontent - Experte in Didaktik",
+    "videos": [{
+      "titel": "Wie spreche ich besser?",
+      "url": "https://www.youtube.com/watch?v=FsxorSNJBaA&pp=ygUKdmluaCBnaWFuZ9IHCQlBCwGHKiGM7w%3D%3D",
+      "themen": [
+        "Didaktik",
+        "Einzelvideo",
+        "Sprache"
+      ]
+    }],
+    "buecher": []
   }
 ]
