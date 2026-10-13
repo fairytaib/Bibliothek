@@ -61,8 +61,18 @@
           "Einzelvideo",
           "Akhira"
         ]
+      },
+      {
+        "titel": "Sakina in der Ehe",
+        "url": "https://youtu.be/e8KySdVw0nM?si=G7dAfJBN-ImFGxUZ",
+        "themen": [
+          "Einzelvideo",
+          "Ehe",
+          "Sakina"
+        ]
       }
     ],
+    
     "buecher": []
   },
   {
@@ -84,6 +94,38 @@
         "themen": [
           "Einzelvideo", "Sirah"
         ]
+      },
+      {
+        "titel": "Wann der Prophet ernst wurde",
+        "url": "https://youtu.be/PhWcKNMU-Ro?si=78NAjfmEUXWuTcHQ",
+        "themen": [
+          "Sirah",
+          "Einzelvideo",
+          "Emotionen"
+        ]
+      },
+      {
+        "titel": "Geschichten der Propheten",
+        "url": "https://youtube.com/playlist?list=PLahgZyjde6qU&si=UaWzjkGqmlQeKyEm",
+        "themen": [
+          "Geschichte",
+          "Propheten"
+        ]
+      },
+      {
+        "titel": "Geschichten aus dem Quran",
+        "url": "https://youtube.com/playlist?list=PLVuenS9jflVE&si=-LeIN01ZRoUAkco1",
+        "themen": [
+          "Geschichte",
+          "Quran"
+        ]
+      },
+      {
+        "titel": "Die Zeichen des jüngsten Tages",
+        "url": "https://youtube.com/playlist?list=PLi_ePUoh6SAvNCXYlTqhhHhQgYh4-qf2r&si=uh95uV5t9mjBxtSl",
+        "themen": [
+          "Der jüngste Tag"
+        ]
       }
     ],
     "buecher": []
@@ -101,7 +143,15 @@
         "Fiqh",
         "Wissenschaftlich"
       ]
-    }],
+    },
+    {
+      "titel": "Krankheiten des Herzens",
+      "url": "https://youtube.com/playlist?list=PLBP_4s7p7C7s9PvPQoHemC4JtGxS1IrnP&si=YlCcbWgBAKwi8sns",
+      "themen": [
+        "Tazzkia"
+      ]
+    }
+  ],
     "buecher": []
   },
   {
