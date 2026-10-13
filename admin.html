@@ -5,6 +5,59 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Admin — ARCHIV</title>
 <link rel="stylesheet" href="style.css" />
+<style>
+  /* ---------- Tag-Hilfestellung ---------- */
+  .tag-guide {
+    border: 1px solid rgba(127,127,127,.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 0 0 16px;
+    font-size: .9rem;
+    line-height: 1.5;
+  }
+  .tag-guide summary { cursor: pointer; font-weight: 600; }
+  .tag-guide ol { margin: 10px 0 6px; padding-left: 20px; }
+  .tag-guide li { margin-bottom: 4px; }
+  .tag-guide table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: .85rem; }
+  .tag-guide th, .tag-guide td { text-align: left; vertical-align: top; padding: 4px 6px; border-top: 1px solid rgba(127,127,127,.2); }
+  .tag-guide th { white-space: nowrap; }
+  .tag-guide .guide-example { margin-top: 10px; opacity: .85; }
+
+  .tag-group { margin-bottom: 10px; }
+  .tag-group:last-child { margin-bottom: 0; }
+  .tag-group-title {
+    display: block;
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    opacity: .7;
+    margin-bottom: 4px;
+  }
+  .tag-group-title em { text-transform: none; letter-spacing: 0; font-style: normal; opacity: .85; }
+  .tag-group-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .tag-help-line {
+    min-height: 1.4em;
+    font-size: .85rem;
+    opacity: .8;
+    margin-top: 8px;
+  }
+  .tag-check { font-size: .85rem; margin-top: 4px; }
+  .tag-check .ok { color: #2e7d32; }
+  .tag-check .warn { color: #b26a00; }
+  .tag-check div { margin-top: 2px; }
+
+  /* ---------- Hervorhebung nach "JSON generieren" ---------- */
+  .output-panel { scroll-margin-top: 16px; }
+  .output-panel.flash { animation: output-flash 1.2s ease-out; }
+  @keyframes output-flash {
+    0%   { box-shadow: 0 0 0 3px rgba(46,125,50,.6); }
+    100% { box-shadow: 0 0 0 3px rgba(46,125,50,0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .output-panel.flash { animation: none; outline: 2px solid rgba(46,125,50,.6); }
+  }
+</style>
 </head>
 <body>
 
@@ -75,7 +128,7 @@
               <input type="text" id="f-spez" placeholder="Künstliche Intelligenz" />
             </div>
 
-            
+
 
             <div class="field">
               <label for="f-anmerkung">Anmerkung</label>
@@ -86,13 +139,14 @@
           <div class="form-section">
             <h2>Videos</h2>
             <p class="field-hint" style="margin: -8px 0 16px;">Wähle pro Video passende Tags aus der vorgefertigten Liste, damit es auf der Themen-Seite auffindbar ist.</p>
+            <div data-role="tag-guide"></div>
             <div id="videos-container"></div>
             <button type="button" class="add-row-btn" id="add-video-btn">+ Video hinzufügen</button>
           </div>
 
           <div class="form-section">
             <h2>Bücher & Quellen</h2>
-            <p class="field-hint" style="margin: -8px 0 16px;">Auch hier: Tags zuordnen, damit das Buch bei der passenden Themen-Detailseite erscheint.</p>
+            <p class="field-hint" style="margin: -8px 0 16px;">Auch hier: Tags zuordnen, damit das Buch bei der passenden Themen-Detailseite erscheint. Format-Tags (Playlist/Einzelvideo) entfallen bei Büchern.</p>
             <div id="buecher-container"></div>
             <button type="button" class="add-row-btn" id="add-buch-btn">+ Buch / Quelle hinzufügen</button>
           </div>
@@ -141,6 +195,7 @@
 
             <div class="field" style="margin-bottom: 0;">
               <label>Themen</label>
+              <div data-role="tag-guide"></div>
               <div class="tag-picker" id="existing-tag-picker"></div>
             </div>
           </div>
@@ -195,6 +250,85 @@
    das passiert ausschließlich direkt in der Datei tags.json.
    ========================================================= */
 
+/* ---------- Tag-Leitfaden ----------
+   Gruppierung und Erklärung jedes Tags. Wird ein neuer Tag in
+   tags.json ergänzt, hier eine Beschreibung + Gruppe nachtragen.
+   Tags aus tags.json, die hier fehlen, erscheinen unter "Weitere".
+
+   rule:
+     'exactly-one' → genau ein Tag der Gruppe (nur Videos)
+     'max-one'     → höchstens ein Tag der Gruppe
+     'content'     → zählt zu den Inhalts-Tags (mind. 1, ideal 1–3)
+     'optional'    → frei wählbar
+*/
+const TAG_GUIDE = [
+  {
+    name: 'Format', hint: 'genau eins wählen', rule: 'exactly-one', videoOnly: true,
+    tags: {
+      'Playlist': 'Reihe aus mehreren Videos (YouTube-Link enthält „playlist?list=“).',
+      'Einzelvideo': 'Ein einzelner Vortrag oder eine Khutba.'
+    }
+  },
+  {
+    name: 'Zugang', hint: 'nur wenn zutreffend', rule: 'optional',
+    tags: {
+      'Kostenpflichtig': 'Inhalt ist nur gegen Bezahlung oder mit Anmeldung verfügbar.'
+    }
+  },
+  {
+    name: 'Niveau', hint: 'höchstens eins, leer = allgemein verständlich', rule: 'max-one',
+    tags: {
+      'Einsteiger': 'Ausdrücklich für Neulinge oder Konvertiten gedacht, setzt nichts voraus.',
+      'Fortgeschritten': 'Setzt Grundwissen voraus, z. B. Erklärung klassischer Texte (Ghazali, Hikam).',
+      'Akademisch': 'Wissenschaftlicher Stil, Fachbegriffe, Auseinandersetzung mit Forschung.'
+    }
+  },
+  {
+    name: 'Islamische Fachgebiete', hint: 'Hauptthema', rule: 'content',
+    tags: {
+      'Quran': 'Tafsir, Rezitation, Bedeutung von Versen und Suren.',
+      'Hadith': 'Erklärung von Hadithen und Hadithsammlungen, Hadithwissenschaft.',
+      'Aqidah': 'Glaubenslehre: Allah, Engel, Schicksal, Unsichtbares.',
+      'Fiqh': 'Islamisches Recht und Regeln: erlaubt/verboten, Rechtsschulen.',
+      'Ibadah': 'Praktische Gottesdienste: Gebet, Fasten, Ramadan, Zakat, Hajj.',
+      'Sirah': 'Leben des Propheten Muhammad ﷺ.',
+      'Tazkiyah': 'Reinigung des Herzens, Spiritualität, Iman, Taqwa, Reue.',
+      'Akhlaq': 'Charakter und gutes Benehmen (Adab), Umgang mit anderen.',
+      'Dua & Dhikr': 'Bittgebete und Gottesgedenken.',
+      'Akhira': 'Jenseits: Tod, Grab, Jüngster Tag, Paradies, Hölle.'
+    }
+  },
+  {
+    name: 'Geschichte & Personen', hint: 'wenn Personen/Epochen im Mittelpunkt stehen', rule: 'content',
+    tags: {
+      'Geschichte': 'Islamische Geschichte nach der Prophetenzeit, Epochen und Ereignisse.',
+      'Propheten': 'Die Propheten vor Muhammad ﷺ (Musa, Yusuf, Ibrahim …).',
+      'Sahaba': 'Die Gefährten und Gefährtinnen des Propheten.',
+      'Frauen im Islam': 'Frauen als Thema oder Vorbild, Frauen-spezifischer Fiqh.'
+    }
+  },
+  {
+    name: 'Leben & Gesellschaft', hint: 'Alltagsbezug', rule: 'content',
+    tags: {
+      'Ehe & Familie': 'Ehe, Erziehung, Familienleben.',
+      'Gesellschaft': 'Gerechtigkeit, Gemeinschaft, Muslime in der Gesellschaft.',
+      'Psychologie': 'Mentale Gesundheit, Trauer, Mindset, Umgang mit Gefühlen.',
+      'Apologetik': 'Antworten auf Islamkritik und Missverständnisse.'
+    }
+  },
+  {
+    name: 'Sprache & Vermittlung', hint: 'auch für nicht-islamische Inhalte', rule: 'content',
+    tags: {
+      'Arabisch': 'Arabisch lernen, Grammatik, Quran-Arabisch.',
+      'Rhetorik': 'Besser sprechen, Vorträge halten, Körpersprache.',
+      'Didaktik': 'Wissen vermitteln und unterrichten, Lernmethoden.'
+    }
+  }
+];
+
+const TAG_INFO = {}; // Tag → { group, desc }
+TAG_GUIDE.forEach(g => Object.entries(g.tags).forEach(([t, d]) => { TAG_INFO[t] = { group: g, desc: d }; }));
+
 let videoRowCount = 0;
 let buchRowCount = 0;
 let masterTags = [];   // vorgefertigte, schreibgeschützte Tag-Liste aus tags.json
@@ -215,7 +349,7 @@ function slugify(text) {
     .toString()
     .toLowerCase()
     .trim()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Umlaute/Akzente entfernen
+    .normalize('NFD').replace(/[̀-ͯ]/g, '') // Umlaute/Akzente entfernen
     .replace(/[^a-z0-9\s-]/g, '')
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-');
@@ -256,19 +390,150 @@ async function loadMasterTags() {
   }
 }
 
-function renderTagPicker(pickerEl) {
+/* ---------- Leitfaden (ausklappbar) ---------- */
+
+function renderTagGuide(el) {
+  const rows = TAG_GUIDE.map(g => `
+    <tr><th colspan="2">${escapeHtml(g.name)} <span style="font-weight:400;opacity:.7">— ${escapeHtml(g.hint)}</span></th></tr>
+    ${Object.entries(g.tags).map(([t, d]) => `<tr><td><strong>${escapeHtml(t)}</strong></td><td>${escapeHtml(d)}</td></tr>`).join('')}
+  `).join('');
+
+  el.innerHTML = `
+    <details class="tag-guide">
+      <summary>Wie tagge ich richtig? (Leitfaden öffnen)</summary>
+      <ol>
+        <li><strong>Format:</strong> Bei Videos immer genau <em>Playlist</em> oder <em>Einzelvideo</em>. Wird anhand der URL vorausgewählt.</li>
+        <li><strong>Inhalt:</strong> 1–3 Tags für das <em>Hauptthema</em>. Frage: „Unter welchem Thema würde jemand dieses Video suchen?“ Nicht alles taggen, was nur kurz vorkommt.</li>
+        <li><strong>Niveau:</strong> Nur setzen, wenn der Inhalt klar für Einsteiger oder klar anspruchsvoll ist. Sonst leer lassen.</li>
+        <li><strong>Kostenpflichtig:</strong> Nur wenn der Inhalt hinter einer Bezahlschranke liegt.</li>
+        <li>Spezifischer Tag schlägt allgemeinen: Prophetengeschichten → <em>Propheten</em> (nicht nur <em>Geschichte</em>), Ramadan → <em>Ibadah</em> (nicht <em>Fiqh</em>).</li>
+        <li>Passt kein Tag? Nicht den „nächstbesten“ wählen, sondern einen neuen Tag in <code>tags.json</code> vorschlagen.</li>
+      </ol>
+      <table>${rows}</table>
+      <p class="guide-example"><strong>Beispiele:</strong>
+        „Tafsir Surah Yasin“ → Playlist · Quran<br>
+        „Das Leben von Umm Sulaim“ → Einzelvideo · Sahaba · Frauen im Islam<br>
+        „Muslim sein für Beginner“ → Playlist · Einsteiger · Ibadah · Fiqh</p>
+    </details>`;
+}
+
+/* ---------- Tag-Picker mit Gruppen, Erklärungen und Prüfung ---------- */
+
+function renderTagPicker(pickerEl, kind = 'video') {
+  pickerEl.dataset.kind = kind;
+
   if (masterTags.length === 0) {
     pickerEl.innerHTML = '<span class="tag-picker-empty">Keine Tags vorhanden. Ergänze Tags direkt in tags.json.</span>';
     return;
   }
 
-  pickerEl.innerHTML = masterTags.map(tag => `
-    <button type="button" class="tag-chip" data-tag="${escapeHtml(tag)}">${escapeHtml(tag)}</button>
-  `).join('');
+  const available = new Set(masterTags);
+  const groupsHtml = [];
+
+  TAG_GUIDE.forEach(g => {
+    if (g.videoOnly && kind !== 'video') return;
+    const tags = Object.keys(g.tags).filter(t => available.has(t));
+    if (tags.length === 0) return;
+    groupsHtml.push(groupHtml(g.name, g.hint, tags));
+  });
+
+  const unknown = masterTags.filter(t => !TAG_INFO[t]);
+  if (unknown.length) groupsHtml.push(groupHtml('Weitere', 'noch ohne Beschreibung', unknown));
+
+  pickerEl.innerHTML = `
+    ${groupsHtml.join('')}
+    <div class="tag-help-line" data-role="help">Fahre über einen Tag, um seine Bedeutung zu sehen.</div>
+    <div class="tag-check" data-role="check"></div>
+  `;
+
+  const help = pickerEl.querySelector('[data-role="help"]');
+  const defaultHelp = help.textContent;
 
   pickerEl.querySelectorAll('.tag-chip').forEach(chip => {
-    chip.addEventListener('click', () => chip.classList.toggle('selected'));
+    const tag = chip.dataset.tag;
+    const desc = TAG_INFO[tag]?.desc || 'Keine Beschreibung hinterlegt.';
+    chip.title = desc;
+
+    const showHelp = () => { help.innerHTML = `<strong>${escapeHtml(tag)}:</strong> ${escapeHtml(desc)}`; };
+    chip.addEventListener('mouseenter', showHelp);
+    chip.addEventListener('focus', showHelp);
+    chip.addEventListener('mouseleave', () => { help.textContent = defaultHelp; });
+
+    chip.addEventListener('click', () => {
+      const group = TAG_INFO[tag]?.group;
+      const willSelect = !chip.classList.contains('selected');
+      // In Gruppen mit "genau/höchstens eins" die anderen abwählen
+      if (willSelect && group && (group.rule === 'exactly-one' || group.rule === 'max-one')) {
+        Object.keys(group.tags).forEach(other => {
+          if (other !== tag) pickerEl.querySelector(`.tag-chip[data-tag="${CSS.escape(other)}"]`)?.classList.remove('selected');
+        });
+      }
+      chip.classList.toggle('selected', willSelect);
+      chip.dataset.userSet = 'true';
+      showHelp();
+      validateTagPicker(pickerEl);
+    });
   });
+
+  validateTagPicker(pickerEl);
+}
+
+function groupHtml(name, hint, tags) {
+  return `
+    <div class="tag-group">
+      <span class="tag-group-title">${escapeHtml(name)} <em>· ${escapeHtml(hint)}</em></span>
+      <div class="tag-group-chips">
+        ${tags.map(t => `<button type="button" class="tag-chip" data-tag="${escapeHtml(t)}">${escapeHtml(t)}</button>`).join('')}
+      </div>
+    </div>`;
+}
+
+function getSelectedTags(pickerEl) {
+  return [...pickerEl.querySelectorAll('.tag-chip.selected')].map(c => c.dataset.tag);
+}
+
+function getTagWarnings(selected, kind) {
+  const warnings = [];
+  const inGroup = rule => selected.filter(t => TAG_INFO[t]?.group.rule === rule);
+
+  if (kind === 'video' && inGroup('exactly-one').length !== 1) {
+    warnings.push('Format fehlt: Playlist oder Einzelvideo wählen.');
+  }
+  const content = inGroup('content');
+  if (content.length === 0) {
+    warnings.push('Kein Inhalts-Tag gewählt: mindestens ein Thema (z. B. Quran, Sirah, Tazkiyah) auswählen.');
+  } else if (content.length > 3) {
+    warnings.push(`${content.length} Inhalts-Tags gewählt. Besser auf die 1–3 Hauptthemen beschränken.`);
+  }
+  if (selected.includes('Geschichte') && (selected.includes('Propheten') || selected.includes('Sirah') || selected.includes('Sahaba'))) {
+    warnings.push('„Geschichte“ ist meist überflüssig, wenn schon Propheten, Sirah oder Sahaba gewählt ist.');
+  }
+  return warnings;
+}
+
+function validateTagPicker(pickerEl) {
+  const check = pickerEl.querySelector('[data-role="check"]');
+  if (!check) return;
+  const warnings = getTagWarnings(getSelectedTags(pickerEl), pickerEl.dataset.kind);
+  check.innerHTML = warnings.length
+    ? warnings.map(w => `<div class="warn">⚠ ${escapeHtml(w)}</div>`).join('')
+    : '<div class="ok">✓ Tags sehen gut aus.</div>';
+}
+
+/* Format aus URL vorschlagen (nur solange der Nutzer das Format nicht selbst gewählt hat) */
+function suggestFormatFromUrl(url, pickerEl) {
+  if (!pickerEl || pickerEl.dataset.kind !== 'video') return;
+  const playlist = pickerEl.querySelector('.tag-chip[data-tag="Playlist"]');
+  const single = pickerEl.querySelector('.tag-chip[data-tag="Einzelvideo"]');
+  if (!playlist || !single) return;
+  if (playlist.dataset.userSet || single.dataset.userSet) return;
+
+  const isPlaylist = /[?&]list=/.test(url) && !/[?&]v=/.test(url) || /\/playlist\b/.test(url);
+  const isSingle = !isPlaylist && /(youtu\.be\/|youtube\.com\/(watch|live|shorts))/.test(url);
+
+  playlist.classList.toggle('selected', isPlaylist);
+  single.classList.toggle('selected', isSingle);
+  validateTagPicker(pickerEl);
 }
 
 /* ---------- Modus 1: Dynamische Video-/Buch-Zeilen ---------- */
@@ -302,7 +567,13 @@ function createDynamicRow(container, prefix, index, kindLabel, placeholderTitel,
   `;
   row.querySelector('.icon-btn').addEventListener('click', () => row.remove());
   container.appendChild(row);
-  renderTagPicker(row.querySelector('[data-role="tag-picker"]'));
+
+  const picker = row.querySelector('[data-role="tag-picker"]');
+  const kind = prefix === 'video' ? 'video' : 'buch';
+  renderTagPicker(picker, kind);
+  if (kind === 'video') {
+    row.querySelector(`.${prefix}-url`).addEventListener('input', e => suggestFormatFromUrl(e.target.value, picker));
+  }
 }
 
 document.getElementById('add-video-btn').addEventListener('click', () => {
@@ -327,18 +598,45 @@ document.getElementById('add-buch-btn').addEventListener('click', () => {
   );
 });
 
-function collectResourceRows(containerId, prefix) {
+function collectResourceRows(containerId, prefix, warningsOut) {
   const rows = document.querySelectorAll(`#${containerId} .dynamic-row`);
   const result = [];
   rows.forEach(row => {
     const titel = row.querySelector(`.${prefix}-titel`).value.trim();
     const url = row.querySelector(`.${prefix}-url`).value.trim();
-    const themen = [...row.querySelectorAll('.tag-chip.selected')].map(c => c.dataset.tag);
+    const picker = row.querySelector('[data-role="tag-picker"]');
+    const themen = getSelectedTags(picker);
     if (titel && url) {
       result.push({ titel, url, themen });
+      getTagWarnings(themen, picker.dataset.kind).forEach(w => warningsOut?.push(`"${titel}": ${w}`));
     }
   });
   return result;
+}
+
+/* Nach dem Generieren zum Ergebnis scrollen und es kurz hervorheben */
+function revealOutput(message) {
+  const panel = document.querySelector('.output-panel');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Zuerst ganz nach oben, damit der Nutzer den Ausgangspunkt der Seite sieht;
+  // liegt die Ausgabe tiefer (z. B. auf dem Handy unter dem Formular), dorthin.
+  const panelTop = panel.getBoundingClientRect().top + window.scrollY;
+  const target = panelTop > window.innerHeight ? panelTop - 16 : 0;
+  window.scrollTo({ top: target, behavior: reduceMotion ? 'auto' : 'smooth' });
+
+  panel.classList.remove('flash');
+  void panel.offsetWidth; // Animation neu starten
+  panel.classList.add('flash');
+  setTimeout(() => panel.classList.remove('flash'), 1300);
+
+  if (message) showToast(message);
+}
+
+function warningsComment(warnings) {
+  return warnings.length
+    ? `\n// HINWEISE ZU DEN TAGS (bitte prüfen):\n${warnings.map(w => `//  - ${w}`).join('\n')}`
+    : '';
 }
 
 /* ---------- Name → ID-Vorschlag (Modus 1) ---------- */
@@ -364,15 +662,17 @@ document.getElementById('generate-btn').addEventListener('click', () => {
 
   const anmerkung = document.getElementById('f-anmerkung').value.trim();
 
-  const videos = collectResourceRows('videos-container', 'video');
-  const buecher = collectResourceRows('buecher-container', 'buch');
+  const warnings = [];
+  const videos = collectResourceRows('videos-container', 'video', warnings);
+  const buecher = collectResourceRows('buecher-container', 'buch', warnings);
 
   const entry = { id, name, sprache, spezialisierung, anmerkung, videos, buecher };
 
-  const comment = `// NEU — kompletter neuer Professoren-Eintrag (ID: ${id})\n// Vor dem Einfügen in data.json diese Kommentarzeile entfernen!`;
+  const comment = `// NEU — kompletter neuer Professoren-Eintrag (ID: ${id})${warningsComment(warnings)}\n// Vor dem Einfügen in data.json alle Kommentarzeilen entfernen!`;
 
   document.getElementById('json-output').textContent = `${comment}\n\n${JSON.stringify(entry, null, 2)}`;
-  document.getElementById('output-hint').innerHTML = 'Entferne zuerst die Kommentarzeile, dann füge den restlichen Code als neues Objekt in das Array deiner <code>data.json</code> ein.';
+  document.getElementById('output-hint').innerHTML = 'Entferne zuerst die Kommentarzeilen, dann füge den restlichen Code als neues Objekt in das Array deiner <code>data.json</code> ein.';
+  revealOutput(warnings.length ? `JSON generiert – ${warnings.length} Tag-Hinweis(e) prüfen.` : 'JSON generiert.');
 });
 
 /* ---------- Modus 2: Bestehenden Professor laden ---------- */
@@ -435,10 +735,22 @@ function setResourceKind(kind) {
   const urlInput = document.getElementById('existing-url');
   titelInput.placeholder = kind === 'video' ? 'Video-Titel' : 'Buch-/Quellentitel';
   urlInput.placeholder = kind === 'video' ? 'https://www.youtube.com/watch?v=…' : 'https://…';
+
+  // Tag-Picker neu aufbauen (Format-Tags nur bei Videos), bisherige Auswahl behalten
+  const picker = document.getElementById('existing-tag-picker');
+  const keep = getSelectedTags(picker);
+  renderTagPicker(picker, kind);
+  keep.forEach(t => picker.querySelector(`.tag-chip[data-tag="${CSS.escape(t)}"]`)?.classList.add('selected'));
+  if (kind === 'video') suggestFormatFromUrl(urlInput.value, picker);
+  validateTagPicker(picker);
 }
 
 document.getElementById('kind-video-btn').addEventListener('click', () => setResourceKind('video'));
 document.getElementById('kind-buch-btn').addEventListener('click', () => setResourceKind('buch'));
+
+document.getElementById('existing-url').addEventListener('input', e =>
+  suggestFormatFromUrl(e.target.value, document.getElementById('existing-tag-picker'))
+);
 
 /* ---------- Modus 2: JSON-Generierung ---------- */
 
@@ -449,6 +761,7 @@ document.getElementById('generate-existing-btn').addEventListener('click', () =>
 
   if (!prof) {
     output.textContent = '// Bitte zuerst einen bestehenden Professor auswählen.';
+    revealOutput('Bitte zuerst einen Professor auswählen.');
     return;
   }
 
@@ -457,11 +770,14 @@ document.getElementById('generate-existing-btn').addEventListener('click', () =>
 
   if (!titel || !url) {
     output.textContent = '// Bitte Titel und URL ausfüllen.';
+    revealOutput('Bitte Titel und URL ausfüllen.');
     return;
   }
 
-  const themen = [...document.querySelectorAll('#existing-tag-picker .tag-chip.selected')].map(c => c.dataset.tag);
+  const picker = document.getElementById('existing-tag-picker');
+  const themen = getSelectedTags(picker);
   const newResource = { titel, url, themen };
+  const warnings = getTagWarnings(themen, currentResourceKind).map(w => `"${titel}": ${w}`);
 
   // Tiefe Kopie, damit das Original in allProfessors unangetastet bleibt
   const updatedProf = JSON.parse(JSON.stringify(prof));
@@ -470,11 +786,12 @@ document.getElementById('generate-existing-btn').addEventListener('click', () =>
   updatedProf[arrayKey].push(newResource);
 
   const kindLabel = currentResourceKind === 'video' ? 'Video' : 'Buch';
-  const comment = `// BESTEHEND — aktualisierter Professor "${prof.name}" (ID: ${profId})\n// Enthält alle bisherigen Einträge plus 1 neues ${kindLabel}.\n// Vor dem Einfügen in data.json diese Kommentarzeile entfernen!`;
+  const comment = `// BESTEHEND — aktualisierter Professor "${prof.name}" (ID: ${profId})\n// Enthält alle bisherigen Einträge plus 1 neues ${kindLabel}.${warningsComment(warnings)}\n// Vor dem Einfügen in data.json alle Kommentarzeilen entfernen!`;
 
   output.textContent = `${comment}\n\n${JSON.stringify(updatedProf, null, 2)}`;
   document.getElementById('output-hint').innerHTML =
-    `Entferne zuerst die Kommentarzeile, dann ersetze in deiner <code>data.json</code> das komplette Objekt mit der ID <code>${escapeHtml(profId)}</code> durch den restlichen Code.`;
+    `Entferne zuerst die Kommentarzeilen, dann ersetze in deiner <code>data.json</code> das komplette Objekt mit der ID <code>${escapeHtml(profId)}</code> durch den restlichen Code.`;
+  revealOutput(warnings.length ? `JSON generiert – ${warnings.length} Tag-Hinweis(e) prüfen.` : 'JSON generiert.');
 });
 
 /* ---------- Kopieren & Toast ---------- */
@@ -511,13 +828,16 @@ function showToast(message) {
 (async function init() {
   await Promise.all([loadMasterTags(), loadProfessors()]);
 
+  // Leitfaden in beiden Modi einblenden
+  document.querySelectorAll('[data-role="tag-guide"]').forEach(renderTagGuide);
+
   // Modus 1: Start-Zeilen für Videos und Bücher
   createDynamicRow(document.getElementById('videos-container'), 'video', videoRowCount++, 'Video', 'Video-Titel', 'https://www.youtube.com/watch?v=…');
   createDynamicRow(document.getElementById('buecher-container'), 'buch', buchRowCount++, 'Buch', 'Buch-/Quellentitel', 'https://…');
 
   // Modus 2: Professor-Auswahl und Tag-Picker vorbereiten
   renderProfessorSelect();
-  renderTagPicker(document.getElementById('existing-tag-picker'));
+  renderTagPicker(document.getElementById('existing-tag-picker'), 'video');
 })();
 </script>
 
