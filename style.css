@@ -38,6 +38,9 @@
 
 *, *::before, *::after{ box-sizing: border-box; }
 
+/* "hidden" muss auch Elemente mit eigenem display-Wert (flex, grid …) ausblenden */
+[hidden]{ display: none !important; }
+
 html{ color-scheme: dark; }
 
 body{
@@ -981,6 +984,156 @@ pre#json-output{
   text-align: center;
 }
 
+/* ---------- Suche & Ergebnisse (index.html) ---------- */
+.filter-select{ flex: 1 1 170px; max-width: 260px; }
+
+.section-title{
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+.result-block + .result-block{ margin-top: 48px; }
+
+.list-empty{
+  padding: 18px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-faint);
+  font-size: 14px;
+  text-align: center;
+}
+
+.more-btn{
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--border);
+  background: none;
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.more-btn:hover{ border-color: var(--accent); background: var(--accent-soft); }
+
+/* Format-, Niveau- und Zugangs-Tags dezenter als inhaltliche Themen */
+.badge.meta{
+  background: transparent;
+  border-style: dashed;
+  color: var(--text-faint);
+}
+
+.badge.lang.badge-sm{ font-weight: 600; }
+
+.profile-head .spez a{ color: inherit; }
+.profile-head .spez a:hover{ color: var(--accent-strong); text-decoration: underline; }
+
+/* ---------- Themen-Übersicht: Gruppen ---------- */
+.theme-group + .theme-group{ margin-top: 40px; }
+.theme-group .section-title{ margin-bottom: 14px; }
+
+.theme-tile-desc{
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+/* ---------- Thema-Detailseite: Beschreibung & Filter ---------- */
+.thema-hero p.thema-desc{
+  color: var(--text-muted);
+  font-size: 15.5px;
+  max-width: 62ch;
+  margin: 0 0 10px;
+}
+
+.thema-filters{ margin-top: 22px; }
+
+.thema-body .empty-state{ margin-bottom: 24px; }
+
+/* ---------- Admin: Tag-Hilfe ---------- */
+.tag-guide{
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  padding: 12px 16px;
+  margin: 0 0 16px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+.tag-guide summary{ cursor: pointer; font-weight: 600; color: var(--text); }
+.tag-guide ol{ margin: 10px 0 6px; padding-left: 20px; }
+.tag-guide li{ margin-bottom: 4px; }
+.tag-guide strong{ color: var(--text); }
+.tag-guide table{ width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+.tag-guide th, .tag-guide td{ text-align: left; vertical-align: top; padding: 5px 6px; border-top: 1px solid var(--border-soft); }
+.tag-guide th{ color: var(--text); white-space: nowrap; }
+.tag-guide th span{ font-weight: 400; color: var(--text-faint); white-space: normal; }
+.tag-guide .guide-example{ margin: 10px 0 0; }
+
+.tag-picker{ flex-direction: column; flex-wrap: nowrap; }
+.tag-group{ margin-bottom: 4px; }
+.tag-group-title{
+  display: block;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--text-faint);
+  margin-bottom: 6px;
+}
+.tag-group-title em{ text-transform: none; letter-spacing: 0; font-style: normal; }
+.tag-group-chips{ display: flex; flex-wrap: wrap; gap: 6px; }
+
+.tag-help-line{ min-height: 1.4em; font-size: 12.5px; color: var(--text-muted); }
+.tag-check{ font-size: 12.5px; }
+.tag-check div + div{ margin-top: 2px; }
+.tag-check .ok{ color: var(--accent); }
+.tag-check .warn{ color: #f2b65a; }
+
+/* ---------- Admin: Status, Änderungen, Ausgabe ---------- */
+.status-box{
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.status-box ul{ margin: 6px 0 0; padding-left: 18px; }
+.status-box.ok{ border-color: var(--accent); background: var(--accent-soft); }
+.status-box.warn{ border-color: #f2b65a; background: rgba(242, 182, 90, 0.1); }
+.status-box.error{ border-color: var(--danger); background: var(--danger-soft); }
+
+.change-list{
+  margin: 0 0 16px;
+  padding: 12px 14px 12px 32px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.change-list-title{ font-size: 13px; font-weight: 600; color: var(--text-muted); margin: 0 0 6px; }
+
+.output-actions{ display: flex; gap: 8px; flex-wrap: wrap; }
+.btn[disabled]{ opacity: .45; cursor: not-allowed; filter: none; transform: none; }
+
+.form-actions{ display: flex; flex-direction: column; gap: 10px; }
+.form-actions .btn{ width: 100%; justify-content: center; }
+
+.output-panel{ scroll-margin-top: 96px; }
+.output-panel.flash{ animation: output-flash 1.2s ease-out; }
+@keyframes output-flash{
+  0%{ box-shadow: 0 0 0 3px rgba(41, 212, 232, 0.55); }
+  100%{ box-shadow: 0 0 0 3px rgba(41, 212, 232, 0); }
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 860px){
   .profile-grid{ grid-template-columns: 1fr; }
@@ -992,6 +1145,7 @@ pre#json-output{
   .site-header .container{ height: auto; padding: 14px 20px; flex-wrap: wrap; gap: 10px; }
   .hero{ padding: 40px 0 28px; }
   .search-row{ flex-direction: column; }
+  .filter-select{ flex-basis: 100%; max-width: none; }
   .card-grid{ grid-template-columns: 1fr; }
   .themen-cloud{ grid-template-columns: 1fr; }
   .profile-head{ flex-direction: column; }

@@ -1,34 +1,92 @@
-[
-  "Playlist",
-  "Einzelvideo",
-  "Kostenpflichtig",
-
-  "Einsteiger",
-  "Fortgeschritten",
-  "Akademisch",
-
-  "Quran",
-  "Hadith",
-  "Aqidah",
-  "Fiqh",
-  "Ibadah",
-  "Sirah",
-  "Tazkiyah",
-  "Akhlaq",
-  "Dua & Dhikr",
-  "Akhira",
-
-  "Geschichte",
-  "Propheten",
-  "Sahaba",
-  "Frauen im Islam",
-
-  "Ehe & Familie",
-  "Gesellschaft",
-  "Psychologie",
-  "Apologetik",
-
-  "Arabisch",
-  "Rhetorik",
-  "Didaktik"
-]
+{
+  "sprachen": ["Deutsch", "Englisch", "Arabisch", "Türkisch", "Andere"],
+  "gruppen": [
+    {
+      "id": "format",
+      "name": "Format",
+      "art": "filter",
+      "regel": "genau-eins",
+      "nurVideo": true,
+      "hinweis": "genau eins wählen",
+      "tags": [
+        { "name": "Playlist", "beschreibung": "Reihe aus mehreren zusammenhängenden Videos." },
+        { "name": "Einzelvideo", "beschreibung": "Ein einzelner Vortrag, eine Khutba oder ein einzelnes Video." }
+      ]
+    },
+    {
+      "id": "zugang",
+      "name": "Zugang",
+      "art": "filter",
+      "regel": "optional",
+      "hinweis": "nur wenn zutreffend",
+      "tags": [
+        { "name": "Kostenpflichtig", "beschreibung": "Nur gegen Bezahlung oder mit Anmeldung verfügbar." }
+      ]
+    },
+    {
+      "id": "niveau",
+      "name": "Niveau",
+      "art": "filter",
+      "regel": "hoechstens-eins",
+      "hinweis": "höchstens eins, leer = allgemein verständlich",
+      "tags": [
+        { "name": "Einsteiger", "beschreibung": "Für Neulinge und Konvertiten, setzt kein Vorwissen voraus." },
+        { "name": "Fortgeschritten", "beschreibung": "Setzt Grundwissen voraus, z. B. Erklärungen klassischer Werke wie Ghazali oder die Hikam." },
+        { "name": "Akademisch", "beschreibung": "Wissenschaftlicher Stil mit Fachbegriffen und Bezug zur Forschung." }
+      ]
+    },
+    {
+      "id": "fachgebiete",
+      "name": "Islamische Fachgebiete",
+      "art": "thema",
+      "hinweis": "Hauptthema",
+      "tags": [
+        { "name": "Quran", "beschreibung": "Tafsir, Rezitation und die Bedeutung von Versen und Suren." },
+        { "name": "Hadith", "beschreibung": "Erklärung von Hadithen und Hadithsammlungen, Hadithwissenschaft." },
+        { "name": "Aqidah", "beschreibung": "Glaubenslehre: Allah, Engel, Schicksal und das Unsichtbare." },
+        { "name": "Fiqh", "beschreibung": "Islamisches Recht und Regeln: erlaubt und verboten, Rechtsschulen." },
+        { "name": "Ibadah", "beschreibung": "Praktische Gottesdienste: Gebet, Fasten, Ramadan, Zakat und Hajj." },
+        { "name": "Sirah", "beschreibung": "Das Leben des Propheten Muhammad ﷺ." },
+        { "name": "Tazkiyah", "beschreibung": "Reinigung des Herzens und Spiritualität: Iman, Taqwa, Reue." },
+        { "name": "Akhlaq", "beschreibung": "Charakter und gutes Benehmen (Adab), Umgang mit anderen." },
+        { "name": "Dua & Dhikr", "beschreibung": "Bittgebete und Gottesgedenken." },
+        { "name": "Akhira", "beschreibung": "Das Jenseits: Tod, Grab, Jüngster Tag, Paradies und Hölle." }
+      ]
+    },
+    {
+      "id": "geschichte",
+      "name": "Geschichte & Personen",
+      "art": "thema",
+      "hinweis": "wenn Personen oder Epochen im Mittelpunkt stehen",
+      "tags": [
+        { "name": "Geschichte", "beschreibung": "Islamische Geschichte nach der Prophetenzeit, Epochen und Ereignisse." },
+        { "name": "Propheten", "beschreibung": "Die Propheten vor Muhammad ﷺ, z. B. Musa, Yusuf und Ibrahim." },
+        { "name": "Sahaba", "beschreibung": "Die Gefährten und Gefährtinnen des Propheten." },
+        { "name": "Frauen im Islam", "beschreibung": "Frauen als Thema und Vorbild, Fiqh speziell für Frauen." }
+      ]
+    },
+    {
+      "id": "leben",
+      "name": "Leben & Gesellschaft",
+      "art": "thema",
+      "hinweis": "Alltagsbezug",
+      "tags": [
+        { "name": "Ehe & Familie", "beschreibung": "Ehe, Erziehung und Familienleben." },
+        { "name": "Gesellschaft", "beschreibung": "Gerechtigkeit, Gemeinschaft und Muslime in der Gesellschaft." },
+        { "name": "Psychologie", "beschreibung": "Mentale Gesundheit, Trauer, Mindset und der Umgang mit Gefühlen." },
+        { "name": "Apologetik", "beschreibung": "Antworten auf Islamkritik und Missverständnisse." }
+      ]
+    },
+    {
+      "id": "vermittlung",
+      "name": "Sprache & Vermittlung",
+      "art": "thema",
+      "hinweis": "auch für nicht-islamische Inhalte",
+      "tags": [
+        { "name": "Arabisch", "beschreibung": "Arabisch lernen, Grammatik und Quran-Arabisch." },
+        { "name": "Rhetorik", "beschreibung": "Besser sprechen, Vorträge halten und Körpersprache." },
+        { "name": "Didaktik", "beschreibung": "Wissen vermitteln und unterrichten, Lernmethoden." }
+      ]
+    }
+  ]
+}

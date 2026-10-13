@@ -1,845 +1,883 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Admin — ARCHIV</title>
-<link rel="stylesheet" href="style.css" />
-<style>
-  /* ---------- Tag-Hilfestellung ---------- */
-  .tag-guide {
-    border: 1px solid rgba(127,127,127,.3);
-    border-radius: 8px;
-    padding: 10px 14px;
-    margin: 0 0 16px;
-    font-size: .9rem;
-    line-height: 1.5;
-  }
-  .tag-guide summary { cursor: pointer; font-weight: 600; }
-  .tag-guide ol { margin: 10px 0 6px; padding-left: 20px; }
-  .tag-guide li { margin-bottom: 4px; }
-  .tag-guide table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: .85rem; }
-  .tag-guide th, .tag-guide td { text-align: left; vertical-align: top; padding: 4px 6px; border-top: 1px solid rgba(127,127,127,.2); }
-  .tag-guide th { white-space: nowrap; }
-  .tag-guide .guide-example { margin-top: 10px; opacity: .85; }
-
-  .tag-group { margin-bottom: 10px; }
-  .tag-group:last-child { margin-bottom: 0; }
-  .tag-group-title {
-    display: block;
-    font-size: .75rem;
-    text-transform: uppercase;
-    letter-spacing: .04em;
-    opacity: .7;
-    margin-bottom: 4px;
-  }
-  .tag-group-title em { text-transform: none; letter-spacing: 0; font-style: normal; opacity: .85; }
-  .tag-group-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-
-  .tag-help-line {
-    min-height: 1.4em;
-    font-size: .85rem;
-    opacity: .8;
-    margin-top: 8px;
-  }
-  .tag-check { font-size: .85rem; margin-top: 4px; }
-  .tag-check .ok { color: #2e7d32; }
-  .tag-check .warn { color: #b26a00; }
-  .tag-check div { margin-top: 2px; }
-
-  /* ---------- Hervorhebung nach "JSON generieren" ---------- */
-  .output-panel { scroll-margin-top: 16px; }
-  .output-panel.flash { animation: output-flash 1.2s ease-out; }
-  @keyframes output-flash {
-    0%   { box-shadow: 0 0 0 3px rgba(46,125,50,.6); }
-    100% { box-shadow: 0 0 0 3px rgba(46,125,50,0); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .output-panel.flash { animation: none; outline: 2px solid rgba(46,125,50,.6); }
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — ARCHIV</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-<header class="site-header">
-  <div class="container">
-    <a class="brand" href="index.html">
-      <span class="mark">A</span>
-      Archiv <small>HDI-Bibliothek</small>
-    </a>
-    <nav class="nav-links">
-      <a href="index.html">Gelehrte</a>
-      <a href="themen.html">Themen</a>
-      <a href="admin.html" class="active">Admin</a>
-    </nav>
-  </div>
-</header>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html">
+        <span class="mark">A</span>
+        Archiv <small>HDI-Bibliothek</small>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">Gelehrte</a>
+        <a href="themen.html">Themen</a>
+        <!-- <a href="admin.html">Admin</a> -->
+      </nav>
+    </div>
+  </header>
 
-<section class="hero" style="padding-bottom: 24px;">
-  <div class="container">
-    <p class="hero-eyebrow">Admin-Generator</p>
-    <h1>Profil-Einträge erstellen & ergänzen</h1>
-    <p>Lege einen komplett neuen Professor an, oder ergänze bei einem bereits vorhandenen Professor nur ein einzelnes Video bzw. Buch. Verfügbare Themen-Tags stammen aus <code>tags.json</code> — um neue Tags zu ergänzen, bearbeite diese Datei direkt.</p>
-  </div>
-</section>
+  <section class="hero" style="padding-bottom: 24px;">
+    <div class="container">
+      <p class="hero-eyebrow">Admin</p>
+      <h1>Einträge anlegen &amp; ergänzen</h1>
+      <p>Lege einen neuen Gelehrten an oder ergänze bei einem vorhandenen ein Video bzw. Buch. Danach lädst du die komplette, fertige <code>data.json</code> herunter und ersetzt damit die alte Datei. Tags, Sprachen und Spezialisierungen kommen aus <code>tags.json</code>.</p>
+    </div>
+  </section>
 
-<div class="admin-body">
-  <div class="container">
-    <div class="admin-grid">
+  <div class="admin-body">
+    <div class="container">
+      <div class="admin-grid">
 
-      <!-- Formular-Spalte -->
-      <div class="col-form">
+        <!-- Formular-Spalte -->
+        <div class="col-form">
 
-        <div class="mode-tabs">
-          <button type="button" class="mode-tab active" id="tab-new-professor">Neuen Professor anlegen</button>
-          <button type="button" class="mode-tab" id="tab-existing-professor">Video/Buch zu bestehendem Professor</button>
-        </div>
-
-        <!-- ============ MODUS 1: NEUER PROFESSOR ============ -->
-        <div id="new-professor-panel">
-
-          <div class="form-section">
-            <h2>Grunddaten</h2>
-
-            <div class="field">
-              <label for="f-name">Name</label>
-              <input type="text" id="f-name" placeholder="Prof. Dr. Max Mustermann" />
-            </div>
-
-            <div class="field">
-              <label for="f-id">ID (URL-Kennung)</label>
-              <input type="text" id="f-id" placeholder="prof-mustermann" />
-              <p class="field-hint">Wird automatisch aus dem Namen generiert, kann aber angepasst werden.</p>
-            </div>
-
-            <div class="field">
-              <label for="f-sprache">Sprache</label>
-              <select id="f-sprache">
-                <option value="Deutsch">Deutsch</option>
-                <option value="Englisch">Englisch</option>
-                <option value="Französisch">Französisch</option>
-                <option value="Spanisch">Spanisch</option>
-                <option value="Andere">Andere</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="f-spez">Spezialisierung</label>
-              <input type="text" id="f-spez" placeholder="Künstliche Intelligenz" />
-            </div>
-
-
-
-            <div class="field">
-              <label for="f-anmerkung">Anmerkung</label>
-              <textarea id="f-anmerkung" placeholder="Persönliche Notizen oder Kontext zu diesem Professor…"></textarea>
-            </div>
+          <div class="mode-tabs">
+            <button type="button" class="mode-tab active" id="tab-new-professor">Neuen Gelehrten anlegen</button>
+            <button type="button" class="mode-tab" id="tab-existing-professor">Video/Buch zu bestehendem Gelehrten</button>
           </div>
 
-          <div class="form-section">
-            <h2>Videos</h2>
-            <p class="field-hint" style="margin: -8px 0 16px;">Wähle pro Video passende Tags aus der vorgefertigten Liste, damit es auf der Themen-Seite auffindbar ist.</p>
-            <div data-role="tag-guide"></div>
-            <div id="videos-container"></div>
-            <button type="button" class="add-row-btn" id="add-video-btn">+ Video hinzufügen</button>
-          </div>
+          <!-- ============ MODUS 1: NEUER GELEHRTER ============ -->
+          <div id="new-professor-panel">
 
-          <div class="form-section">
-            <h2>Bücher & Quellen</h2>
-            <p class="field-hint" style="margin: -8px 0 16px;">Auch hier: Tags zuordnen, damit das Buch bei der passenden Themen-Detailseite erscheint. Format-Tags (Playlist/Einzelvideo) entfallen bei Büchern.</p>
-            <div id="buecher-container"></div>
-            <button type="button" class="add-row-btn" id="add-buch-btn">+ Buch / Quelle hinzufügen</button>
-          </div>
+            <div class="form-section">
+              <h2>Grunddaten</h2>
 
-          <button type="button" class="btn" id="generate-btn" style="width: 100%; justify-content: center;">
-            JSON generieren
-          </button>
-        </div>
+              <div class="field">
+                <label for="f-name">Name</label>
+                <input type="text" id="f-name" placeholder="z. B. Max Mustermann" />
+              </div>
 
-        <!-- ============ MODUS 2: BESTEHENDER PROFESSOR ============ -->
-        <div id="existing-professor-panel" style="display:none;">
+              <div class="field">
+                <label for="f-id">ID (URL-Kennung)</label>
+                <input type="text" id="f-id" placeholder="prof-max-mustermann" />
+                <p class="field-hint">Wird automatisch aus dem Namen erzeugt. Nur Kleinbuchstaben, Ziffern und Bindestriche.</p>
+              </div>
 
-          <div class="form-section">
-            <h2>Professor auswählen</h2>
+              <div class="field">
+                <label for="f-sprache">Sprache</label>
+                <select id="f-sprache"></select>
+                <p class="field-hint">Gilt für alle Videos und Bücher, bei denen keine eigene Sprache angegeben ist.</p>
+              </div>
 
-            <div class="field">
-              <label for="existing-prof-select">Bestehender Professor</label>
-              <select id="existing-prof-select">
-                <option value="">Wird geladen …</option>
-              </select>
-            </div>
+              <div class="field">
+                <label for="f-spez">Spezialisierung</label>
+                <select id="f-spez"></select>
+                <p class="field-hint">Hauptgebiet des Gelehrten. Die Auswahl entspricht den Themen aus <code>tags.json</code>.</p>
+              </div>
 
-            <div class="existing-prof-summary" id="existing-prof-summary"></div>
-          </div>
-
-          <div class="form-section">
-            <h2>Neuen Eintrag hinzufügen</h2>
-
-            <div class="field">
-              <label>Art des Eintrags</label>
-              <div class="mode-tabs" style="margin-top: 6px;">
-                <button type="button" class="mode-tab active" id="kind-video-btn">Video</button>
-                <button type="button" class="mode-tab" id="kind-buch-btn">Buch</button>
+              <div class="field" style="margin-bottom: 0;">
+                <label for="f-anmerkung">Anmerkung</label>
+                <textarea id="f-anmerkung" placeholder="Kurzer Kontext zu diesem Gelehrten …"></textarea>
               </div>
             </div>
 
-            <div class="field">
-              <label for="existing-titel">Titel</label>
-              <input type="text" id="existing-titel" placeholder="Video-Titel" />
-            </div>
-
-            <div class="field">
-              <label for="existing-url">URL</label>
-              <input type="url" id="existing-url" placeholder="https://www.youtube.com/watch?v=…" />
-            </div>
-
-            <div class="field" style="margin-bottom: 0;">
-              <label>Themen</label>
+            <div class="form-section">
+              <h2>Videos</h2>
+              <p class="field-hint" style="margin: -8px 0 16px;">Wähle pro Video passende Tags, damit es über Suche, Filter und Themen-Seite gefunden wird.</p>
               <div data-role="tag-guide"></div>
-              <div class="tag-picker" id="existing-tag-picker"></div>
+              <div id="videos-container"></div>
+              <button type="button" class="add-row-btn" id="add-video-btn">+ Video hinzufügen</button>
+            </div>
+
+            <div class="form-section">
+              <h2>Bücher &amp; Quellen</h2>
+              <p class="field-hint" style="margin: -8px 0 16px;">Auch hier Tags zuordnen. Format-Tags (Playlist/Einzelvideo) entfallen bei Büchern.</p>
+              <div id="buecher-container"></div>
+              <button type="button" class="add-row-btn" id="add-buch-btn">+ Buch / Quelle hinzufügen</button>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn" id="generate-btn">In data.json übernehmen</button>
+              <button type="button" class="btn secondary" id="reset-new-btn">Formular leeren für nächsten Gelehrten</button>
             </div>
           </div>
 
-          <button type="button" class="btn" id="generate-existing-btn" style="width: 100%; justify-content: center;">
-            JSON generieren
-          </button>
-        </div>
+          <!-- ============ MODUS 2: BESTEHENDER GELEHRTER ============ -->
+          <div id="existing-professor-panel" style="display:none;">
 
-      </div>
+            <div class="form-section">
+              <h2>Gelehrten auswählen</h2>
 
-      <!-- Output-Spalte -->
-      <div class="col-output">
-        <div class="form-section output-panel">
-          <div class="output-header">
-            <h2>Generierter JSON-Code</h2>
-            <button type="button" class="btn secondary" id="copy-btn">Kopieren</button>
+              <div class="field">
+                <label for="existing-prof-select">Bestehender Gelehrter</label>
+                <select id="existing-prof-select">
+                  <option value="">Wird geladen …</option>
+                </select>
+              </div>
+
+              <div class="existing-prof-summary" id="existing-prof-summary"></div>
+            </div>
+
+            <div class="form-section">
+              <h2>Neuen Eintrag hinzufügen</h2>
+
+              <div class="field">
+                <label>Art des Eintrags</label>
+                <div class="mode-tabs" style="margin-top: 6px;">
+                  <button type="button" class="mode-tab active" id="kind-video-btn">Video</button>
+                  <button type="button" class="mode-tab" id="kind-buch-btn">Buch</button>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="existing-titel">Titel</label>
+                <input type="text" id="existing-titel" placeholder="Video-Titel" />
+              </div>
+
+              <div class="field">
+                <label for="existing-url">URL</label>
+                <input type="url" id="existing-url" placeholder="https://www.youtube.com/watch?v=…" />
+              </div>
+
+              <div class="field">
+                <label for="existing-sprache">Sprache</label>
+                <select id="existing-sprache"></select>
+              </div>
+
+              <div class="field" style="margin-bottom: 0;">
+                <label>Themen</label>
+                <div data-role="tag-guide"></div>
+                <div class="tag-picker" id="existing-tag-picker"></div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn" id="generate-existing-btn">In data.json übernehmen</button>
+            </div>
           </div>
-          <pre id="json-output">// Fülle das Formular aus und klicke auf "JSON generieren".</pre>
-          <p class="field-hint" id="output-hint" style="margin-top: 12px;">
-            Füge diesen Code als neues Objekt in das Array deiner <code>data.json</code> ein.
-          </p>
+
         </div>
-      </div>
 
+        <!-- Ausgabe-Spalte -->
+        <div class="col-output">
+          <div class="form-section output-panel">
+            <div class="status-box" id="output-status" hidden></div>
+
+            <div id="change-wrap" hidden>
+              <p class="change-list-title">Änderungen in dieser Sitzung</p>
+              <ul class="change-list" id="change-list"></ul>
+            </div>
+
+            <div class="output-header">
+              <h2>data.json</h2>
+              <div class="output-actions">
+                <button type="button" class="btn" id="download-btn" disabled>Herunterladen</button>
+                <button type="button" class="btn secondary" id="copy-btn" disabled>Kopieren</button>
+              </div>
+            </div>
+            <pre id="json-output">// Noch keine Änderungen.</pre>
+            <p class="field-hint" style="margin-top: 12px;">
+              Ersetze in deinem GitHub-Repository die alte <code>data.json</code> durch die heruntergeladene Datei. Kurz danach ist die Seite aktualisiert. Die Datei enthält alle bisherigen Einträge plus deine Änderungen.
+            </p>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
-</div>
 
-<div class="toast" id="toast">In die Zwischenablage kopiert.</div>
+  <div class="toast" id="toast" role="status">In die Zwischenablage kopiert.</div>
 
-<footer class="site-footer">
-  <div class="container">
-    Archiv · Unsere muslimische Bibliothek
-  </div>
-</footer>
+  <footer class="site-footer">
+    <div class="container">
+      Archiv · Unsere muslimische Bibliothek
+    </div>
+  </footer>
 
-<script>
-/* =========================================================
-   admin.html — Formular-Logik zur JSON-Generierung
-   (eigenständig, benötigt kein app.js)
+  <!-- Gemeinsame Hilfsfunktionen (loadData, loadTagConfig, tagInfo, escapeHtml …) -->
+  <script src="app.js"></script>
+  <script>
+  /* =========================================================
+     admin.html — Formular-Logik
 
-   Zwei Modi:
-   1) Neuen Professor anlegen (komplettes Objekt für data.json)
-   2) Ein Video/Buch bei einem bestehenden Professor ergänzen
-      (lädt data.json, hängt den neuen Eintrag an und gibt das
-      komplette, aktualisierte Professor-Objekt zum Ersetzen aus)
+     Ablauf: data.json und tags.json laden → Änderungen im Formular
+     erfassen → komplette, aktualisierte data.json ausgeben.
+     Die Originaldaten bleiben unverändert; alle Änderungen dieser
+     Sitzung liegen in "changes" und werden beim Ausgeben eingemischt.
+     ========================================================= */
 
-   Tags sind bewusst schreibgeschützt: Sie werden nur aus
-   tags.json geladen und angezeigt. Es gibt in diesem Formular
-   keine Möglichkeit, Tags hinzuzufügen oder zu entfernen —
-   das passiert ausschließlich direkt in der Datei tags.json.
-   ========================================================= */
+  let cfg = buildTagConfig(null);
+  let baseData = [];          // data.json in Originalreihenfolge
+  let dataLoaded = false;
+  const changes = new Map();  // id → { entry, isNew }
+  const changeLog = [];       // Texte für „Änderungen in dieser Sitzung“
+  let editingNewId = null;    // Eintrag, den das Formular „Neuer Gelehrter“ gerade bearbeitet
+  let unsaved = false;        // Änderungen noch nicht heruntergeladen/kopiert
+  let currentResourceKind = 'video';
 
-/* ---------- Tag-Leitfaden ----------
-   Gruppierung und Erklärung jedes Tags. Wird ein neuer Tag in
-   tags.json ergänzt, hier eine Beschreibung + Gruppe nachtragen.
-   Tags aus tags.json, die hier fehlen, erscheinen unter "Weitere".
+  const FALLBACK_LANGUAGES = ['Deutsch', 'Englisch', 'Andere'];
+  const $ = id => document.getElementById(id);
 
-   rule:
-     'exactly-one' → genau ein Tag der Gruppe (nur Videos)
-     'max-one'     → höchstens ein Tag der Gruppe
-     'content'     → zählt zu den Inhalts-Tags (mind. 1, ideal 1–3)
-     'optional'    → frei wählbar
-*/
-const TAG_GUIDE = [
-  {
-    name: 'Format', hint: 'genau eins wählen', rule: 'exactly-one', videoOnly: true,
-    tags: {
-      'Playlist': 'Reihe aus mehreren Videos (YouTube-Link enthält „playlist?list=“).',
-      'Einzelvideo': 'Ein einzelner Vortrag oder eine Khutba.'
-    }
-  },
-  {
-    name: 'Zugang', hint: 'nur wenn zutreffend', rule: 'optional',
-    tags: {
-      'Kostenpflichtig': 'Inhalt ist nur gegen Bezahlung oder mit Anmeldung verfügbar.'
-    }
-  },
-  {
-    name: 'Niveau', hint: 'höchstens eins, leer = allgemein verständlich', rule: 'max-one',
-    tags: {
-      'Einsteiger': 'Ausdrücklich für Neulinge oder Konvertiten gedacht, setzt nichts voraus.',
-      'Fortgeschritten': 'Setzt Grundwissen voraus, z. B. Erklärung klassischer Texte (Ghazali, Hikam).',
-      'Akademisch': 'Wissenschaftlicher Stil, Fachbegriffe, Auseinandersetzung mit Forschung.'
-    }
-  },
-  {
-    name: 'Islamische Fachgebiete', hint: 'Hauptthema', rule: 'content',
-    tags: {
-      'Quran': 'Tafsir, Rezitation, Bedeutung von Versen und Suren.',
-      'Hadith': 'Erklärung von Hadithen und Hadithsammlungen, Hadithwissenschaft.',
-      'Aqidah': 'Glaubenslehre: Allah, Engel, Schicksal, Unsichtbares.',
-      'Fiqh': 'Islamisches Recht und Regeln: erlaubt/verboten, Rechtsschulen.',
-      'Ibadah': 'Praktische Gottesdienste: Gebet, Fasten, Ramadan, Zakat, Hajj.',
-      'Sirah': 'Leben des Propheten Muhammad ﷺ.',
-      'Tazkiyah': 'Reinigung des Herzens, Spiritualität, Iman, Taqwa, Reue.',
-      'Akhlaq': 'Charakter und gutes Benehmen (Adab), Umgang mit anderen.',
-      'Dua & Dhikr': 'Bittgebete und Gottesgedenken.',
-      'Akhira': 'Jenseits: Tod, Grab, Jüngster Tag, Paradies, Hölle.'
-    }
-  },
-  {
-    name: 'Geschichte & Personen', hint: 'wenn Personen/Epochen im Mittelpunkt stehen', rule: 'content',
-    tags: {
-      'Geschichte': 'Islamische Geschichte nach der Prophetenzeit, Epochen und Ereignisse.',
-      'Propheten': 'Die Propheten vor Muhammad ﷺ (Musa, Yusuf, Ibrahim …).',
-      'Sahaba': 'Die Gefährten und Gefährtinnen des Propheten.',
-      'Frauen im Islam': 'Frauen als Thema oder Vorbild, Frauen-spezifischer Fiqh.'
-    }
-  },
-  {
-    name: 'Leben & Gesellschaft', hint: 'Alltagsbezug', rule: 'content',
-    tags: {
-      'Ehe & Familie': 'Ehe, Erziehung, Familienleben.',
-      'Gesellschaft': 'Gerechtigkeit, Gemeinschaft, Muslime in der Gesellschaft.',
-      'Psychologie': 'Mentale Gesundheit, Trauer, Mindset, Umgang mit Gefühlen.',
-      'Apologetik': 'Antworten auf Islamkritik und Missverständnisse.'
-    }
-  },
-  {
-    name: 'Sprache & Vermittlung', hint: 'auch für nicht-islamische Inhalte', rule: 'content',
-    tags: {
-      'Arabisch': 'Arabisch lernen, Grammatik, Quran-Arabisch.',
-      'Rhetorik': 'Besser sprechen, Vorträge halten, Körpersprache.',
-      'Didaktik': 'Wissen vermitteln und unterrichten, Lernmethoden.'
-    }
-  }
-];
-
-const TAG_INFO = {}; // Tag → { group, desc }
-TAG_GUIDE.forEach(g => Object.entries(g.tags).forEach(([t, d]) => { TAG_INFO[t] = { group: g, desc: d }; }));
-
-let videoRowCount = 0;
-let buchRowCount = 0;
-let masterTags = [];   // vorgefertigte, schreibgeschützte Tag-Liste aus tags.json
-let allProfessors = []; // aus data.json geladen, für Modus 2
-let currentResourceKind = 'video'; // 'video' oder 'buch', für Modus 2
-
-function escapeHtml(str) {
-  return String(str ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
-
-function slugify(text) {
-  return text
-    .toString()
-    .toLowerCase()
-    .trim()
-    .normalize('NFD').replace(/[̀-ͯ]/g, '') // Umlaute/Akzente entfernen
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-}
-
-/* ---------- Modus-Umschaltung ---------- */
-
-function setMode(mode) {
-  const isNew = mode === 'new';
-  document.getElementById('new-professor-panel').style.display = isNew ? '' : 'none';
-  document.getElementById('existing-professor-panel').style.display = isNew ? 'none' : '';
-  document.getElementById('tab-new-professor').classList.toggle('active', isNew);
-  document.getElementById('tab-existing-professor').classList.toggle('active', !isNew);
-
-  document.getElementById('json-output').textContent = isNew
-    ? '// Fülle das Formular aus und klicke auf "JSON generieren".'
-    : '// Wähle einen Professor, ergänze Titel/URL/Tags und klicke auf "JSON generieren".';
-
-  document.getElementById('output-hint').innerHTML = isNew
-    ? 'Füge diesen Code als neues Objekt in das Array deiner <code>data.json</code> ein.'
-    : 'Ersetze in deiner <code>data.json</code> das bestehende Objekt mit passender ID durch diesen aktualisierten Code (er enthält alle bisherigen Einträge plus den neuen).';
-}
-
-document.getElementById('tab-new-professor').addEventListener('click', () => setMode('new'));
-document.getElementById('tab-existing-professor').addEventListener('click', () => setMode('existing'));
-
-/* ---------- Vorgefertigte Tags laden (read-only) ---------- */
-
-async function loadMasterTags() {
-  try {
-    const res = await fetch('tags.json', { cache: 'no-store' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    masterTags = Array.isArray(json) ? [...json].sort((a, b) => a.localeCompare(b, 'de')) : [];
-  } catch (err) {
-    console.warn('Konnte tags.json nicht laden — starte mit leerer Tag-Liste.', err);
-    masterTags = [];
-  }
-}
-
-/* ---------- Leitfaden (ausklappbar) ---------- */
-
-function renderTagGuide(el) {
-  const rows = TAG_GUIDE.map(g => `
-    <tr><th colspan="2">${escapeHtml(g.name)} <span style="font-weight:400;opacity:.7">— ${escapeHtml(g.hint)}</span></th></tr>
-    ${Object.entries(g.tags).map(([t, d]) => `<tr><td><strong>${escapeHtml(t)}</strong></td><td>${escapeHtml(d)}</td></tr>`).join('')}
-  `).join('');
-
-  el.innerHTML = `
-    <details class="tag-guide">
-      <summary>Wie tagge ich richtig? (Leitfaden öffnen)</summary>
-      <ol>
-        <li><strong>Format:</strong> Bei Videos immer genau <em>Playlist</em> oder <em>Einzelvideo</em>. Wird anhand der URL vorausgewählt.</li>
-        <li><strong>Inhalt:</strong> 1–3 Tags für das <em>Hauptthema</em>. Frage: „Unter welchem Thema würde jemand dieses Video suchen?“ Nicht alles taggen, was nur kurz vorkommt.</li>
-        <li><strong>Niveau:</strong> Nur setzen, wenn der Inhalt klar für Einsteiger oder klar anspruchsvoll ist. Sonst leer lassen.</li>
-        <li><strong>Kostenpflichtig:</strong> Nur wenn der Inhalt hinter einer Bezahlschranke liegt.</li>
-        <li>Spezifischer Tag schlägt allgemeinen: Prophetengeschichten → <em>Propheten</em> (nicht nur <em>Geschichte</em>), Ramadan → <em>Ibadah</em> (nicht <em>Fiqh</em>).</li>
-        <li>Passt kein Tag? Nicht den „nächstbesten“ wählen, sondern einen neuen Tag in <code>tags.json</code> vorschlagen.</li>
-      </ol>
-      <table>${rows}</table>
-      <p class="guide-example"><strong>Beispiele:</strong>
-        „Tafsir Surah Yasin“ → Playlist · Quran<br>
-        „Das Leben von Umm Sulaim“ → Einzelvideo · Sahaba · Frauen im Islam<br>
-        „Muslim sein für Beginner“ → Playlist · Einsteiger · Ibadah · Fiqh</p>
-    </details>`;
-}
-
-/* ---------- Tag-Picker mit Gruppen, Erklärungen und Prüfung ---------- */
-
-function renderTagPicker(pickerEl, kind = 'video') {
-  pickerEl.dataset.kind = kind;
-
-  if (masterTags.length === 0) {
-    pickerEl.innerHTML = '<span class="tag-picker-empty">Keine Tags vorhanden. Ergänze Tags direkt in tags.json.</span>';
-    return;
+  function languages() {
+    return cfg.sprachen.length ? cfg.sprachen : FALLBACK_LANGUAGES;
   }
 
-  const available = new Set(masterTags);
-  const groupsHtml = [];
+  function slugify(text) {
+    return String(text)
+      .toLowerCase()
+      .trim()
+      .replace(/ß/g, 'ss')
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+  }
 
-  TAG_GUIDE.forEach(g => {
-    if (g.videoOnly && kind !== 'video') return;
-    const tags = Object.keys(g.tags).filter(t => available.has(t));
-    if (tags.length === 0) return;
-    groupsHtml.push(groupHtml(g.name, g.hint, tags));
-  });
+  function suggestId(name) {
+    const slug = slugify(String(name).replace(/^prof\.?\s*(dr\.?)?\s*/i, ''));
+    return slug ? `prof-${slug}` : '';
+  }
 
-  const unknown = masterTags.filter(t => !TAG_INFO[t]);
-  if (unknown.length) groupsHtml.push(groupHtml('Weitere', 'noch ohne Beschreibung', unknown));
+  function isHttpUrl(value) {
+    return /^https?:\/\/\S+$/i.test(value);
+  }
 
-  pickerEl.innerHTML = `
-    ${groupsHtml.join('')}
-    <div class="tag-help-line" data-role="help">Fahre über einen Tag, um seine Bedeutung zu sehen.</div>
-    <div class="tag-check" data-role="check"></div>
-  `;
+  /* ---------- Datenstand ---------- */
 
-  const help = pickerEl.querySelector('[data-role="help"]');
-  const defaultHelp = help.textContent;
+  function mergedData() {
+    const result = baseData.map(p => (changes.has(p.id) ? changes.get(p.id).entry : p));
+    changes.forEach(change => { if (change.isNew) result.push(change.entry); });
+    return result;
+  }
 
-  pickerEl.querySelectorAll('.tag-chip').forEach(chip => {
-    const tag = chip.dataset.tag;
-    const desc = TAG_INFO[tag]?.desc || 'Keine Beschreibung hinterlegt.';
-    chip.title = desc;
+  function currentProfessor(id) {
+    if (changes.has(id)) return changes.get(id).entry;
+    return baseData.find(p => p.id === id) || null;
+  }
 
-    const showHelp = () => { help.innerHTML = `<strong>${escapeHtml(tag)}:</strong> ${escapeHtml(desc)}`; };
-    chip.addEventListener('mouseenter', showHelp);
-    chip.addEventListener('focus', showHelp);
-    chip.addEventListener('mouseleave', () => { help.textContent = defaultHelp; });
+  function dataFileText() {
+    return JSON.stringify(mergedData(), null, 2) + '\n';
+  }
 
-    chip.addEventListener('click', () => {
-      const group = TAG_INFO[tag]?.group;
-      const willSelect = !chip.classList.contains('selected');
-      // In Gruppen mit "genau/höchstens eins" die anderen abwählen
-      if (willSelect && group && (group.rule === 'exactly-one' || group.rule === 'max-one')) {
-        Object.keys(group.tags).forEach(other => {
-          if (other !== tag) pickerEl.querySelector(`.tag-chip[data-tag="${CSS.escape(other)}"]`)?.classList.remove('selected');
-        });
+  /** Vergleichsschlüssel für Links: YouTube-Video bzw. -Playlist unabhängig von Schreibweise und Tracking-Parametern. */
+  function urlKey(url) {
+    try {
+      const u = new URL(String(url).trim());
+      const host = u.hostname.replace(/^(www\.|m\.)/, '');
+      if (host === 'youtu.be') return 'yt:v:' + u.pathname.slice(1);
+      if (host === 'youtube.com') {
+        if (u.searchParams.get('v')) return 'yt:v:' + u.searchParams.get('v');
+        const live = u.pathname.match(/^\/(live|shorts)\/([^/]+)/);
+        if (live) return 'yt:v:' + live[2];
+        if (u.searchParams.get('list')) return 'yt:list:' + u.searchParams.get('list');
       }
-      chip.classList.toggle('selected', willSelect);
-      chip.dataset.userSet = 'true';
-      showHelp();
-      validateTagPicker(pickerEl);
-    });
-  });
-
-  validateTagPicker(pickerEl);
-}
-
-function groupHtml(name, hint, tags) {
-  return `
-    <div class="tag-group">
-      <span class="tag-group-title">${escapeHtml(name)} <em>· ${escapeHtml(hint)}</em></span>
-      <div class="tag-group-chips">
-        ${tags.map(t => `<button type="button" class="tag-chip" data-tag="${escapeHtml(t)}">${escapeHtml(t)}</button>`).join('')}
-      </div>
-    </div>`;
-}
-
-function getSelectedTags(pickerEl) {
-  return [...pickerEl.querySelectorAll('.tag-chip.selected')].map(c => c.dataset.tag);
-}
-
-function getTagWarnings(selected, kind) {
-  const warnings = [];
-  const inGroup = rule => selected.filter(t => TAG_INFO[t]?.group.rule === rule);
-
-  if (kind === 'video' && inGroup('exactly-one').length !== 1) {
-    warnings.push('Format fehlt: Playlist oder Einzelvideo wählen.');
-  }
-  const content = inGroup('content');
-  if (content.length === 0) {
-    warnings.push('Kein Inhalts-Tag gewählt: mindestens ein Thema (z. B. Quran, Sirah, Tazkiyah) auswählen.');
-  } else if (content.length > 3) {
-    warnings.push(`${content.length} Inhalts-Tags gewählt. Besser auf die 1–3 Hauptthemen beschränken.`);
-  }
-  if (selected.includes('Geschichte') && (selected.includes('Propheten') || selected.includes('Sirah') || selected.includes('Sahaba'))) {
-    warnings.push('„Geschichte“ ist meist überflüssig, wenn schon Propheten, Sirah oder Sahaba gewählt ist.');
-  }
-  return warnings;
-}
-
-function validateTagPicker(pickerEl) {
-  const check = pickerEl.querySelector('[data-role="check"]');
-  if (!check) return;
-  const warnings = getTagWarnings(getSelectedTags(pickerEl), pickerEl.dataset.kind);
-  check.innerHTML = warnings.length
-    ? warnings.map(w => `<div class="warn">⚠ ${escapeHtml(w)}</div>`).join('')
-    : '<div class="ok">✓ Tags sehen gut aus.</div>';
-}
-
-/* Format aus URL vorschlagen (nur solange der Nutzer das Format nicht selbst gewählt hat) */
-function suggestFormatFromUrl(url, pickerEl) {
-  if (!pickerEl || pickerEl.dataset.kind !== 'video') return;
-  const playlist = pickerEl.querySelector('.tag-chip[data-tag="Playlist"]');
-  const single = pickerEl.querySelector('.tag-chip[data-tag="Einzelvideo"]');
-  if (!playlist || !single) return;
-  if (playlist.dataset.userSet || single.dataset.userSet) return;
-
-  const isPlaylist = /[?&]list=/.test(url) && !/[?&]v=/.test(url) || /\/playlist\b/.test(url);
-  const isSingle = !isPlaylist && /(youtu\.be\/|youtube\.com\/(watch|live|shorts))/.test(url);
-
-  playlist.classList.toggle('selected', isPlaylist);
-  single.classList.toggle('selected', isSingle);
-  validateTagPicker(pickerEl);
-}
-
-/* ---------- Modus 1: Dynamische Video-/Buch-Zeilen ---------- */
-
-function createDynamicRow(container, prefix, index, kindLabel, placeholderTitel, placeholderUrl) {
-  const row = document.createElement('div');
-  row.className = 'dynamic-row';
-  row.dataset.index = index;
-  row.innerHTML = `
-    <div class="dynamic-row-header">
-      <span class="dynamic-row-kind">${kindLabel}</span>
-      <button type="button" class="icon-btn" aria-label="Eintrag entfernen">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-      </button>
-    </div>
-
-    <div class="field">
-      <label>Titel</label>
-      <input type="text" class="${prefix}-titel" placeholder="${placeholderTitel}" />
-    </div>
-
-    <div class="field">
-      <label>URL</label>
-      <input type="url" class="${prefix}-url" placeholder="${placeholderUrl}" />
-    </div>
-
-    <div class="field" style="margin-bottom: 0;">
-      <label>Themen (aus vorgefertigter Liste)</label>
-      <div class="tag-picker" data-role="tag-picker"></div>
-    </div>
-  `;
-  row.querySelector('.icon-btn').addEventListener('click', () => row.remove());
-  container.appendChild(row);
-
-  const picker = row.querySelector('[data-role="tag-picker"]');
-  const kind = prefix === 'video' ? 'video' : 'buch';
-  renderTagPicker(picker, kind);
-  if (kind === 'video') {
-    row.querySelector(`.${prefix}-url`).addEventListener('input', e => suggestFormatFromUrl(e.target.value, picker));
-  }
-}
-
-document.getElementById('add-video-btn').addEventListener('click', () => {
-  createDynamicRow(
-    document.getElementById('videos-container'),
-    'video',
-    videoRowCount++,
-    'Video',
-    'Video-Titel',
-    'https://www.youtube.com/watch?v=…'
-  );
-});
-
-document.getElementById('add-buch-btn').addEventListener('click', () => {
-  createDynamicRow(
-    document.getElementById('buecher-container'),
-    'buch',
-    buchRowCount++,
-    'Buch',
-    'Buch-/Quellentitel',
-    'https://…'
-  );
-});
-
-function collectResourceRows(containerId, prefix, warningsOut) {
-  const rows = document.querySelectorAll(`#${containerId} .dynamic-row`);
-  const result = [];
-  rows.forEach(row => {
-    const titel = row.querySelector(`.${prefix}-titel`).value.trim();
-    const url = row.querySelector(`.${prefix}-url`).value.trim();
-    const picker = row.querySelector('[data-role="tag-picker"]');
-    const themen = getSelectedTags(picker);
-    if (titel && url) {
-      result.push({ titel, url, themen });
-      getTagWarnings(themen, picker.dataset.kind).forEach(w => warningsOut?.push(`"${titel}": ${w}`));
+      u.hash = '';
+      return (host + u.pathname + u.search).toLowerCase();
+    } catch {
+      return String(url ?? '').trim().toLowerCase();
     }
+  }
+
+  /** Sucht einen bereits vorhandenen Eintrag mit demselben Link. */
+  function findDuplicateUrl(url, excludeProfId = null) {
+    const key = urlKey(url);
+    for (const prof of mergedData()) {
+      if (prof.id === excludeProfId) continue;
+      for (const listKey of ['videos', 'buecher']) {
+        for (const item of (Array.isArray(prof[listKey]) ? prof[listKey] : [])) {
+          if (item && item.url && urlKey(item.url) === key) return { prof, item };
+        }
+      }
+    }
+    return null;
+  }
+
+  function buildResource(titel, url, sprache, profSprache, themen) {
+    const resource = { titel, url };
+    if (sprache && sprache !== profSprache) resource.sprache = sprache;
+    resource.themen = themen;
+    return resource;
+  }
+
+  /* ---------- Modus-Umschaltung ---------- */
+
+  function setMode(mode) {
+    const isNew = mode === 'new';
+    $('new-professor-panel').style.display = isNew ? '' : 'none';
+    $('existing-professor-panel').style.display = isNew ? 'none' : '';
+    $('tab-new-professor').classList.toggle('active', isNew);
+    $('tab-existing-professor').classList.toggle('active', !isNew);
+  }
+
+  $('tab-new-professor').addEventListener('click', () => setMode('new'));
+  $('tab-existing-professor').addEventListener('click', () => setMode('existing'));
+
+  /* ---------- Auswahllisten ---------- */
+
+  function languageSelectHtml(inheritLabel) {
+    const inherit = inheritLabel ? `<option value="">${escapeHtml(inheritLabel)}</option>` : '';
+    return inherit + languages().map(l => `<option value="${escapeHtml(l)}">${escapeHtml(l)}</option>`).join('');
+  }
+
+  function fillSpezSelect() {
+    const options = [{ value: 'Allrounder' }];
+    cfg.gruppen.filter(g => g.art === 'thema').forEach(g => {
+      g.tags.forEach(t => options.push({ value: t.name, group: g.name }));
+    });
+    fillSelect($('f-spez'), '– keine Angabe –', options);
+  }
+
+  /* ---------- Tag-Leitfaden ---------- */
+
+  function renderTagGuide(el) {
+    const rows = cfg.gruppen.map(g => `
+      <tr><th colspan="2">${escapeHtml(g.name)}${g.hinweis ? ` <span>— ${escapeHtml(g.hinweis)}</span>` : ''}</th></tr>
+      ${g.tags.map(t => `<tr><td><strong>${escapeHtml(t.name)}</strong></td><td>${escapeHtml(t.beschreibung)}</td></tr>`).join('')}
+    `).join('');
+
+    el.innerHTML = `
+      <details class="tag-guide">
+        <summary>Wie tagge ich richtig? (Leitfaden öffnen)</summary>
+        <ol>
+          <li><strong>Format:</strong> Bei Videos immer genau <em>Playlist</em> oder <em>Einzelvideo</em>. Wird anhand der URL vorausgewählt.</li>
+          <li><strong>Inhalt:</strong> 1–3 Tags für das <em>Hauptthema</em>. Frage: „Unter welchem Thema würde jemand dieses Video suchen?“ Nicht alles taggen, was nur kurz vorkommt.</li>
+          <li><strong>Niveau:</strong> Nur setzen, wenn der Inhalt klar für Einsteiger oder klar anspruchsvoll ist. Sonst leer lassen.</li>
+          <li><strong>Kostenpflichtig:</strong> Nur wenn der Inhalt hinter einer Bezahlschranke liegt.</li>
+          <li><strong>Spezifisch vor allgemein:</strong> Prophetengeschichten → <em>Propheten</em> (nicht nur <em>Geschichte</em>), Ramadan → <em>Ibadah</em> (nicht <em>Fiqh</em>).</li>
+          <li><strong>Sprache:</strong> Nur ändern, wenn das Video in einer anderen Sprache ist als beim Gelehrten angegeben.</li>
+          <li>Passt kein Tag? Nicht den „nächstbesten“ wählen, sondern einen neuen Tag in <code>tags.json</code> ergänzen.</li>
+        </ol>
+        <table>${rows}</table>
+        <p class="guide-example"><strong>Beispiele:</strong><br>
+          „Tafsir Surah Yasin“ → Playlist · Quran<br>
+          „Das Leben von Umm Sulaim“ → Einzelvideo · Sahaba · Frauen im Islam<br>
+          „Muslim sein für Beginner“ → Playlist · Einsteiger · Ibadah · Fiqh</p>
+      </details>`;
+  }
+
+  /* ---------- Tag-Auswahl mit Gruppen, Erklärungen und Prüfung ---------- */
+
+  function renderTagPicker(pickerEl, kind = 'video') {
+    pickerEl.dataset.kind = kind;
+    const groups = cfg.gruppen.filter(g => g.tags.length && !(g.nurVideo && kind !== 'video'));
+
+    if (groups.length === 0) {
+      pickerEl.innerHTML = '<span class="tag-picker-empty">Keine Tags vorhanden. Ergänze Tags in tags.json.</span>';
+      return;
+    }
+
+    pickerEl.innerHTML = `
+      ${groups.map(g => `
+        <div class="tag-group">
+          <span class="tag-group-title">${escapeHtml(g.name)}${g.hinweis ? ` <em>· ${escapeHtml(g.hinweis)}</em>` : ''}</span>
+          <div class="tag-group-chips">
+            ${g.tags.map(t => `<button type="button" class="tag-chip" data-tag="${escapeHtml(t.name)}" title="${escapeHtml(t.beschreibung)}">${escapeHtml(t.name)}</button>`).join('')}
+          </div>
+        </div>`).join('')}
+      <div class="tag-help-line" data-role="help">Fahre über einen Tag, um seine Bedeutung zu sehen.</div>
+      <div class="tag-check" data-role="check"></div>
+    `;
+
+    const help = pickerEl.querySelector('[data-role="help"]');
+    const defaultHelp = help.textContent;
+    const chips = [...pickerEl.querySelectorAll('.tag-chip')];
+
+    chips.forEach(chip => {
+      const info = tagInfo(cfg, chip.dataset.tag);
+      const showHelp = () => {
+        help.innerHTML = `<strong>${escapeHtml(chip.dataset.tag)}:</strong> ${escapeHtml(info?.beschreibung || 'Keine Beschreibung hinterlegt.')}`;
+      };
+      chip.addEventListener('mouseenter', showHelp);
+      chip.addEventListener('focus', showHelp);
+      chip.addEventListener('mouseleave', () => { help.textContent = defaultHelp; });
+
+      chip.addEventListener('click', () => {
+        const select = !chip.classList.contains('selected');
+        const regel = info?.gruppe.regel;
+        // Gruppen mit „genau eins“ / „höchstens eins“: andere Tags der Gruppe abwählen
+        if (select && info && (regel === 'genau-eins' || regel === 'hoechstens-eins')) {
+          const siblings = new Set(info.gruppe.tags.map(t => t.name));
+          chips.forEach(other => {
+            if (other !== chip && siblings.has(other.dataset.tag)) other.classList.remove('selected');
+          });
+        }
+        chip.classList.toggle('selected', select);
+        chip.dataset.userSet = 'true';
+        showHelp();
+        validateTagPicker(pickerEl);
+      });
+    });
+
+    validateTagPicker(pickerEl);
+  }
+
+  function getSelectedTags(pickerEl) {
+    return [...pickerEl.querySelectorAll('.tag-chip.selected')].map(c => c.dataset.tag);
+  }
+
+  function getTagWarnings(selected, kind) {
+    const warnings = [];
+    const byRule = regel => selected.filter(t => tagInfo(cfg, t)?.gruppe.regel === regel);
+    const content = selected.filter(t => tagInfo(cfg, t)?.gruppe.art === 'thema');
+
+    if (kind === 'video' && cfg.gruppen.some(g => g.regel === 'genau-eins' && g.nurVideo) && byRule('genau-eins').length !== 1) {
+      warnings.push('Format fehlt: Playlist oder Einzelvideo wählen.');
+    }
+    if (content.length === 0) {
+      warnings.push('Kein Inhalts-Tag gewählt: mindestens ein Thema (z. B. Quran, Sirah, Tazkiyah) auswählen.');
+    } else if (content.length > 3) {
+      warnings.push(`${content.length} Inhalts-Tags gewählt. Besser auf die 1–3 Hauptthemen beschränken.`);
+    }
+    if (selected.includes('Geschichte') && ['Propheten', 'Sirah', 'Sahaba'].some(t => selected.includes(t))) {
+      warnings.push('„Geschichte“ ist meist überflüssig, wenn schon Propheten, Sirah oder Sahaba gewählt ist.');
+    }
+    return warnings;
+  }
+
+  function validateTagPicker(pickerEl) {
+    const check = pickerEl.querySelector('[data-role="check"]');
+    if (!check) return;
+    const warnings = getTagWarnings(getSelectedTags(pickerEl), pickerEl.dataset.kind);
+    check.innerHTML = warnings.length
+      ? warnings.map(w => `<div class="warn">⚠ ${escapeHtml(w)}</div>`).join('')
+      : '<div class="ok">✓ Tags sehen gut aus.</div>';
+  }
+
+  /** Format aus der URL vorschlagen – nur solange es nicht von Hand gewählt wurde. */
+  function suggestFormatFromUrl(url, pickerEl) {
+    if (!pickerEl || pickerEl.dataset.kind !== 'video') return;
+    const chips = [...pickerEl.querySelectorAll('.tag-chip')];
+    const playlist = chips.find(c => c.dataset.tag === 'Playlist');
+    const single = chips.find(c => c.dataset.tag === 'Einzelvideo');
+    if (!playlist || !single || playlist.dataset.userSet || single.dataset.userSet) return;
+
+    const isPlaylist = (/[?&]list=/.test(url) && !/[?&]v=/.test(url)) || /\/playlist\b/.test(url);
+    const isSingle = !isPlaylist && /(youtu\.be\/|youtube\.com\/(watch|live|shorts))/.test(url);
+    playlist.classList.toggle('selected', isPlaylist);
+    single.classList.toggle('selected', isSingle);
+    validateTagPicker(pickerEl);
+  }
+
+  /* ---------- Modus 1: Video-/Buch-Zeilen ---------- */
+
+  function rowContainer(kind) {
+    return $(kind === 'video' ? 'videos-container' : 'buecher-container');
+  }
+
+  function renumberRows(kind) {
+    const label = kind === 'video' ? 'Video' : 'Buch';
+    rowContainer(kind).querySelectorAll('.dynamic-row').forEach((row, i) => {
+      row.querySelector('.dynamic-row-kind').textContent = `${label} ${i + 1}`;
+    });
+  }
+
+  function createDynamicRow(kind) {
+    const isVideo = kind === 'video';
+    const row = document.createElement('div');
+    row.className = 'dynamic-row';
+    row.innerHTML = `
+      <div class="dynamic-row-header">
+        <span class="dynamic-row-kind"></span>
+        <button type="button" class="icon-btn" aria-label="Eintrag entfernen">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="field">
+        <label>Titel</label>
+        <input type="text" class="res-titel" placeholder="${isVideo ? 'Video-Titel' : 'Buch-/Quellentitel'}" />
+      </div>
+      <div class="field">
+        <label>URL</label>
+        <input type="url" class="res-url" placeholder="${isVideo ? 'https://www.youtube.com/watch?v=…' : 'https://…'}" />
+      </div>
+      <div class="field">
+        <label>Sprache</label>
+        <select class="res-sprache">${languageSelectHtml('Wie beim Gelehrten')}</select>
+      </div>
+      <div class="field" style="margin-bottom: 0;">
+        <label>Themen</label>
+        <div class="tag-picker" data-role="tag-picker"></div>
+      </div>
+    `;
+
+    row.querySelector('.icon-btn').addEventListener('click', () => {
+      row.remove();
+      renumberRows(kind);
+    });
+    rowContainer(kind).appendChild(row);
+    renumberRows(kind);
+
+    const picker = row.querySelector('[data-role="tag-picker"]');
+    renderTagPicker(picker, kind);
+    if (isVideo) {
+      row.querySelector('.res-url').addEventListener('input', e => suggestFormatFromUrl(e.target.value, picker));
+    }
+  }
+
+  $('add-video-btn').addEventListener('click', () => createDynamicRow('video'));
+  $('add-buch-btn').addEventListener('click', () => createDynamicRow('buch'));
+
+  function collectRows(kind, profSprache, errors, warnings) {
+    const label = kind === 'video' ? 'Video' : 'Buch';
+    const result = [];
+    rowContainer(kind).querySelectorAll('.dynamic-row').forEach((row, i) => {
+      const name = `${label} ${i + 1}`;
+      const titel = row.querySelector('.res-titel').value.trim();
+      const url = row.querySelector('.res-url').value.trim();
+      if (!titel && !url) return; // leere Zeile wird ignoriert
+      if (!titel || !url) {
+        errors.push(`${name}: Bitte Titel und URL ausfüllen.`);
+        return;
+      }
+      if (!isHttpUrl(url)) {
+        errors.push(`${name}: Die URL muss mit http:// oder https:// beginnen.`);
+        return;
+      }
+      const picker = row.querySelector('[data-role="tag-picker"]');
+      const themen = getSelectedTags(picker);
+      getTagWarnings(themen, kind).forEach(w => warnings.push(`${name} „${titel}“: ${w}`));
+      result.push(buildResource(titel, url, row.querySelector('.res-sprache').value, profSprache, themen));
+    });
+    return result;
+  }
+
+  /* ---------- Modus 1: Name → ID ---------- */
+
+  $('f-name').addEventListener('input', e => {
+    const idField = $('f-id');
+    if (!idField.dataset.manuallyEdited) idField.value = suggestId(e.target.value);
   });
-  return result;
-}
 
-/* Nach dem Generieren zum Ergebnis scrollen und es kurz hervorheben */
-function revealOutput(message) {
-  const panel = document.querySelector('.output-panel');
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  $('f-id').addEventListener('input', e => {
+    e.target.dataset.manuallyEdited = 'true';
+  });
 
-  // Zuerst ganz nach oben, damit der Nutzer den Ausgangspunkt der Seite sieht;
-  // liegt die Ausgabe tiefer (z. B. auf dem Handy unter dem Formular), dorthin.
-  const panelTop = panel.getBoundingClientRect().top + window.scrollY;
-  const target = panelTop > window.innerHeight ? panelTop - 16 : 0;
-  window.scrollTo({ top: target, behavior: reduceMotion ? 'auto' : 'smooth' });
+  /* ---------- Modus 1: Übernehmen ---------- */
 
-  panel.classList.remove('flash');
-  void panel.offsetWidth; // Animation neu starten
-  panel.classList.add('flash');
-  setTimeout(() => panel.classList.remove('flash'), 1300);
+  function generateNew() {
+    if (!guardLoaded()) return;
 
-  if (message) showToast(message);
-}
+    const errors = [];
+    const warnings = [];
+    const name = $('f-name').value.trim();
+    const id = $('f-id').value.trim() || suggestId(name);
+    const sprache = $('f-sprache').value;
+    const spezialisierung = $('f-spez').value;
+    const anmerkung = $('f-anmerkung').value.trim();
 
-function warningsComment(warnings) {
-  return warnings.length
-    ? `\n// HINWEISE ZU DEN TAGS (bitte prüfen):\n${warnings.map(w => `//  - ${w}`).join('\n')}`
-    : '';
-}
+    if (!name) errors.push('Name fehlt.');
+    if (!id) {
+      errors.push('ID fehlt.');
+    } else if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(id)) {
+      errors.push('Die ID darf nur Kleinbuchstaben, Ziffern und einzelne Bindestriche enthalten (z. B. prof-max-mustermann).');
+    } else if (id !== editingNewId && mergedData().some(p => p.id === id)) {
+      errors.push(changes.get(id)?.isNew
+        ? `„${id}“ wurde in dieser Sitzung schon angelegt. Weitere Videos dazu bitte über den Reiter „Video/Buch zu bestehendem Gelehrten“ ergänzen.`
+        : `Die ID „${id}“ gibt es schon. Bitte eine andere wählen.`);
+    }
 
-/* ---------- Name → ID-Vorschlag (Modus 1) ---------- */
+    const videos = collectRows('video', sprache, errors, warnings);
+    const buecher = collectRows('buch', sprache, errors, warnings);
 
-document.getElementById('f-name').addEventListener('input', (e) => {
-  const idField = document.getElementById('f-id');
-  if (!idField.dataset.manuallyEdited) {
-    idField.value = e.target.value ? `prof-${slugify(e.target.value.replace(/^prof\.?\s*(dr\.?)?\s*/i, ''))}` : '';
-  }
-});
+    const all = [...videos, ...buecher];
+    all.forEach((r, i) => {
+      if (all.findIndex(o => urlKey(o.url) === urlKey(r.url)) !== i) {
+        warnings.push(`„${r.titel}“: Dieser Link steht in diesem Formular doppelt.`);
+      }
+      const dup = findDuplicateUrl(r.url, editingNewId);
+      if (dup) warnings.push(`„${r.titel}“: Dieser Link ist schon bei ${dup.prof.name} eingetragen („${dup.item.titel}“).`);
+    });
 
-document.getElementById('f-id').addEventListener('input', (e) => {
-  e.target.dataset.manuallyEdited = 'true';
-});
+    if (errors.length) {
+      setStatus('error', 'Noch nicht übernommen – bitte korrigieren:', errors);
+      revealOutput('Bitte die markierten Punkte korrigieren.');
+      return;
+    }
 
-/* ---------- Modus 1: JSON-Generierung ---------- */
+    const entry = { id, name, sprache, spezialisierung, anmerkung, videos, buecher };
+    const isUpdate = Boolean(editingNewId && changes.has(editingNewId));
+    if (isUpdate) changes.delete(editingNewId);
+    changes.set(id, { entry, isNew: true });
+    editingNewId = id;
+    $('f-id').value = id;
 
-document.getElementById('generate-btn').addEventListener('click', () => {
-  const name = document.getElementById('f-name').value.trim();
-  const id = document.getElementById('f-id').value.trim() || slugify(name ? `prof-${name}` : 'neuer-eintrag');
-  const sprache = document.getElementById('f-sprache').value;
-  const spezialisierung = document.getElementById('f-spez').value.trim();
+    changeLog.push(isUpdate ? `Neu (überarbeitet): ${name}` : `Neu: ${name}`);
+    unsaved = true;
+    refreshProfSelect();
+    renderOutput();
 
-  const anmerkung = document.getElementById('f-anmerkung').value.trim();
-
-  const warnings = [];
-  const videos = collectResourceRows('videos-container', 'video', warnings);
-  const buecher = collectResourceRows('buecher-container', 'buch', warnings);
-
-  const entry = { id, name, sprache, spezialisierung, anmerkung, videos, buecher };
-
-  const comment = `// NEU — kompletter neuer Professoren-Eintrag (ID: ${id})${warningsComment(warnings)}\n// Vor dem Einfügen in data.json alle Kommentarzeilen entfernen!`;
-
-  document.getElementById('json-output').textContent = `${comment}\n\n${JSON.stringify(entry, null, 2)}`;
-  document.getElementById('output-hint').innerHTML = 'Entferne zuerst die Kommentarzeilen, dann füge den restlichen Code als neues Objekt in das Array deiner <code>data.json</code> ein.';
-  revealOutput(warnings.length ? `JSON generiert – ${warnings.length} Tag-Hinweis(e) prüfen.` : 'JSON generiert.');
-});
-
-/* ---------- Modus 2: Bestehenden Professor laden ---------- */
-
-async function loadProfessors() {
-  try {
-    const res = await fetch('data.json', { cache: 'no-store' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    const list = Array.isArray(json) ? json.filter(e => e && typeof e === 'object') : [];
-    // Alphabetisch nach Namen sortieren (deutsche Sortierregeln, z. B. für Umlaute)
-    allProfessors = [...list].sort((a, b) =>
-      String(a.name || '').localeCompare(String(b.name || ''), 'de', { sensitivity: 'base' })
-    );
-  } catch (err) {
-    console.warn('Konnte data.json nicht laden.', err);
-    allProfessors = [];
-  }
-}
-
-function renderProfessorSelect() {
-  const select = document.getElementById('existing-prof-select');
-
-  if (allProfessors.length === 0) {
-    select.innerHTML = '<option value="">Keine Professoren gefunden — prüfe data.json</option>';
-    return;
+    const title = isUpdate ? `„${name}“ wurde aktualisiert.` : `„${name}“ wurde übernommen.`;
+    if (warnings.length) {
+      setStatus('warn', `${title} Bitte noch prüfen:`, warnings);
+    } else {
+      setStatus('ok', title, ['Lade jetzt die data.json herunter oder lege weitere Einträge an. Korrekturen an diesem Eintrag: Formular anpassen und erneut übernehmen.']);
+    }
+    revealOutput(warnings.length ? `Übernommen – ${warnings.length} Hinweis(e) prüfen.` : 'Übernommen.');
   }
 
-  select.innerHTML =
-    '<option value="">Bitte wählen …</option>' +
-    allProfessors.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`).join('');
-}
-
-function updateProfessorSummary() {
-  const id = document.getElementById('existing-prof-select').value;
-  const summaryEl = document.getElementById('existing-prof-summary');
-  const prof = allProfessors.find(p => p.id === id);
-
-  if (!prof) {
-    summaryEl.textContent = '';
-    return;
+  function resetNewForm() {
+    ['f-name', 'f-id', 'f-anmerkung'].forEach(id => { $(id).value = ''; });
+    delete $('f-id').dataset.manuallyEdited;
+    $('f-sprache').selectedIndex = 0;
+    $('f-spez').value = '';
+    $('videos-container').innerHTML = '';
+    $('buecher-container').innerHTML = '';
+    createDynamicRow('video');
+    createDynamicRow('buch');
+    editingNewId = null;
+    $('f-name').focus();
   }
 
-  const videosCount = (prof.videos || []).length;
-  const buecherCount = (prof.buecher || []).length;
-  summaryEl.textContent =
-    `${prof.spezialisierung || '–'} · ${prof.sprache || '–'} · bereits ${videosCount} Video(s) und ${buecherCount} Buch/Bücher hinterlegt.`;
-}
+  $('generate-btn').addEventListener('click', generateNew);
+  $('reset-new-btn').addEventListener('click', resetNewForm);
 
-document.getElementById('existing-prof-select').addEventListener('change', updateProfessorSummary);
+  /* ---------- Modus 2: Gelehrten wählen ---------- */
 
-/* ---------- Modus 2: Art des Eintrags (Video/Buch) ---------- */
+  function refreshProfSelect() {
+    const select = $('existing-prof-select');
+    const previous = select.value;
+    const list = sortProfessors(mergedData());
 
-function setResourceKind(kind) {
-  currentResourceKind = kind;
-  document.getElementById('kind-video-btn').classList.toggle('active', kind === 'video');
-  document.getElementById('kind-buch-btn').classList.toggle('active', kind === 'buch');
-
-  const titelInput = document.getElementById('existing-titel');
-  const urlInput = document.getElementById('existing-url');
-  titelInput.placeholder = kind === 'video' ? 'Video-Titel' : 'Buch-/Quellentitel';
-  urlInput.placeholder = kind === 'video' ? 'https://www.youtube.com/watch?v=…' : 'https://…';
-
-  // Tag-Picker neu aufbauen (Format-Tags nur bei Videos), bisherige Auswahl behalten
-  const picker = document.getElementById('existing-tag-picker');
-  const keep = getSelectedTags(picker);
-  renderTagPicker(picker, kind);
-  keep.forEach(t => picker.querySelector(`.tag-chip[data-tag="${CSS.escape(t)}"]`)?.classList.add('selected'));
-  if (kind === 'video') suggestFormatFromUrl(urlInput.value, picker);
-  validateTagPicker(picker);
-}
-
-document.getElementById('kind-video-btn').addEventListener('click', () => setResourceKind('video'));
-document.getElementById('kind-buch-btn').addEventListener('click', () => setResourceKind('buch'));
-
-document.getElementById('existing-url').addEventListener('input', e =>
-  suggestFormatFromUrl(e.target.value, document.getElementById('existing-tag-picker'))
-);
-
-/* ---------- Modus 2: JSON-Generierung ---------- */
-
-document.getElementById('generate-existing-btn').addEventListener('click', () => {
-  const output = document.getElementById('json-output');
-  const profId = document.getElementById('existing-prof-select').value;
-  const prof = allProfessors.find(p => p.id === profId);
-
-  if (!prof) {
-    output.textContent = '// Bitte zuerst einen bestehenden Professor auswählen.';
-    revealOutput('Bitte zuerst einen Professor auswählen.');
-    return;
+    if (list.length === 0) {
+      select.innerHTML = '<option value="">Keine Gelehrten gefunden – prüfe data.json</option>';
+      return;
+    }
+    select.innerHTML = '<option value="">Bitte wählen …</option>' + list.map(p =>
+      `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}${changes.get(p.id)?.isNew ? ' (neu)' : ''}</option>`
+    ).join('');
+    if (list.some(p => p.id === previous)) select.value = previous;
+    updateProfessorSummary();
   }
 
-  const titel = document.getElementById('existing-titel').value.trim();
-  const url = document.getElementById('existing-url').value.trim();
+  function updateProfessorSummary() {
+    const prof = currentProfessor($('existing-prof-select').value);
+    const summary = $('existing-prof-summary');
+    const langSelect = $('existing-sprache');
+    const previousLang = langSelect.value;
 
-  if (!titel || !url) {
-    output.textContent = '// Bitte Titel und URL ausfüllen.';
-    revealOutput('Bitte Titel und URL ausfüllen.');
-    return;
+    langSelect.innerHTML = languageSelectHtml(`Wie beim Gelehrten${prof?.sprache ? ` (${prof.sprache})` : ''}`);
+    if ([...langSelect.options].some(o => o.value === previousLang)) langSelect.value = previousLang;
+
+    if (!prof) {
+      summary.textContent = '';
+      return;
+    }
+    const videos = (prof.videos || []).length;
+    const buecher = (prof.buecher || []).length;
+    summary.textContent = `${prof.spezialisierung || '–'} · ${prof.sprache || '–'} · bereits ${countLabel(videos, 'Video', 'Videos')} und ${countLabel(buecher, 'Buch', 'Bücher')}.`;
   }
 
-  const picker = document.getElementById('existing-tag-picker');
-  const themen = getSelectedTags(picker);
-  const newResource = { titel, url, themen };
-  const warnings = getTagWarnings(themen, currentResourceKind).map(w => `"${titel}": ${w}`);
+  $('existing-prof-select').addEventListener('change', updateProfessorSummary);
 
-  // Tiefe Kopie, damit das Original in allProfessors unangetastet bleibt
-  const updatedProf = JSON.parse(JSON.stringify(prof));
-  const arrayKey = currentResourceKind === 'video' ? 'videos' : 'buecher';
-  if (!Array.isArray(updatedProf[arrayKey])) updatedProf[arrayKey] = [];
-  updatedProf[arrayKey].push(newResource);
+  /* ---------- Modus 2: Video oder Buch ---------- */
 
-  const kindLabel = currentResourceKind === 'video' ? 'Video' : 'Buch';
-  const comment = `// BESTEHEND — aktualisierter Professor "${prof.name}" (ID: ${profId})\n// Enthält alle bisherigen Einträge plus 1 neues ${kindLabel}.${warningsComment(warnings)}\n// Vor dem Einfügen in data.json alle Kommentarzeilen entfernen!`;
+  function setResourceKind(kind) {
+    currentResourceKind = kind;
+    $('kind-video-btn').classList.toggle('active', kind === 'video');
+    $('kind-buch-btn').classList.toggle('active', kind === 'buch');
+    $('existing-titel').placeholder = kind === 'video' ? 'Video-Titel' : 'Buch-/Quellentitel';
+    $('existing-url').placeholder = kind === 'video' ? 'https://www.youtube.com/watch?v=…' : 'https://…';
 
-  output.textContent = `${comment}\n\n${JSON.stringify(updatedProf, null, 2)}`;
-  document.getElementById('output-hint').innerHTML =
-    `Entferne zuerst die Kommentarzeilen, dann ersetze in deiner <code>data.json</code> das komplette Objekt mit der ID <code>${escapeHtml(profId)}</code> durch den restlichen Code.`;
-  revealOutput(warnings.length ? `JSON generiert – ${warnings.length} Tag-Hinweis(e) prüfen.` : 'JSON generiert.');
-});
-
-/* ---------- Kopieren & Toast ---------- */
-
-document.getElementById('copy-btn').addEventListener('click', async () => {
-  const text = document.getElementById('json-output').textContent;
-  await copyToClipboard(text);
-  showToast('In die Zwischenablage kopiert.');
-});
-
-async function copyToClipboard(text) {
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch (err) {
-    // Fallback für Umgebungen ohne Clipboard-API
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
+    // Tag-Auswahl neu aufbauen (Format-Tags nur bei Videos), bisherige Auswahl behalten
+    const picker = $('existing-tag-picker');
+    const keep = new Set(getSelectedTags(picker));
+    renderTagPicker(picker, kind);
+    picker.querySelectorAll('.tag-chip').forEach(chip => {
+      if (keep.has(chip.dataset.tag)) chip.classList.add('selected');
+    });
+    if (kind === 'video') suggestFormatFromUrl($('existing-url').value, picker);
+    validateTagPicker(picker);
   }
-}
 
-function showToast(message) {
-  const toast = document.getElementById('toast');
-  if (message) toast.textContent = message;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2200);
-}
+  $('kind-video-btn').addEventListener('click', () => setResourceKind('video'));
+  $('kind-buch-btn').addEventListener('click', () => setResourceKind('buch'));
+  $('existing-url').addEventListener('input', e => suggestFormatFromUrl(e.target.value, $('existing-tag-picker')));
 
-/* ---------- Initialisierung ---------- */
+  /* ---------- Modus 2: Übernehmen ---------- */
 
-(async function init() {
-  await Promise.all([loadMasterTags(), loadProfessors()]);
+  function generateExisting() {
+    if (!guardLoaded()) return;
 
-  // Leitfaden in beiden Modi einblenden
-  document.querySelectorAll('[data-role="tag-guide"]').forEach(renderTagGuide);
+    const errors = [];
+    const id = $('existing-prof-select').value;
+    const prof = id ? currentProfessor(id) : null;
+    const titel = $('existing-titel').value.trim();
+    const url = $('existing-url').value.trim();
 
-  // Modus 1: Start-Zeilen für Videos und Bücher
-  createDynamicRow(document.getElementById('videos-container'), 'video', videoRowCount++, 'Video', 'Video-Titel', 'https://www.youtube.com/watch?v=…');
-  createDynamicRow(document.getElementById('buecher-container'), 'buch', buchRowCount++, 'Buch', 'Buch-/Quellentitel', 'https://…');
+    if (!prof) errors.push('Bitte einen Gelehrten auswählen.');
+    if (!titel) errors.push('Titel fehlt.');
+    if (!url) errors.push('URL fehlt.');
+    else if (!isHttpUrl(url)) errors.push('Die URL muss mit http:// oder https:// beginnen.');
 
-  // Modus 2: Professor-Auswahl und Tag-Picker vorbereiten
-  renderProfessorSelect();
-  renderTagPicker(document.getElementById('existing-tag-picker'), 'video');
-})();
-</script>
+    if (errors.length) {
+      setStatus('error', 'Noch nicht übernommen – bitte korrigieren:', errors);
+      revealOutput('Bitte die markierten Punkte korrigieren.');
+      return;
+    }
+
+    const picker = $('existing-tag-picker');
+    const themen = getSelectedTags(picker);
+    const warnings = getTagWarnings(themen, currentResourceKind);
+    const dup = findDuplicateUrl(url);
+    if (dup) warnings.push(`Dieser Link ist schon bei ${dup.prof.name} eingetragen („${dup.item.titel}“).`);
+
+    const resource = buildResource(titel, url, $('existing-sprache').value, prof.sprache, themen);
+    const updated = JSON.parse(JSON.stringify(prof)); // tiefe Kopie, Original bleibt unverändert
+    const listKey = currentResourceKind === 'video' ? 'videos' : 'buecher';
+    if (!Array.isArray(updated[listKey])) updated[listKey] = [];
+    updated[listKey].push(resource);
+
+    const previous = changes.get(id);
+    changes.set(id, { entry: updated, isNew: previous ? previous.isNew : false });
+    // Das Formular „Neuer Gelehrter“ darf diesen Eintrag ab jetzt nicht mehr überschreiben
+    if (editingNewId === id) editingNewId = null;
+
+    const kindLabel = currentResourceKind === 'video' ? 'Video' : 'Buch';
+    changeLog.push(`${kindLabel} bei ${prof.name}: „${titel}“`);
+    unsaved = true;
+
+    // Felder leeren, damit derselbe Eintrag nicht versehentlich doppelt übernommen wird
+    $('existing-titel').value = '';
+    $('existing-url').value = '';
+    $('existing-sprache').value = '';
+    renderTagPicker(picker, currentResourceKind);
+
+    refreshProfSelect();
+    renderOutput();
+
+    const title = `${kindLabel} „${titel}“ wurde bei ${prof.name} ergänzt.`;
+    if (warnings.length) setStatus('warn', `${title} Bitte noch prüfen:`, warnings);
+    else setStatus('ok', title, ['Lade jetzt die data.json herunter oder ergänze weitere Einträge.']);
+    revealOutput(warnings.length ? `Übernommen – ${warnings.length} Hinweis(e) prüfen.` : 'Übernommen.');
+  }
+
+  $('generate-existing-btn').addEventListener('click', generateExisting);
+
+  /* ---------- Ausgabe, Status, Download ---------- */
+
+  function guardLoaded() {
+    if (dataLoaded) return true;
+    setStatus('error', 'data.json konnte nicht geladen werden.', [
+      'Ohne die vorhandenen Daten würde die erzeugte Datei alle bisherigen Einträge löschen. Deshalb ist das Übernehmen gesperrt.',
+      'Öffne die Seite über GitHub Pages oder einen lokalen Webserver und prüfe, ob data.json gültiges JSON enthält.'
+    ]);
+    revealOutput();
+    return false;
+  }
+
+  function setStatus(type, title, items = []) {
+    const box = $('output-status');
+    box.className = `status-box ${type}`;
+    box.innerHTML = `<strong>${escapeHtml(title)}</strong>${items.length ? `<ul>${items.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>` : ''}`;
+    box.hidden = false;
+  }
+
+  function renderOutput() {
+    const hasChanges = changes.size > 0;
+    $('json-output').textContent = hasChanges
+      ? dataFileText()
+      : '// Noch keine Änderungen. Fülle links ein Formular aus und klicke auf „In data.json übernehmen“.';
+    $('download-btn').disabled = !hasChanges;
+    $('copy-btn').disabled = !hasChanges;
+    $('change-list').innerHTML = changeLog.map(t => `<li>${escapeHtml(t)}</li>`).join('');
+    $('change-wrap').hidden = changeLog.length === 0;
+  }
+
+  /** Zum Ergebnis scrollen und es kurz hervorheben. */
+  function revealOutput(message) {
+    const panel = document.querySelector('.output-panel');
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const panelTop = panel.getBoundingClientRect().top + window.scrollY;
+    // Desktop: Ausgabe steht rechts → nach oben. Handy: Ausgabe steht unten → dorthin.
+    const target = panelTop > window.innerHeight ? panelTop - 96 : 0;
+    window.scrollTo({ top: target, behavior: reduceMotion ? 'auto' : 'smooth' });
+
+    panel.classList.remove('flash');
+    void panel.offsetWidth; // Animation neu starten
+    panel.classList.add('flash');
+    setTimeout(() => panel.classList.remove('flash'), 1300);
+
+    if (message) showToast(message);
+  }
+
+  function downloadData() {
+    const blob = new Blob([dataFileText()], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'data.json';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+    unsaved = false;
+    showToast('data.json wurde heruntergeladen.');
+  }
+
+  async function copyToClipboard(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    }
+  }
+
+  function showToast(message) {
+    const toast = $('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(() => toast.classList.remove('show'), 2400);
+  }
+
+  $('download-btn').addEventListener('click', downloadData);
+  $('copy-btn').addEventListener('click', async () => {
+    await copyToClipboard(dataFileText());
+    unsaved = false;
+    showToast('Komplette data.json in die Zwischenablage kopiert.');
+  });
+
+  // Warnung beim Verlassen, wenn Änderungen noch nicht gesichert wurden
+  window.addEventListener('beforeunload', e => {
+    if (!unsaved) return;
+    e.preventDefault();
+    e.returnValue = '';
+  });
+
+  /* ---------- Start ---------- */
+
+  (async function init() {
+    const [data, tagCfg] = await Promise.all([loadData(), loadTagConfig()]);
+    cfg = tagCfg;
+
+    if (data === null) {
+      dataLoaded = false;
+      ['generate-btn', 'generate-existing-btn'].forEach(id => { $(id).disabled = true; });
+      setStatus('error', 'data.json konnte nicht geladen werden.', [
+        'Das Übernehmen ist gesperrt, damit keine Datei ohne die bisherigen Einträge entsteht.',
+        'Öffne die Seite über GitHub Pages oder einen lokalen Webserver und prüfe, ob data.json gültiges JSON enthält.'
+      ]);
+    } else {
+      baseData = data;
+      dataLoaded = true;
+    }
+
+    $('f-sprache').innerHTML = languageSelectHtml(null);
+    fillSpezSelect();
+    document.querySelectorAll('[data-role="tag-guide"]').forEach(renderTagGuide);
+
+    createDynamicRow('video');
+    createDynamicRow('buch');
+
+    refreshProfSelect();
+    renderTagPicker($('existing-tag-picker'), 'video');
+    renderOutput();
+  })();
+  </script>
 
 </body>
+
 </html>

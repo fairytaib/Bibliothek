@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Themen — ARCHIV</title>
-  <meta name="description" content="Durchsuche alle Themen und finde direkt passende Videos, Bücher und Professoren." />
+  <meta name="description" content="Alle Themen der Bibliothek – mit passenden Videos, Büchern und Gelehrten." />
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -20,25 +20,25 @@
       <nav class="nav-links">
         <a href="index.html">Gelehrte</a>
         <a href="themen.html" class="active">Themen</a>
-        <a href="admin.html">Admin</a>
+        <!-- <a href="admin.html">Admin</a> -->
       </nav>
     </div>
   </header>
 
   <section class="hero">
     <div class="container">
-      <p class="hero-eyebrow">Themen-Wolke</p>
+      <p class="hero-eyebrow">Themen</p>
       <h1>Stöbere nach Thema</h1>
-      <p>Jedes Thema führt direkt zu allen passenden Videos, Büchern und Professoren im Archiv — unabhängig davon, bei wem sie ursprünglich gelistet sind.</p>
+      <p>Jedes Thema führt zu allen passenden Videos, Büchern und Gelehrten – egal, bei wem sie eingetragen sind.</p>
 
       <div class="search-panel">
         <div class="search-row">
           <div class="search-input-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input type="text" id="themen-search" class="search-field" placeholder="Thema suchen…" autocomplete="off" />
+            <input type="search" id="themen-search" class="search-field" placeholder="Thema suchen, z. B. Gebet, Jenseits, Ehe" autocomplete="off" aria-label="Thema suchen" />
           </div>
         </div>
       </div>
@@ -48,10 +48,10 @@
   <section class="results-section">
     <div class="container">
       <div class="results-meta">
-        <span><strong id="themen-count">0</strong> Themen gefunden</span>
+        <span aria-live="polite"><strong id="themen-count">0</strong> Themen gefunden</span>
       </div>
-      <div class="themen-cloud" id="themen-cloud">
-        <!-- Themen-Kacheln werden dynamisch von app.js gerendert -->
+      <div id="themen-groups">
+        <!-- Themen-Gruppen werden von app.js gerendert -->
       </div>
     </div>
   </section>

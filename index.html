@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ARCHIV — HDI-Bibliothekssystem</title>
-  <meta name="description" content="Durchsuche Professoren nach Sprache, Spezialisierung und Thema — mit Videos und Buchempfehlungen." />
+  <title>Gelehrte — ARCHIV</title>
+  <meta name="description" content="Durchsuche Vorträge, Reihen und Bücher nach Thema, Titel, Sprache und Gelehrtem." />
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -20,34 +20,33 @@
       <nav class="nav-links">
         <a href="index.html" class="active">Gelehrte</a>
         <a href="themen.html">Themen</a>
-        <a href="admin.html">Admin</a>
+        <!-- <a href="admin.html">Admin</a> -->
       </nav>
     </div>
   </header>
 
   <section class="hero">
     <div class="container">
-      <p class="hero-eyebrow">Gelehrte</p>
-      <h1>Finde die richtige Stimme für dein Thema</h1>
-      <p>Suche Gelehrte nach Name, Sprache, Spezialisierung oder Thema und gelange direkt zu ihren Video- und Buchempfehlungen.</p>
+      <p class="hero-eyebrow">Gelehrte &amp; Inhalte</p>
+      <h1>Finde Vorträge, Reihen und Bücher</h1>
+      <p>Suche nach einem Thema, einem Videotitel oder einem Gelehrten. Mit den Filtern grenzt du nach Sprache, Thema, Niveau und Format ein.</p>
 
       <div class="search-panel">
         <div class="search-row">
           <div class="search-input-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input type="text" id="search-input" class="search-field" placeholder="Suche nach Name, Sprache, Spezialisierung..." autocomplete="off" />
+            <input type="search" id="search-input" class="search-field" placeholder="z. B. Ramadan, Paradies, Sirah oder Omar Suleiman" autocomplete="off" aria-label="Suche" />
           </div>
         </div>
         <div class="filters-row">
-          <select id="filter-lang" class="filter-select">
-            <option value="">Alle Sprachen</option>
-          </select>
-          <select id="filter-spez" class="filter-select">
-            <option value="">Alle Spezialisierungen</option>
-          </select>
+          <select id="filter-lang" class="filter-select" aria-label="Sprache"></select>
+          <select id="filter-thema" class="filter-select" aria-label="Thema"></select>
+          <select id="filter-niveau" class="filter-select" aria-label="Niveau"></select>
+          <select id="filter-format" class="filter-select" aria-label="Format"></select>
+          <select id="filter-spez" class="filter-select" aria-label="Spezialisierung"></select>
           <button type="button" id="clear-filters" class="clear-filters">Filter zurücksetzen</button>
         </div>
       </div>
@@ -56,12 +55,26 @@
 
   <section class="results-section">
     <div class="container">
-      <div class="results-meta">
-        <span><strong id="result-count">0</strong> Profile gefunden</span>
+
+      <div id="resource-section" class="result-block" hidden>
+        <div class="results-meta">
+          <h2 class="section-title">Videos &amp; Bücher</h2>
+          <span aria-live="polite"><strong id="resource-count">0</strong> Treffer</span>
+        </div>
+        <ul class="resource-list" id="resource-list"></ul>
+        <button type="button" class="more-btn" id="resource-more" hidden>Alle Treffer anzeigen</button>
       </div>
-      <div class="card-grid" id="card-grid">
-        <!-- Karten werden dynamisch von app.js gerendert -->
+
+      <div class="result-block">
+        <div class="results-meta">
+          <h2 class="section-title">Gelehrte</h2>
+          <span aria-live="polite"><strong id="result-count">0</strong> gefunden</span>
+        </div>
+        <div class="card-grid" id="card-grid">
+          <!-- Karten werden von app.js gerendert -->
+        </div>
       </div>
+
     </div>
   </section>
 

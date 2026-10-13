@@ -9,17 +9,29 @@
       {
         "titel": "Quranrezitation",
         "url": "https://youtube.com/playlist?list=PLueyk3wWkc9oijjARi_czPfItqavP-8ty&si=OOYOPbIUxxQKHIE5",
-        "themen": ["Playlist", "Quran"]
+        "themen": [
+          "Playlist",
+          "Quran"
+        ]
       },
       {
         "titel": "Die Liebe zum Paradies",
         "url": "https://youtube.com/playlist?list=PL2DBB7E3CB9C076EF&si=pTGYudpyhCA0qbdO",
-        "themen": ["Playlist", "Akhira", "Tazkiyah"]
+        "themen": [
+          "Playlist",
+          "Akhira",
+          "Tazkiyah"
+        ]
       },
       {
         "titel": "Kommentar zur westlich-historischen Einordnung der islamischen Entstehungsgeschichte",
         "url": "https://youtu.be/6SVGKQ-xiGs?si=g-tcTGq03R_dm0Xp",
-        "themen": ["Einzelvideo", "Akademisch", "Geschichte", "Apologetik"]
+        "themen": [
+          "Einzelvideo",
+          "Akademisch",
+          "Geschichte",
+          "Apologetik"
+        ]
       }
     ],
     "buecher": []
@@ -28,28 +40,44 @@
     "id": "prof-abdurrahman-reidegeld",
     "name": "Abdurrahman Reidegeld",
     "sprache": "Deutsch",
-    "spezialisierung": "Allrounder (Interdisziplinärer Experte)",
-    "anmerkung": "Sehr gehoben und wissenschaftlich. teilweise sehr kompliziert)",
+    "spezialisierung": "Allrounder",
+    "anmerkung": "Sehr gehoben und wissenschaftlich, teilweise sehr kompliziert.",
     "videos": [
       {
         "titel": "Traumwelten & Traumdeutung",
         "url": "https://www.ilmfix.de/programs/traumwelten",
-        "themen": ["Playlist", "Kostenpflichtig", "Akademisch", "Aqidah"]
+        "themen": [
+          "Playlist",
+          "Kostenpflichtig",
+          "Akademisch",
+          "Aqidah"
+        ]
       },
       {
         "titel": "Antwort auf islamkritische Deutung",
         "url": "https://youtube.com/playlist?list=PLGcVoqaHs9Dq9Q7WeR1SsKMJFymePDAnj&si=9lpWBG7bUV0NJ72q",
-        "themen": ["Playlist", "Akademisch", "Apologetik"]
+        "themen": [
+          "Playlist",
+          "Akademisch",
+          "Apologetik"
+        ]
       },
       {
         "titel": "Der jüngste Tag",
         "url": "https://youtu.be/6T38lO0IohU?si=2oVIQj7sIvbTQmCz",
-        "themen": ["Einzelvideo", "Akhira"]
+        "themen": [
+          "Einzelvideo",
+          "Akhira"
+        ]
       },
       {
         "titel": "Sakina in der Ehe",
         "url": "https://youtu.be/e8KySdVw0nM?si=G7dAfJBN-ImFGxUZ",
-        "themen": ["Einzelvideo", "Ehe & Familie", "Tazkiyah"]
+        "themen": [
+          "Einzelvideo",
+          "Ehe & Familie",
+          "Tazkiyah"
+        ]
       }
     ],
     "buecher": []
@@ -64,38 +92,61 @@
       {
         "titel": "Einführung in das Erlernen des Fiqh",
         "url": "https://youtube.com/playlist?list=PLi_ePUoh6SAuwi33nj18I5-c14su32V0M&si=w3_PkwRkXUBiPExG",
-        "themen": ["Playlist", "Einsteiger", "Fiqh"]
+        "themen": [
+          "Playlist",
+          "Einsteiger",
+          "Fiqh"
+        ]
       },
       {
         "titel": "Wenn der Prophet lachte",
         "url": "https://youtu.be/6M-31JKYD3w?si=qppKIgU9hwCR93r2",
-        "themen": ["Einzelvideo", "Sirah", "Akhlaq"]
+        "themen": [
+          "Einzelvideo",
+          "Sirah",
+          "Akhlaq"
+        ]
       },
       {
         "titel": "Wann der Prophet ernst wurde",
         "url": "https://youtu.be/PhWcKNMU-Ro?si=78NAjfmEUXWuTcHQ",
-        "themen": ["Einzelvideo", "Sirah", "Akhlaq"]
+        "themen": [
+          "Einzelvideo",
+          "Sirah",
+          "Akhlaq"
+        ]
       },
       {
         "titel": "Geschichten der Propheten",
         "url": "https://youtube.com/playlist?list=PLahgZyjde6qU&si=UaWzjkGqmlQeKyEm",
-        "themen": ["Playlist", "Propheten", "Geschichte"]
+        "themen": [
+          "Playlist",
+          "Propheten",
+          "Geschichte"
+        ]
       },
       {
         "titel": "Geschichten aus dem Quran",
         "url": "https://youtube.com/playlist?list=PLVuenS9jflVE&si=-LeIN01ZRoUAkco1",
-        "themen": ["Playlist", "Quran", "Geschichte"]
+        "themen": [
+          "Playlist",
+          "Quran",
+          "Geschichte"
+        ]
       },
       {
         "titel": "Die Zeichen des jüngsten Tages",
         "url": "https://youtube.com/playlist?list=PLi_ePUoh6SAvNCXYlTqhhHhQgYh4-qf2r&si=uh95uV5t9mjBxtSl",
-        "themen": ["Playlist", "Akhira"]
+        "themen": [
+          "Playlist",
+          "Akhira"
+        ]
       }
     ],
     "buecher": []
   },
   {
-    "id": "Hamza Yusuf",
+    "id": "prof-hamza-yusuf",
     "name": "Hamza Yusuf",
     "sprache": "Deutsch",
     "spezialisierung": "",
@@ -104,27 +155,46 @@
       {
         "titel": "Islamische Fundamente",
         "url": "https://youtube.com/playlist?list=PLLWosYrkNwE9_IdtxX_sI2BuOdmr8P8xQ&si=yrFR23G26ir5Dz9O",
-        "themen": ["Playlist", "Einsteiger", "Aqidah", "Fiqh"]
+        "themen": [
+          "Playlist",
+          "Einsteiger",
+          "Aqidah",
+          "Fiqh"
+        ]
       },
       {
         "titel": "Krankheiten des Herzens",
         "url": "https://youtube.com/playlist?list=PLBP_4s7p7C7s9PvPQoHemC4JtGxS1IrnP&si=YlCcbWgBAKwi8sns",
-        "themen": ["Playlist", "Tazkiyah"]
+        "themen": [
+          "Playlist",
+          "Tazkiyah"
+        ]
       },
       {
         "titel": "Durar al-Ilm – Perlen des Wissens",
         "url": "https://youtube.com/playlist?list=PLBP_4s7p7C7usI2UkOKVcCgBMh7rkUrRt&si=U-xz-gFhEfblmNZC",
-        "themen": ["Playlist", "Tazkiyah", "Akhlaq"]
+        "themen": [
+          "Playlist",
+          "Tazkiyah",
+          "Akhlaq"
+        ]
       },
       {
         "titel": "Jawahir al-Hikmah – Juwelen der Weisheit",
         "url": "https://youtube.com/playlist?list=PLBP_4s7p7C7vVP-KThbf0wECPocfiMV8x&si=lX4NS9IU-nFTeyeE",
-        "themen": ["Playlist", "Tazkiyah", "Akhlaq"]
+        "themen": [
+          "Playlist",
+          "Tazkiyah",
+          "Akhlaq"
+        ]
       },
       {
         "titel": "Sirah des Propheten",
         "url": "https://youtube.com/playlist?list=PLBP_4s7p7C7vj5MdwMWYzRpoGbmKiHZml&si=jSEPg2u0viNccSyP",
-        "themen": ["Playlist", "Sirah"]
+        "themen": [
+          "Playlist",
+          "Sirah"
+        ]
       }
     ],
     "buecher": []
@@ -139,12 +209,18 @@
       {
         "titel": "Die Generation Salahuddins",
         "url": "https://youtube.com/playlist?list=PLQ02IYL5pmhHhA6ZoXuLLf49ozb4pHxpr&si=gDqJJGi0XC2dSGme",
-        "themen": ["Playlist", "Geschichte"]
+        "themen": [
+          "Playlist",
+          "Geschichte"
+        ]
       },
       {
         "titel": "Wenn die Gerechten straucheln",
         "url": "https://www.youtube.com/live/3ZSqbjAhflE?si=_fahGV36j1Y3SpNF",
-        "themen": ["Einzelvideo", "Tazkiyah"]
+        "themen": [
+          "Einzelvideo",
+          "Tazkiyah"
+        ]
       }
     ],
     "buecher": []
@@ -159,27 +235,38 @@
       {
         "titel": "Positives Denken",
         "url": "https://youtu.be/ECCaGDDVwGc?si=kBYJJdanbMn0xNST",
-        "themen": ["Einzelvideo", "Psychologie", "Tazkiyah"]
+        "themen": [
+          "Einzelvideo",
+          "Psychologie",
+          "Tazkiyah"
+        ]
       },
       {
         "titel": "Asya, die Frau des Pharaos",
         "url": "https://youtu.be/Wf-mm2A0gYk?si=qTncOcsIoFXCFpSa",
-        "themen": ["Einzelvideo", "Frauen im Islam", "Geschichte"]
+        "themen": [
+          "Einzelvideo",
+          "Frauen im Islam",
+          "Geschichte"
+        ]
       },
       {
         "titel": "Schamhaftigkeit im Islam",
         "url": "https://youtu.be/iPGyyjkWWNk?si=CyNX-pDgGILprgVK",
-        "themen": ["Einzelvideo", "Akhlaq"]
-      },
-      {
-        "titel": "Positives Denken",
-        "url": "https://youtu.be/ECCaGDDVwGc?si=iCD_rd_lRfHTAfrU",
-        "themen": ["Einzelvideo", "Psychologie", "Tazkiyah"]
+        "themen": [
+          "Einzelvideo",
+          "Akhlaq"
+        ]
       },
       {
         "titel": "Muslim sein für Beginner",
         "url": "https://youtube.com/playlist?list=PLz-qwtLIQTl4xijzsIf8Ehx2p9q3EOXaY&si=rX9QKTlYMdKakLyz",
-        "themen": ["Playlist", "Einsteiger", "Ibadah", "Fiqh"]
+        "themen": [
+          "Playlist",
+          "Einsteiger",
+          "Ibadah",
+          "Fiqh"
+        ]
       }
     ],
     "buecher": []
@@ -189,22 +276,33 @@
     "name": "Mariam bint Ali Dhouib",
     "sprache": "Deutsch",
     "spezialisierung": "",
-    "anmerkung": "Nachfahrin des Propheten s.a.s.  ",
+    "anmerkung": "Nachfahrin des Propheten ﷺ",
     "videos": [
       {
         "titel": "Menstruation (Hanafi Fiqh)",
         "url": "https://youtube.com/playlist?list=PLz-qwtLIQTl7y2gAMo6XwL5NiRWwL089a&si=FYAw10UMgUDTLxM-",
-        "themen": ["Playlist", "Fiqh", "Frauen im Islam"]
+        "themen": [
+          "Playlist",
+          "Fiqh",
+          "Frauen im Islam"
+        ]
       },
       {
         "titel": "Verständnis der prophetischen Biographie",
         "url": "https://youtube.com/playlist?list=PLz-qwtLIQTl5qh5ab5cI-C7-_haKu9uFA&si=uX5bM3qQUciG9PKe",
-        "themen": ["Playlist", "Sirah"]
+        "themen": [
+          "Playlist",
+          "Sirah"
+        ]
       },
       {
         "titel": "Das Leben von Umm Sulaim bint Milhan",
         "url": "https://youtu.be/XRtBOh89LTg?si=S5bjfs5XbqVtcuvT",
-        "themen": ["Einzelvideo", "Sahaba", "Frauen im Islam"]
+        "themen": [
+          "Einzelvideo",
+          "Sahaba",
+          "Frauen im Islam"
+        ]
       }
     ],
     "buecher": []
@@ -213,28 +311,43 @@
     "id": "prof-mahmud-kellner",
     "name": "Mahmud Kellner",
     "sprache": "Deutsch",
-    "spezialisierung": "Reinigung des Herzens/Tazkiyah & Hadith",
+    "spezialisierung": "Tazkiyah",
     "anmerkung": "Gründer von Madrasah e.V.",
     "videos": [
       {
         "titel": "Ash-Shifa",
         "url": "https://youtube.com/playlist?list=PLz-qwtLIQTl4AGXX1dRQgp0-_j1Lw0Dep&si=7NoKRNT7B1qqQ79o",
-        "themen": ["Playlist", "Sirah", "Tazkiyah"]
+        "themen": [
+          "Playlist",
+          "Sirah",
+          "Tazkiyah"
+        ]
       },
       {
         "titel": "Die Zustände des Herzens nach Ghazali",
         "url": "https://youtube.com/playlist?list=PLz-qwtLIQTl4fzgG2PGcTmuF3vUkHZfUY&si=Zbg7gIKlj9iABZSP",
-        "themen": ["Playlist", "Fortgeschritten", "Tazkiyah"]
+        "themen": [
+          "Playlist",
+          "Fortgeschritten",
+          "Tazkiyah"
+        ]
       },
       {
         "titel": "Das Allerwesentlichste im Islam",
         "url": "https://youtube.com/playlist?list=PLz-qwtLIQTl52E1Cd0a-Uf-cL60tHFaNI&si=hMbV2F8P35MTTqQi",
-        "themen": ["Playlist", "Fiqh"]
+        "themen": [
+          "Playlist",
+          "Fiqh"
+        ]
       },
       {
         "titel": "Hikam von Ibn Ata'illah (Auszüge)",
         "url": "https://youtube.com/playlist?list=PLz-qwtLIQTl7y6gec0D0y3F1VC-8TgLs2&si=cux2H9cfZmKA8tET",
-        "themen": ["Playlist", "Fortgeschritten", "Tazkiyah"]
+        "themen": [
+          "Playlist",
+          "Fortgeschritten",
+          "Tazkiyah"
+        ]
       }
     ],
     "buecher": []
@@ -252,33 +365,51 @@
     "id": "prof-nouman-ali-khan",
     "name": "Nouman Ali Khan",
     "sprache": "Englisch",
-    "spezialisierung": "Quranwissenschaften",
-    "anmerkung": "Gründer von des BAyyinah-Institutes",
+    "spezialisierung": "Quran",
+    "anmerkung": "Gründer des Bayyinah-Institutes",
     "videos": [
       {
         "titel": "Tafsir Surah Yasin",
         "url": "https://youtube.com/playlist?list=PLHPW7nn9Wmb66OICiQfWwlSUU4rM1rY3D&si=knty9Kys70ZHHceK",
-        "themen": ["Playlist", "Quran"]
+        "themen": [
+          "Playlist",
+          "Quran"
+        ]
       },
       {
         "titel": "“Aus dem Kontext genommen”",
         "url": "https://youtube.com/playlist?list=PLutdSTmJ7bAJQaNrfGlijtvLsDcERufni&si=cSYjVSsNwXnziLZD",
-        "themen": ["Playlist", "Quran", "Apologetik"]
+        "themen": [
+          "Playlist",
+          "Quran",
+          "Apologetik"
+        ]
       },
       {
         "titel": "Taqwa",
         "url": "https://www.youtube.com/watch?v=hU4zZQtfGRo",
-        "themen": ["Einzelvideo", "Tazkiyah"]
+        "themen": [
+          "Einzelvideo",
+          "Tazkiyah"
+        ]
       },
       {
         "titel": "Wie man sich auf den Ramadan vorbereitet",
         "url": "https://youtu.be/_OoHj6aEzmU?si=ydzAxt2yOKeoB9qP",
-        "themen": ["Einzelvideo", "Ibadah", "Tazkiyah"]
+        "themen": [
+          "Einzelvideo",
+          "Ibadah",
+          "Tazkiyah"
+        ]
       },
       {
         "titel": "Alle Khutbas von Nouman Ali Khan",
         "url": "https://youtube.com/playlist?list=PLutdSTmJ7bAJi20r4ZAVKR-DfzJm99Tlv&si=y9lkRLCmHrEP7XDk",
-        "themen": ["Playlist", "Quran", "Tazkiyah"]
+        "themen": [
+          "Playlist",
+          "Quran",
+          "Tazkiyah"
+        ]
       }
     ],
     "buecher": []
@@ -293,7 +424,11 @@
       {
         "titel": "“Jüdische” Propheten",
         "url": "https://youtube.com/playlist?list=PLZ6keVEpgaQudSpBndyDMV1j8RfesYXSD&si=5pDNhHy-IS-YVQwn",
-        "themen": ["Playlist", "Propheten", "Geschichte"]
+        "themen": [
+          "Playlist",
+          "Propheten",
+          "Geschichte"
+        ]
       }
     ],
     "buecher": []
@@ -308,52 +443,90 @@
       {
         "titel": "Das Paradies",
         "url": "https://youtube.com/playlist?list=PLQ02IYL5pmhGLpO-oUMpZbuI_5dT9m4fi&si=WJbkQ1o1EINsUuyo",
-        "themen": ["Playlist", "Akhira"]
+        "themen": [
+          "Playlist",
+          "Akhira"
+        ]
       },
       {
         "titel": "Menschen des Quran",
         "url": "https://youtube.com/playlist?list=PLutdSTmJ7bALsxxmygqLzM15tzY2uL-h4&si=sjYUp5ILIW7eEm82",
-        "themen": ["Playlist", "Quran", "Geschichte"]
+        "themen": [
+          "Playlist",
+          "Quran",
+          "Geschichte"
+        ]
       },
       {
         "titel": "\"Für diejenigen, die jemanden verloren haben\"",
         "url": "https://youtube.com/playlist?list=PLQ02IYL5pmhExgMFX9tTxaKRYcU18W0zJ&si=_eJ0SkaxIcuYIS6b",
-        "themen": ["Playlist", "Akhira", "Psychologie"]
+        "themen": [
+          "Playlist",
+          "Akhira",
+          "Psychologie"
+        ]
       },
       {
         "titel": "Allah liebt",
         "url": "https://youtube.com/playlist?list=PLQ02IYL5pmhHLgbkpUu1a5igh6Hsff0eY&si=GbcPRaWm9I-sq2LP",
-        "themen": ["Playlist", "Tazkiyah", "Akhlaq"]
+        "themen": [
+          "Playlist",
+          "Tazkiyah",
+          "Akhlaq"
+        ]
       },
       {
         "titel": "Die Engel II",
         "url": "https://youtube.com/playlist?list=PLLQgemAUoz0iLc-wLaTpjz9L4nhIbN-bK&si=olJ9CmE8TR8Jwv2X",
-        "themen": ["Playlist", "Aqidah", "Akhira"]
+        "themen": [
+          "Playlist",
+          "Aqidah",
+          "Akhira"
+        ]
       },
       {
         "titel": "Soziale Gerechtigkeit",
         "url": "https://youtube.com/playlist?list=PLQ02IYL5pmhGxqbRtm6IvObV2Ysu9oLVa&si=YCcmmxxeuYkK509g",
-        "themen": ["Playlist", "Gesellschaft"]
+        "themen": [
+          "Playlist",
+          "Gesellschaft"
+        ]
       },
       {
         "titel": "Iman wiederbeleben",
         "url": "https://youtube.com/playlist?list=PLQ02IYL5pmhFIX9rUv_TZq60pWmItUAT0&si=gVTcOwaVn_5Z1QSb",
-        "themen": ["Playlist", "Tazkiyah", "Aqidah"]
+        "themen": [
+          "Playlist",
+          "Tazkiyah",
+          "Aqidah"
+        ]
       },
       {
         "titel": "Die Duas der Gottesfürchtigen",
         "url": "https://youtube.com/playlist?list=PLQ02IYL5pmhHEn4GzFZVxsQyofhIFUA3M&si=MivbEsaQSfJVykMf",
-        "themen": ["Playlist", "Dua & Dhikr", "Quran"]
+        "themen": [
+          "Playlist",
+          "Dua & Dhikr",
+          "Quran"
+        ]
       },
       {
         "titel": "Der Anfang und das Ende",
         "url": "https://youtube.com/playlist?list=PLutdSTmJ7bALsUhQRrcMIMLXbG6GPXpGv&si=NswAj58V8rcicgha",
-        "themen": ["Playlist", "Geschichte", "Propheten", "Akhira"]
+        "themen": [
+          "Playlist",
+          "Geschichte",
+          "Propheten",
+          "Akhira"
+        ]
       },
       {
         "titel": "Engel Jibreel",
         "url": "https://youtu.be/p09QoMRkt9g?si=l6wWHsHJJ5KIoeNl",
-        "themen": ["Einzelvideo", "Aqidah"]
+        "themen": [
+          "Einzelvideo",
+          "Aqidah"
+        ]
       }
     ],
     "buecher": []
@@ -368,33 +541,47 @@
       {
         "titel": "Sirah",
         "url": "https://youtube.com/playlist?list=PLAEA99D24CA2F9A8F&si=piqCMllJLF6xlyIn",
-        "themen": ["Playlist", "Fortgeschritten", "Sirah"]
+        "themen": [
+          "Playlist",
+          "Fortgeschritten",
+          "Sirah"
+        ]
       },
       {
         "titel": "Adab",
         "url": "https://youtube.com/playlist?list=PLYZxc42QNctWxkUZ7WSsUYC7yo8D85igl&si=aWMIlfvxfJKTqbUU",
-        "themen": ["Playlist", "Akhlaq"]
+        "themen": [
+          "Playlist",
+          "Akhlaq"
+        ]
       }
     ],
     "buecher": [
       {
         "titel": "Transkript der Sirah-Reihe",
         "url": "https://hausdesislamev.sharepoint.com/:b:/s/HDI-Dokumente/IQDr2fgvndG7QKporvJyup8vAXAwVI9dBDCxgCZei8l21UI?e=c2byVH",
-        "themen": ["Fortgeschritten", "Sirah"]
+        "themen": [
+          "Fortgeschritten",
+          "Sirah"
+        ]
       }
     ]
   },
   {
-    "id": "prof-redefarbrik",
-    "name": "RedeFarbrik",
+    "id": "prof-redefabrik",
+    "name": "RedeFabrik",
     "sprache": "Deutsch",
-    "spezialisierung": "Artikulation und Körpersprache",
+    "spezialisierung": "Rhetorik",
     "anmerkung": "Nicht islamischer Kontent - Experte in Didaktik",
     "videos": [
       {
         "titel": "Präsentationen, Vorträge & Referate",
         "url": "https://youtube.com/playlist?list=PLoQ2ojtbiJx7AOYGuYSuhwAD-ymPtU-V8&si=dcHPscQTYG99t5sZ",
-        "themen": ["Playlist", "Rhetorik", "Didaktik"]
+        "themen": [
+          "Playlist",
+          "Rhetorik",
+          "Didaktik"
+        ]
       }
     ],
     "buecher": []
@@ -403,13 +590,16 @@
     "id": "prof-vinh-giang",
     "name": "Vinh Giang",
     "sprache": "Englisch",
-    "spezialisierung": "Kommunikation",
+    "spezialisierung": "Rhetorik",
     "anmerkung": "Nicht islamischer Kontent - Experte in Didaktik",
     "videos": [
       {
         "titel": "Wie spreche ich besser?",
         "url": "https://www.youtube.com/watch?v=FsxorSNJBaA&pp=ygUKdmluaCBnaWFuZ9IHCQlBCwGHKiGM7w%3D%3D",
-        "themen": ["Einzelvideo", "Rhetorik"]
+        "themen": [
+          "Einzelvideo",
+          "Rhetorik"
+        ]
       }
     ],
     "buecher": []
@@ -425,7 +615,10 @@
       {
         "titel": "The Drink of the People of Purity",
         "url": "https://hausdesislamev.sharepoint.com/:b:/s/HDI-Dokumente/IQC0p9xvS7d9QrWnk9RIjGkuAXIHNqEnWStHu12XfSAY_TA?e=NcaIwB",
-        "themen": ["Dua & Dhikr", "Tazkiyah"]
+        "themen": [
+          "Dua & Dhikr",
+          "Tazkiyah"
+        ]
       }
     ]
   }
