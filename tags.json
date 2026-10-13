@@ -1,12 +1,34 @@
 [
-  "Kostenpflichtig",
-  "Wissenschaftlich",
+  "Playlist",
   "Einzelvideo",
-  "Fiqh",
-  "Sirah",
+  "Kostenpflichtig",
+
+  "Einsteiger",
+  "Fortgeschritten",
+  "Akademisch",
+
   "Quran",
+  "Hadith",
+  "Aqidah",
+  "Fiqh",
+  "Ibadah",
+  "Sirah",
+  "Tazkiyah",
+  "Akhlaq",
+  "Dua & Dhikr",
   "Akhira",
+
   "Geschichte",
-  "Sprache",
+  "Propheten",
+  "Sahaba",
+  "Frauen im Islam",
+
+  "Ehe & Familie",
+  "Gesellschaft",
+  "Psychologie",
+  "Apologetik",
+
+  "Arabisch",
+  "Rhetorik",
   "Didaktik"
 ]
