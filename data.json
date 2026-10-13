@@ -150,6 +150,27 @@
       "themen": [
         "Tazzkia"
       ]
+    },
+    {
+      "titel": "Durar al-Ilm – Perlen des Wissens",
+      "url": "https://youtube.com/playlist?list=PLBP_4s7p7C7usI2UkOKVcCgBMh7rkUrRt&si=U-xz-gFhEfblmNZC",
+      "themen": [
+        "Wissenschaftlich"
+      ]
+    },
+    {
+      "titel": "Jawahir al-Hikmah – Juwelen der Weisheit",
+      "url": "https://youtube.com/playlist?list=PLBP_4s7p7C7vVP-KThbf0wECPocfiMV8x&si=lX4NS9IU-nFTeyeE",
+      "themen": [
+        "Wissenschaftlich"
+      ]
+    },
+    {
+      "titel": "Sirah des Propheten",
+      "url": "https://youtube.com/playlist?list=PLBP_4s7p7C7vj5MdwMWYzRpoGbmKiHZml&si=jSEPg2u0viNccSyP",
+      "themen": [
+        "Sirah"
+      ]
     }
   ],
     "buecher": []
@@ -164,7 +185,13 @@
       "titel": "Die Generation Salahuddins",
       "url": "https://youtube.com/playlist?list=PLQ02IYL5pmhHhA6ZoXuLLf49ozb4pHxpr&si=gDqJJGi0XC2dSGme",
       "themen": ["Geschichte"]
-    }],
+    },
+    {
+      "titel": "Wenn die Gerechten straucheln",
+      "url": "https://www.youtube.com/live/3ZSqbjAhflE?si=_fahGV36j1Y3SpNF",
+      "themen": ["Einzelvideo", "Tawbah"]
+    }
+  ],
     "buecher": []
   },
   {
@@ -188,7 +215,33 @@
           "Einzelvideo",
           "Geschichte"
         ]
+      },
+      {
+        "titel": "Schamhaftigkeit im Islam",
+        "url": "https://youtu.be/iPGyyjkWWNk?si=CyNX-pDgGILprgVK",
+        "themen": [
+          "Einzelvideo",
+          "Erwachsen"
+        ]
+      },
+      {
+        "titel": "Positives Denken",
+        "url": "https://youtu.be/ECCaGDDVwGc?si=iCD_rd_lRfHTAfrU",
+        "themen": [
+          "Einzelvideo",
+          "Mindset",
+          "Psychologie"
+        ]
+      },
+      {
+        "titel": "Muslim sein für Beginner",
+        "url": "https://youtube.com/playlist?list=PLz-qwtLIQTl4xijzsIf8Ehx2p9q3EOXaY&si=rX9QKTlYMdKakLyz",
+        "themen": [
+          "Anfänger",
+          "Fiqh"
+        ]
       }
+      
     ],
     "buecher": []
   },
@@ -198,14 +251,30 @@
     "name": "Mariam bint Ali Dhouib",
     "sprache": "Deutsch",
     "spezialisierung": "",
-    "anmerkung": "Frau von Mahmud Kellner",
+    "anmerkung": "Nachfahrin des Propheten s.a.s.  ",
     "videos": [{
       "titel": "Menstruation (Hanafi Fiqh)",
       "url": "https://youtube.com/playlist?list=PLz-qwtLIQTl7y2gAMo6XwL5NiRWwL089a&si=FYAw10UMgUDTLxM-",
       "themen": [
         "Fiqh"
       ]
-    }],
+    },
+    {
+      "titel": "Verständnis der prophetischen Biographie",
+      "url": "https://youtube.com/playlist?list=PLz-qwtLIQTl5qh5ab5cI-C7-_haKu9uFA&si=uX5bM3qQUciG9PKe",
+      "themen": [
+        "Sirah"
+      ]
+    },
+    {
+      "titel": "Das Leben von Umm Sulaim bint Milhan",
+      "url": "https://youtu.be/XRtBOh89LTg?si=S5bjfs5XbqVtcuvT",
+      "themen": [
+        "Einzelvideo",
+        "Geschichte"
+      ]
+    }
+  ],
     "buecher": []
   },
   {
@@ -217,7 +286,7 @@
     "videos": [{
         "titel": "Ash-Shifa",
         "url": "https://youtube.com/playlist?list=PLz-qwtLIQTl4AGXX1dRQgp0-_j1Lw0Dep&si=7NoKRNT7B1qqQ79o",
-        "themen": []
+        "themen": ["Tazzkia"]
       },
       {
         "titel": "Die Zustände des Herzens nach Ghazali",
@@ -231,6 +300,13 @@
         "url": "https://youtube.com/playlist?list=PLz-qwtLIQTl52E1Cd0a-Uf-cL60tHFaNI&si=hMbV2F8P35MTTqQi",
         "themen": [
           "Fiqh"
+        ]
+      },
+      {
+        "titel": "Hikam von Ibn Ata'illah (Auszüge)",
+        "url": "https://youtube.com/playlist?list=PLz-qwtLIQTl7y6gec0D0y3F1VC-8TgLs2&si=cux2H9cfZmKA8tET",
+        "themen": [
+          "Hikma"
         ]
       }
     ],
