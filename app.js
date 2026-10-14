@@ -229,7 +229,9 @@ async function copyText(text) {
  */
 function bindShareButton(button) {
   if (!button) return;
-  const label = button.textContent.trim();
+  // Nur die Beschriftung austauschen, damit das Icon erhalten bleibt
+  const labelEl = button.querySelector('.share-label') || button;
+  const label = labelEl.textContent.trim();
   button.addEventListener('click', async () => {
     const url = window.location.href;
     if (navigator.share) {
@@ -241,9 +243,24 @@ function bindShareButton(button) {
       }
     }
     const ok = await copyText(url);
-    button.textContent = ok ? 'Link kopiert ✓' : 'Kopieren nicht möglich';
+    labelEl.textContent = ok ? 'Link kopiert ✓' : 'Kopieren nicht möglich';
+    button.classList.toggle('is-done', ok);
     clearTimeout(button._resetTimer);
-    button._resetTimer = setTimeout(() => { button.textContent = label; }, 2200);
+    button._resetTimer = setTimeout(() => {
+      labelEl.textContent = label;
+      button.classList.remove('is-done');
+    }, 2200);
+  });
+}
+
+/** Such-Taste auf der Handy-Tastatur schließt die Tastatur, damit die Treffer sichtbar werden. */
+function bindSearchKeyboard(input) {
+  if (!input) return;
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      input.blur();
+    }
   });
 }
 
@@ -426,7 +443,7 @@ function resourceItemHtml(cfg, r, { showProf = false, showLang = 'always' } = {}
           <span class="label-title">${escapeHtml(r.titel)}</span>
           ${r.beschreibung ? `<span class="label-desc">${escapeHtml(r.beschreibung)}</span>` : ''}
         </span>
-        <span class="go">Öffnen ↗</span>
+        <span class="go"><span class="go-text">Öffnen </span>↗</span>
       </a>
       ${badges ? `<div class="resource-themes">${badges}</div>` : ''}
     </li>
@@ -539,6 +556,28 @@ const IndexPage = (() => {
     els.grid = document.getElementById('card-grid');
     els.profCount = document.getElementById('result-count');
     els.share = document.getElementById('share-btn');
+    els.panel = document.querySelector('.search-panel');
+    els.toggle = document.getElementById('filters-toggle');
+    els.filterCount = document.getElementById('filter-count');
+  }
+
+  function filterSelects() {
+    return [els.lang, els.thema, els.niveau, els.format, els.spez];
+  }
+
+  /** Zähler am Filter-Button (Handy) und Sichtbarkeit von „Zurücksetzen“. */
+  function updateFilterUi() {
+    const active = filterSelects().filter(s => s.value).length;
+    if (els.filterCount) {
+      els.filterCount.textContent = String(active);
+      els.filterCount.hidden = active === 0;
+    }
+    els.clear.hidden = active === 0 && !els.search.value.trim();
+  }
+
+  function setFiltersOpen(open) {
+    els.panel.classList.toggle('filters-open', open);
+    if (els.toggle) els.toggle.setAttribute('aria-expanded', String(open));
   }
 
   /** URL-Parameter → Suchfeld und Filter (z. B. ?q=ramadan&sprache=Deutsch). */
@@ -625,6 +664,7 @@ const IndexPage = (() => {
     renderResources(resourceHits, searchActive);
     renderProfessors(profHits);
     writeUrlState();
+    updateFilterUi();
   }
 
   function renderResources(hits, visible) {
@@ -701,12 +741,16 @@ const IndexPage = (() => {
       applyFilters();
     };
     els.search.addEventListener('input', refresh);
-    [els.lang, els.thema, els.niveau, els.format, els.spez].forEach(s => s.addEventListener('change', refresh));
+    bindSearchKeyboard(els.search);
+    filterSelects().forEach(s => s.addEventListener('change', refresh));
     els.clear.addEventListener('click', () => {
       els.search.value = '';
-      [els.lang, els.thema, els.niveau, els.format, els.spez].forEach(s => { s.value = ''; });
+      filterSelects().forEach(s => { s.value = ''; });
       refresh();
     });
+    if (els.toggle) {
+      els.toggle.addEventListener('click', () => setFiltersOpen(!els.panel.classList.contains('filters-open')));
+    }
     els.resMore.addEventListener('click', () => {
       showAllResources = true;
       applyFilters();
@@ -923,6 +967,7 @@ const ThemenPage = (() => {
     try {
       stats = collectStats(data);
       els.search.value = new URLSearchParams(window.location.search).get('q') || '';
+      bindSearchKeyboard(els.search);
       render();
       els.search.addEventListener('input', () => {
         render();
@@ -980,7 +1025,8 @@ const ThemaPage = (() => {
     setup(els.lang, 'Alle Sprachen', languageOptions(cfg, matches));
     setup(els.format, 'Alle Formate', formatOptions(cfg, matches));
     setup(els.niveau, 'Alle Niveaus', groupOptions(cfg, matches, 'niveau'));
-    els.clear.hidden = [els.lang, els.format, els.niveau].every(s => s.hidden);
+    // Sind alle Filter ausgeblendet, bleibt nur der Teilen-Button übrig
+    els.lang.closest('.filter-fields').hidden = [els.lang, els.format, els.niveau].every(s => s.hidden);
   }
 
   function currentFilters() {
@@ -1021,6 +1067,7 @@ const ThemaPage = (() => {
     els.filterEmpty.hidden = visible.length > 0;
 
     const f = currentFilters();
+    els.clear.hidden = !(f.sprache || f.format || f.niveau);
     replaceUrlParams({ thema: themaLabel, sprache: f.sprache, format: f.format, niveau: f.niveau });
   }
 

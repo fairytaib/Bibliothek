@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Gelehrte — ARCHIV</title>
   <meta name="description" content="Durchsuche Vorträge, Reihen und Bücher nach Thema, Titel, Sprache und Gelehrtem." />
   <link rel="stylesheet" href="style.css" />
@@ -45,17 +45,30 @@
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input type="search" id="search-input" class="search-field" placeholder="z. B. Ramadan, Paradies, Sirah oder Omar Suleiman" autocomplete="off" aria-label="Suche" />
+            <input type="search" enterkeyhint="search" id="search-input" class="search-field" placeholder="Suchen …" autocomplete="off" aria-label="Suche nach Thema, Videotitel oder Gelehrtem" />
           </div>
+          <!-- Nur auf dem Handy sichtbar: klappt die Filter auf und zu -->
+          <button type="button" id="filters-toggle" class="filters-toggle" aria-expanded="false" aria-controls="filter-fields">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="7" y1="12" x2="17" y2="12"></line><line x1="10" y1="18" x2="14" y2="18"></line></svg>
+            <span>Filter</span>
+            <span class="filter-count" id="filter-count" hidden></span>
+          </button>
         </div>
         <div class="filters-row">
-          <select id="filter-lang" class="filter-select" aria-label="Sprache"></select>
-          <select id="filter-thema" class="filter-select" aria-label="Thema"></select>
-          <select id="filter-niveau" class="filter-select" aria-label="Niveau"></select>
-          <select id="filter-format" class="filter-select" aria-label="Format"></select>
-          <select id="filter-spez" class="filter-select" aria-label="Spezialisierung"></select>
-          <button type="button" id="clear-filters" class="clear-filters">Filter zurücksetzen</button>
-          <button type="button" id="share-btn" class="share-btn" title="Link zu dieser Suche teilen">Link teilen</button>
+          <div class="filter-fields" id="filter-fields">
+            <select id="filter-lang" class="filter-select" aria-label="Sprache"></select>
+            <select id="filter-thema" class="filter-select" aria-label="Thema"></select>
+            <select id="filter-niveau" class="filter-select" aria-label="Niveau"></select>
+            <select id="filter-format" class="filter-select" aria-label="Format"></select>
+            <select id="filter-spez" class="filter-select" aria-label="Spezialisierung"></select>
+          </div>
+          <div class="filter-actions">
+            <button type="button" id="clear-filters" class="clear-filters" hidden>Zurücksetzen</button>
+            <button type="button" id="share-btn" class="share-btn" title="Link zu dieser Suche teilen">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+              <span class="share-label">Link teilen</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

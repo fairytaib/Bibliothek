@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Thema — ARCHIV</title>
   <link rel="stylesheet" href="style.css" />
   <meta name="theme-color" content="#0a0f1a" />
@@ -75,11 +75,18 @@
         <p id="thema-summary" aria-live="polite"></p>
 
         <div class="filters-row thema-filters">
-          <select id="thema-filter-lang" class="filter-select" aria-label="Sprache"></select>
-          <select id="thema-filter-format" class="filter-select" aria-label="Format"></select>
-          <select id="thema-filter-niveau" class="filter-select" aria-label="Niveau"></select>
-          <button type="button" id="thema-clear" class="clear-filters">Filter zurücksetzen</button>
-          <button type="button" id="thema-share" class="share-btn" title="Link zu diesem Thema teilen">Link teilen</button>
+          <div class="filter-fields">
+            <select id="thema-filter-lang" class="filter-select" aria-label="Sprache"></select>
+            <select id="thema-filter-format" class="filter-select" aria-label="Format"></select>
+            <select id="thema-filter-niveau" class="filter-select" aria-label="Niveau"></select>
+          </div>
+          <div class="filter-actions">
+            <button type="button" id="thema-clear" class="clear-filters" hidden>Zurücksetzen</button>
+            <button type="button" id="thema-share" class="share-btn" title="Link zu diesem Thema teilen">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+              <span class="share-label">Link teilen</span>
+            </button>
+          </div>
         </div>
       </div>
     </section>

@@ -1003,7 +1003,7 @@ pre#json-output{
   margin: 0;
 }
 
-.result-block + .result-block{ margin-top: 48px; }
+.result-block:not([hidden]) + .result-block{ margin-top: 48px; }
 
 .list-empty{
   padding: 18px;
@@ -1209,20 +1209,239 @@ details.dynamic-row[open] > summary.dynamic-row-header{ margin-bottom: 14px; }
   100%{ box-shadow: 0 0 0 3px rgba(41, 212, 232, 0); }
 }
 
-/* ---------- Responsive ---------- */
-@media (max-width: 860px){
-  .profile-grid{ grid-template-columns: 1fr; }
-  .admin-grid{ grid-template-columns: 1fr; }
-  .output-panel{ position: static; }
+/* ---------- Filter: Felder, Aktionen, Aufklappen (Handy) ---------- */
+.filters-row{ align-items: center; }
+.filter-fields{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex: 1 1 auto;
+}
+.filter-actions{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+.filter-actions .share-btn{ margin-left: auto; }
+
+.filters-toggle{
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-shrink: 0;
+  height: 48px;
+  padding: 0 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.filters-toggle svg{ width: 18px; height: 18px; color: var(--accent); }
+.filters-toggle[aria-expanded="true"]{ border-color: var(--accent); background: var(--accent-soft); }
+.filter-count{
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #051019;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
 }
 
+.share-btn svg{ width: 16px; height: 16px; flex-shrink: 0; }
+.share-btn.is-done{ border-color: var(--accent); background: var(--accent-soft); }
+
+/* Admin: Auswahlfelder im selben Stil wie die Filter */
+.field select{
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 38px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238d98b3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  cursor: pointer;
+}
+
+/* Admin: Ausgabe-Kopf darf umbrechen */
+.output-header{ flex-wrap: wrap; gap: 12px; }
+
+/* Admin: „Übernehmen“ bleibt beim Scrollen am unteren Rand erreichbar */
+.sticky-actions{
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  margin: 0 -4px;
+  padding: 14px 4px calc(14px + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, var(--bg) 65%, rgba(10, 15, 26, 0));
+}
+.sticky-actions .btn{ box-shadow: 0 10px 28px -12px rgba(41, 212, 232, 0.55); }
+.delete-btn{ width: 100%; justify-content: center; margin-top: 4px; }
+body:has(.sticky-actions) .toast{ bottom: calc(92px + env(safe-area-inset-bottom)); }
+
+/* ---------- Allgemein: lange Wörter, Toast, Sprunganker ---------- */
+html{ scroll-padding-top: 88px; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+a, button, summary, select{ -webkit-tap-highlight-color: transparent; }
+.prof-card h3, .label-title, .theme-prof-name, .profile-head h1, .thema-hero h1, .dynamic-row-title{ overflow-wrap: anywhere; }
+.toast{
+  bottom: calc(28px + env(safe-area-inset-bottom));
+  max-width: calc(100% - 32px);
+  text-align: center;
+}
+
+/* ---------- Touch-Geräte ---------- */
+@media (hover: none){
+  /* Hover-Effekte würden nach dem Antippen „hängen bleiben“ */
+  .prof-card:hover, .theme-tile:hover, .btn:hover{ transform: none; }
+  .prof-card:hover, .theme-tile:hover{ box-shadow: none; }
+}
+
+@media (pointer: coarse), (max-width: 640px){
+  /* Größere Tippflächen */
+  .badge{ min-height: 30px; padding: 5px 11px; }
+  .badge-sm{ min-height: 28px; padding: 4px 10px; }
+  .tag-chip{ min-height: 40px; }
+  .back-link{ min-height: 44px; }
+  .view-link{ min-height: 36px; }
+  /* Kurzes Feedback beim Antippen */
+  .prof-card, .theme-tile, .resource-item, .theme-prof-card{ transition: transform .12s ease, border-color .15s ease, box-shadow .15s ease; }
+  .prof-card:active, .theme-tile:active, .resource-item:active, .theme-prof-card:active{ transform: scale(.985); }
+}
+
+/* iOS zoomt bei Eingabefeldern unter 16px automatisch hinein – das verhindern */
+@media (max-width: 860px), (pointer: coarse){
+  .search-field,
+  .filter-select,
+  .field input[type="text"],
+  .field input[type="url"],
+  .field select,
+  .field textarea,
+  .input-control{ font-size: 16px; }
+}
+
+/* ---------- Tablet ---------- */
+@media (max-width: 860px){
+  .profile-grid{ grid-template-columns: 1fr; gap: 0; }
+  .admin-grid{ grid-template-columns: 1fr; gap: 8px; }
+  .output-panel{ position: static; }
+  .hero{ padding: 44px 0 32px; }
+  .filter-select{ max-width: none; }
+  .results-section{ padding: 32px 0 72px; }
+  .profile-body, .thema-body, .admin-body{ padding: 32px 0 72px; }
+}
+
+/* ---------- Handy ---------- */
 @media (max-width: 640px){
-  .site-header .container{ height: auto; padding: 14px 20px; flex-wrap: wrap; gap: 10px; }
-  .hero{ padding: 40px 0 28px; }
-  .search-row{ flex-direction: column; }
-  .filter-select{ flex-basis: 100%; max-width: none; }
-  .card-grid{ grid-template-columns: 1fr; }
-  .themen-cloud{ grid-template-columns: 1fr; }
-  .profile-head{ flex-direction: column; }
-  .resource-themes{ padding-left: 16px; }
+  .container{
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+
+  /* Kopfzeile: eine Zeile, 56px */
+  .site-header .container{ height: 56px; flex-wrap: nowrap; gap: 8px; }
+  .brand{ font-size: 20px; gap: 8px; align-items: center; flex-shrink: 0; }
+  .brand .mark{ width: 28px; height: 28px; font-size: 15px; }
+  .brand small{ display: none; }
+  .nav-links{ gap: 2px; }
+  .nav-links a{ padding: 8px 10px; font-size: 14px; }
+
+  /* Hero kompakter, damit die Suche sofort sichtbar ist */
+  .hero{ padding: 22px 0 18px; }
+  .hero-eyebrow{ font-size: 12px; margin-bottom: 8px; }
+  .hero h1{ font-size: clamp(26px, 7.4vw, 32px); max-width: none; margin-bottom: 8px; }
+  .hero p{ font-size: 15px; margin-bottom: 18px; }
+
+  /* Suche + Filter */
+  .search-panel{ padding: 12px; border-radius: var(--radius-md); }
+  .search-row{ flex-direction: row; gap: 8px; }
+  .search-field{ height: 48px; padding-left: 42px; }
+  .search-input-wrap svg{ left: 14px; }
+  .filters-toggle{ display: inline-flex; }
+  .search-panel:not(.filters-open) .filter-fields{ display: none; }
+  .filters-row{ margin-top: 10px; gap: 8px; }
+  .filter-fields{ flex-direction: column; flex-wrap: nowrap; width: 100%; gap: 8px; }
+  .filter-select{ flex: none; width: 100%; max-width: none; height: 46px; }
+  .filter-actions{ width: 100%; margin-left: 0; gap: 8px; }
+  .clear-filters, .share-btn{ height: 42px; }
+  .clear-filters{ padding: 0 6px; }
+
+  /* Ergebnisse */
+  .results-section{ padding: 20px 0 56px; }
+  .result-block:not([hidden]) + .result-block{ margin-top: 32px; }
+  .results-meta{ margin-bottom: 12px; }
+  .section-title{ font-size: 18px; }
+  .card-grid{ grid-template-columns: 1fr; gap: 12px; }
+  .prof-card{ padding: 18px; gap: 10px; }
+  .prof-card h3{ font-size: 18px; }
+
+  /* Video-/Buch-Einträge: volle Breite für den Titel */
+  .resource-main{ padding: 12px 14px; align-items: flex-start; }
+  .resource-item .icon{ width: 32px; height: 32px; }
+  .resource-item .label{ font-size: 15px; padding-top: 5px; }
+  .resource-item .go{ font-size: 16px; padding-top: 5px; }
+  .go-text{ display: none; }
+  .resource-themes{ padding: 0 14px 14px; }
+
+  /* Panels mit weniger Innenabstand, damit verschachtelte Listen nicht zu schmal werden */
+  .panel{ padding: 18px 14px; border-radius: var(--radius-md); margin-bottom: 16px; }
+  .panel h2{ font-size: 18px; margin-bottom: 12px; }
+
+  /* Profil */
+  .profile-hero, .thema-hero{ padding: 8px 0 20px; }
+  .back-link{ margin-bottom: 8px; }
+  .profile-head{ flex-direction: column; gap: 16px; }
+  .profile-head h1{ margin-bottom: 6px; }
+  .profile-head .spez{ margin-bottom: 12px; }
+  .profile-body, .thema-body{ padding: 20px 0 56px; }
+
+  /* Themen-Übersicht */
+  .themen-cloud{ grid-template-columns: 1fr; gap: 10px; }
+  .theme-tile{ padding: 14px 16px; gap: 4px; }
+  .theme-group + .theme-group{ margin-top: 28px; }
+  .theme-group .section-title{ margin-bottom: 10px; }
+
+  /* Thema: Gelehrte zweispaltig */
+  .theme-prof-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .theme-prof-card{ padding: 10px 12px; }
+  .theme-prof-name{ font-size: 14px; }
+  .thema-filters{ margin-top: 16px; }
+
+  /* Admin */
+  .admin-body{ padding: 20px 0 56px; }
+  .form-section{ padding: 18px 14px; border-radius: var(--radius-md); margin-bottom: 14px; }
+  .form-section h2{ margin-bottom: 14px; }
+  .dynamic-row{ padding: 12px; }
+  .mode-tabs{ margin-bottom: 14px; }
+  .mode-tab{ padding: 10px 8px; font-size: 13px; }
+  .output-actions{ width: 100%; }
+  .output-actions .btn{ flex: 1; justify-content: center; }
+  pre#json-output{ max-height: 360px; font-size: 12px; padding: 14px; }
+  .tag-guide{ padding: 10px 12px; }
+  .tag-guide table{ font-size: 12.5px; }
+
+  /* Leere Zustände & Fehlerseiten */
+  .not-found{ padding: 72px 8px; }
+  .not-found h1{ font-size: 26px; }
+  .empty-state{ padding: 44px 16px; }
+}
+
+/* Sehr schmale Geräte (z. B. iPhone SE 1. Generation) */
+@media (max-width: 359px){
+  .brand .mark{ display: none; }
+  .nav-links a{ padding: 8px 8px; font-size: 13.5px; }
+  .filters-toggle span:not(.filter-count){ display: none; }
+}
+
+/* Themen-Seite: die wenigen Filter auf dem Handy nebeneinander */
+@media (max-width: 640px){
+  /* auto-fit: ein einzelner sichtbarer Filter nimmt automatisch die volle Breite */
+  .thema-filters .filter-fields{ display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
 }
