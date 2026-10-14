@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin — ARCHIV</title>
   <link rel="stylesheet" href="style.css" />
+  <meta name="theme-color" content="#0a0f1a" />
+  <meta name="robots" content="noindex" />
 </head>
 
 <body>
@@ -19,7 +21,7 @@
       <nav class="nav-links">
         <a href="index.html">Gelehrte</a>
         <a href="themen.html">Themen</a>
-        <!-- <a href="admin.html">Admin</a> -->
+        <a href="admin.html" class="active">Admin</a>
       </nav>
     </div>
   </header>
@@ -27,8 +29,8 @@
   <section class="hero" style="padding-bottom: 24px;">
     <div class="container">
       <p class="hero-eyebrow">Admin</p>
-      <h1>Einträge anlegen &amp; ergänzen</h1>
-      <p>Lege einen neuen Gelehrten an oder ergänze bei einem vorhandenen ein Video bzw. Buch. Danach lädst du die komplette, fertige <code>data.json</code> herunter und ersetzt damit die alte Datei. Tags, Sprachen und Spezialisierungen kommen aus <code>tags.json</code>.</p>
+      <h1>Einträge pflegen</h1>
+      <p>Lege neue Gelehrte an oder bearbeite vorhandene: Videos und Bücher ergänzen, ändern oder entfernen. Danach lädst du die komplette, fertige <code>data.json</code> herunter und ersetzt damit die alte Datei. Tags, Sprachen und Spezialisierungen kommen aus <code>tags.json</code>.</p>
     </div>
   </section>
 
@@ -40,12 +42,22 @@
         <div class="col-form">
 
           <div class="mode-tabs">
-            <button type="button" class="mode-tab active" id="tab-new-professor">Neuen Gelehrten anlegen</button>
-            <button type="button" class="mode-tab" id="tab-existing-professor">Video/Buch zu bestehendem Gelehrten</button>
+            <button type="button" class="mode-tab active" id="tab-new">Neuen Gelehrten anlegen</button>
+            <button type="button" class="mode-tab" id="tab-edit">Gelehrten bearbeiten</button>
           </div>
 
-          <!-- ============ MODUS 1: NEUER GELEHRTER ============ -->
-          <div id="new-professor-panel">
+          <!-- Nur im Bearbeiten-Modus -->
+          <div class="form-section" id="edit-section" hidden>
+            <h2>Gelehrten auswählen</h2>
+            <div class="field" style="margin-bottom: 0;">
+              <label for="edit-prof-select">Gelehrter</label>
+              <select id="edit-prof-select"></select>
+              <p class="field-hint">Alle Videos und Bücher erscheinen eingeklappt. Zum Ändern aufklappen, zum Entfernen auf ✕ klicken.</p>
+            </div>
+          </div>
+
+          <!-- Gemeinsames Formular für Neu und Bearbeiten -->
+          <div id="prof-form">
 
             <div class="form-section">
               <h2>Grunddaten</h2>
@@ -58,7 +70,7 @@
               <div class="field">
                 <label for="f-id">ID (URL-Kennung)</label>
                 <input type="text" id="f-id" placeholder="prof-max-mustermann" />
-                <p class="field-hint">Wird automatisch aus dem Namen erzeugt. Nur Kleinbuchstaben, Ziffern und Bindestriche.</p>
+                <p class="field-hint" id="f-id-hint"></p>
               </div>
 
               <div class="field">
@@ -81,7 +93,7 @@
 
             <div class="form-section">
               <h2>Videos</h2>
-              <p class="field-hint" style="margin: -8px 0 16px;">Wähle pro Video passende Tags, damit es über Suche, Filter und Themen-Seite gefunden wird.</p>
+              <p class="field-hint" style="margin: -8px 0 16px;">Tags und Kurzbeschreibung sorgen dafür, dass ein Video über Suche, Filter und Themen-Seite gefunden wird.</p>
               <div data-role="tag-guide"></div>
               <div id="videos-container"></div>
               <button type="button" class="add-row-btn" id="add-video-btn">+ Video hinzufügen</button>
@@ -95,62 +107,8 @@
             </div>
 
             <div class="form-actions">
-              <button type="button" class="btn" id="generate-btn">In data.json übernehmen</button>
-              <button type="button" class="btn secondary" id="reset-new-btn">Formular leeren für nächsten Gelehrten</button>
-            </div>
-          </div>
-
-          <!-- ============ MODUS 2: BESTEHENDER GELEHRTER ============ -->
-          <div id="existing-professor-panel" style="display:none;">
-
-            <div class="form-section">
-              <h2>Gelehrten auswählen</h2>
-
-              <div class="field">
-                <label for="existing-prof-select">Bestehender Gelehrter</label>
-                <select id="existing-prof-select">
-                  <option value="">Wird geladen …</option>
-                </select>
-              </div>
-
-              <div class="existing-prof-summary" id="existing-prof-summary"></div>
-            </div>
-
-            <div class="form-section">
-              <h2>Neuen Eintrag hinzufügen</h2>
-
-              <div class="field">
-                <label>Art des Eintrags</label>
-                <div class="mode-tabs" style="margin-top: 6px;">
-                  <button type="button" class="mode-tab active" id="kind-video-btn">Video</button>
-                  <button type="button" class="mode-tab" id="kind-buch-btn">Buch</button>
-                </div>
-              </div>
-
-              <div class="field">
-                <label for="existing-titel">Titel</label>
-                <input type="text" id="existing-titel" placeholder="Video-Titel" />
-              </div>
-
-              <div class="field">
-                <label for="existing-url">URL</label>
-                <input type="url" id="existing-url" placeholder="https://www.youtube.com/watch?v=…" />
-              </div>
-
-              <div class="field">
-                <label for="existing-sprache">Sprache</label>
-                <select id="existing-sprache"></select>
-              </div>
-
-              <div class="field" style="margin-bottom: 0;">
-                <label>Themen</label>
-                <div data-role="tag-guide"></div>
-                <div class="tag-picker" id="existing-tag-picker"></div>
-              </div>
-            </div>
-
-            <div class="form-actions">
-              <button type="button" class="btn" id="generate-existing-btn">In data.json übernehmen</button>
+              <button type="button" class="btn" id="save-btn">In data.json übernehmen</button>
+              <button type="button" class="btn danger-outline" id="delete-btn" hidden>Diesen Gelehrten löschen</button>
             </div>
           </div>
 
@@ -175,7 +133,7 @@
             </div>
             <pre id="json-output">// Noch keine Änderungen.</pre>
             <p class="field-hint" style="margin-top: 12px;">
-              Ersetze in deinem GitHub-Repository die alte <code>data.json</code> durch die heruntergeladene Datei. Kurz danach ist die Seite aktualisiert. Die Datei enthält alle bisherigen Einträge plus deine Änderungen.
+              Ersetze in deinem GitHub-Repository die alte <code>data.json</code> durch die heruntergeladene Datei. GitHub prüft sie automatisch und veröffentlicht sie nur, wenn sie fehlerfrei ist. Die Datei enthält alle bisherigen Einträge plus deine Änderungen.
             </p>
           </div>
         </div>
@@ -192,28 +150,34 @@
     </div>
   </footer>
 
-  <!-- Gemeinsame Hilfsfunktionen (loadData, loadTagConfig, tagInfo, escapeHtml …) -->
+  <!-- Gemeinsame Hilfsfunktionen (loadData, loadTagConfig, tagInfo, escapeHtml, copyText …) -->
   <script src="app.js"></script>
   <script>
   /* =========================================================
      admin.html — Formular-Logik
 
-     Ablauf: data.json und tags.json laden → Änderungen im Formular
-     erfassen → komplette, aktualisierte data.json ausgeben.
-     Die Originaldaten bleiben unverändert; alle Änderungen dieser
-     Sitzung liegen in "changes" und werden beim Ausgeben eingemischt.
+     Ablauf: data.json und tags.json laden → im Formular anlegen,
+     ändern oder löschen → komplette, aktualisierte data.json ausgeben.
+
+     Die geladenen Originaldaten bleiben unverändert. Änderungen dieser
+     Sitzung liegen in "changes" (geänderte/neue Gelehrte) und
+     "deletions" (gelöschte) und werden beim Ausgeben eingemischt.
      ========================================================= */
 
   let cfg = buildTagConfig(null);
   let baseData = [];          // data.json in Originalreihenfolge
   let dataLoaded = false;
   const changes = new Map();  // id → { entry, isNew }
-  const changeLog = [];       // Texte für „Änderungen in dieser Sitzung“
-  let editingNewId = null;    // Eintrag, den das Formular „Neuer Gelehrter“ gerade bearbeitet
-  let unsaved = false;        // Änderungen noch nicht heruntergeladen/kopiert
-  let currentResourceKind = 'video';
+  const deletions = new Set();
+  const changeLog = [];
+  let mode = 'new';           // 'new' | 'edit'
+  let editId = null;          // im Bearbeiten-Modus geöffneter Gelehrter
+  let formDirty = false;      // Formular enthält noch nicht übernommene Eingaben
+  let unsaved = false;        // übernommene Änderungen noch nicht heruntergeladen/kopiert
 
   const FALLBACK_LANGUAGES = ['Deutsch', 'Englisch', 'Andere'];
+  const RESOURCE_KEYS = ['titel', 'url', 'sprache', 'beschreibung', 'themen'];
+  const DESCRIPTION_MAX = 300;
   const $ = id => document.getElementById(id);
 
   function languages() {
@@ -225,7 +189,7 @@
       .toLowerCase()
       .trim()
       .replace(/ß/g, 'ss')
-      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-z0-9\s-]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
@@ -241,16 +205,26 @@
     return /^https?:\/\/\S+$/i.test(value);
   }
 
-  /* ---------- Datenstand ---------- */
+  function sameSet(a, b) {
+    return a.length === b.length && a.every(x => b.includes(x)) && b.every(x => a.includes(x));
+  }
+
+  /* =========================================================
+     Datenstand
+     ========================================================= */
 
   function mergedData() {
-    const result = baseData.map(p => (changes.has(p.id) ? changes.get(p.id).entry : p));
+    const result = baseData
+      .filter(p => !deletions.has(p.id))
+      .map(p => (changes.has(p.id) ? changes.get(p.id).entry : p));
     changes.forEach(change => { if (change.isNew) result.push(change.entry); });
     return result;
   }
 
   function currentProfessor(id) {
+    if (!id) return null;
     if (changes.has(id)) return changes.get(id).entry;
+    if (deletions.has(id)) return null;
     return baseData.find(p => p.id === id) || null;
   }
 
@@ -277,8 +251,8 @@
     }
   }
 
-  /** Sucht einen bereits vorhandenen Eintrag mit demselben Link. */
-  function findDuplicateUrl(url, excludeProfId = null) {
+  /** Sucht einen Eintrag mit demselben Link bei einem anderen Gelehrten. */
+  function findDuplicateUrl(url, excludeProfId) {
     const key = urlKey(url);
     for (const prof of mergedData()) {
       if (prof.id === excludeProfId) continue;
@@ -291,31 +265,28 @@
     return null;
   }
 
-  function buildResource(titel, url, sprache, profSprache, themen) {
-    const resource = { titel, url };
-    if (sprache && sprache !== profSprache) resource.sprache = sprache;
-    resource.themen = themen;
-    return resource;
-  }
-
-  /* ---------- Modus-Umschaltung ---------- */
-
-  function setMode(mode) {
-    const isNew = mode === 'new';
-    $('new-professor-panel').style.display = isNew ? '' : 'none';
-    $('existing-professor-panel').style.display = isNew ? 'none' : '';
-    $('tab-new-professor').classList.toggle('active', isNew);
-    $('tab-existing-professor').classList.toggle('active', !isNew);
-  }
-
-  $('tab-new-professor').addEventListener('click', () => setMode('new'));
-  $('tab-existing-professor').addEventListener('click', () => setMode('existing'));
-
-  /* ---------- Auswahllisten ---------- */
+  /* =========================================================
+     Auswahllisten
+     ========================================================= */
 
   function languageSelectHtml(inheritLabel) {
     const inherit = inheritLabel ? `<option value="">${escapeHtml(inheritLabel)}</option>` : '';
     return inherit + languages().map(l => `<option value="${escapeHtml(l)}">${escapeHtml(l)}</option>`).join('');
+  }
+
+  /** Wert setzen; ist er nicht in der Liste (alter Datenbestand), wird er als Option ergänzt statt verloren zu gehen. */
+  function setSelectKeepingValue(select, value) {
+    if (value && ![...select.options].some(o => o.value === value)) {
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = `${value} (bisheriger Wert)`;
+      select.appendChild(option);
+    }
+    select.value = value || '';
+  }
+
+  function fillLanguageSelect() {
+    $('f-sprache').innerHTML = languageSelectHtml(null);
   }
 
   function fillSpezSelect() {
@@ -323,10 +294,22 @@
     cfg.gruppen.filter(g => g.art === 'thema').forEach(g => {
       g.tags.forEach(t => options.push({ value: t.name, group: g.name }));
     });
+    $('f-spez').value = '';
     fillSelect($('f-spez'), '– keine Angabe –', options);
   }
 
-  /* ---------- Tag-Leitfaden ---------- */
+  function refreshEditSelect() {
+    const select = $('edit-prof-select');
+    const list = sortProfessors(mergedData());
+    select.innerHTML = '<option value="">Bitte wählen …</option>' + list.map(p =>
+      `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}${changes.get(p.id)?.isNew ? ' (neu)' : ''}</option>`
+    ).join('');
+    select.value = editId && list.some(p => p.id === editId) ? editId : '';
+  }
+
+  /* =========================================================
+     Tag-Leitfaden
+     ========================================================= */
 
   function renderTagGuide(el) {
     const rows = cfg.gruppen.map(g => `
@@ -336,13 +319,14 @@
 
     el.innerHTML = `
       <details class="tag-guide">
-        <summary>Wie tagge ich richtig? (Leitfaden öffnen)</summary>
+        <summary>Wie tagge und beschreibe ich richtig? (Leitfaden öffnen)</summary>
         <ol>
           <li><strong>Format:</strong> Bei Videos immer genau <em>Playlist</em> oder <em>Einzelvideo</em>. Wird anhand der URL vorausgewählt.</li>
           <li><strong>Inhalt:</strong> 1–3 Tags für das <em>Hauptthema</em>. Frage: „Unter welchem Thema würde jemand dieses Video suchen?“ Nicht alles taggen, was nur kurz vorkommt.</li>
           <li><strong>Niveau:</strong> Nur setzen, wenn der Inhalt klar für Einsteiger oder klar anspruchsvoll ist. Sonst leer lassen.</li>
           <li><strong>Kostenpflichtig:</strong> Nur wenn der Inhalt hinter einer Bezahlschranke liegt.</li>
           <li><strong>Spezifisch vor allgemein:</strong> Prophetengeschichten → <em>Propheten</em> (nicht nur <em>Geschichte</em>), Ramadan → <em>Ibadah</em> (nicht <em>Fiqh</em>).</li>
+          <li><strong>Kurzbeschreibung (optional):</strong> 1–2 Sätze: Worum geht es, für wen ist es gedacht? Begriffe, nach denen jemand suchen würde, gehören hier hinein – die Suche berücksichtigt sie.</li>
           <li><strong>Sprache:</strong> Nur ändern, wenn das Video in einer anderen Sprache ist als beim Gelehrten angegeben.</li>
           <li>Passt kein Tag? Nicht den „nächstbesten“ wählen, sondern einen neuen Tag in <code>tags.json</code> ergänzen.</li>
         </ol>
@@ -350,14 +334,18 @@
         <p class="guide-example"><strong>Beispiele:</strong><br>
           „Tafsir Surah Yasin“ → Playlist · Quran<br>
           „Das Leben von Umm Sulaim“ → Einzelvideo · Sahaba · Frauen im Islam<br>
-          „Muslim sein für Beginner“ → Playlist · Einsteiger · Ibadah · Fiqh</p>
+          „Muslim sein für Beginner“ → Playlist · Einsteiger · Ibadah · Fiqh<br>
+          Beschreibung: „Grundlagen von Gebet, Fasten und Reinheit – für Neu-Muslime und alle, die ihr Wissen auffrischen wollen.“</p>
       </details>`;
   }
 
-  /* ---------- Tag-Auswahl mit Gruppen, Erklärungen und Prüfung ---------- */
+  /* =========================================================
+     Tag-Auswahl mit Gruppen, Erklärungen und Prüfung
+     ========================================================= */
 
-  function renderTagPicker(pickerEl, kind = 'video') {
+  function renderTagPicker(pickerEl, kind, selected = []) {
     pickerEl.dataset.kind = kind;
+    delete pickerEl.dataset.formatLocked;
     const groups = cfg.gruppen.filter(g => g.tags.length && !(g.nurVideo && kind !== 'video'));
 
     if (groups.length === 0) {
@@ -380,9 +368,15 @@
     const help = pickerEl.querySelector('[data-role="help"]');
     const defaultHelp = help.textContent;
     const chips = [...pickerEl.querySelectorAll('.tag-chip')];
+    const wanted = new Set(selected.map(t => tagLabel(cfg, t)));
 
     chips.forEach(chip => {
       const info = tagInfo(cfg, chip.dataset.tag);
+      if (wanted.has(chip.dataset.tag)) {
+        chip.classList.add('selected');
+        if (info?.gruppe.id === 'format') pickerEl.dataset.formatLocked = 'true';
+      }
+
       const showHelp = () => {
         help.innerHTML = `<strong>${escapeHtml(chip.dataset.tag)}:</strong> ${escapeHtml(info?.beschreibung || 'Keine Beschreibung hinterlegt.')}`;
       };
@@ -401,7 +395,7 @@
           });
         }
         chip.classList.toggle('selected', select);
-        chip.dataset.userSet = 'true';
+        if (info?.gruppe.id === 'format') pickerEl.dataset.formatLocked = 'true';
         showHelp();
         validateTagPicker(pickerEl);
       });
@@ -416,10 +410,11 @@
 
   function getTagWarnings(selected, kind) {
     const warnings = [];
-    const byRule = regel => selected.filter(t => tagInfo(cfg, t)?.gruppe.regel === regel);
     const content = selected.filter(t => tagInfo(cfg, t)?.gruppe.art === 'thema');
+    const formatGroup = cfg.gruppen.find(g => g.id === 'format');
+    const formats = selected.filter(t => tagInfo(cfg, t)?.gruppe.id === 'format');
 
-    if (kind === 'video' && cfg.gruppen.some(g => g.regel === 'genau-eins' && g.nurVideo) && byRule('genau-eins').length !== 1) {
+    if (kind === 'video' && formatGroup && formats.length !== 1) {
       warnings.push('Format fehlt: Playlist oder Einzelvideo wählen.');
     }
     if (content.length === 0) {
@@ -442,13 +437,13 @@
       : '<div class="ok">✓ Tags sehen gut aus.</div>';
   }
 
-  /** Format aus der URL vorschlagen – nur solange es nicht von Hand gewählt wurde. */
+  /** Format aus der URL vorschlagen – nur solange es nicht von Hand gewählt bzw. schon gespeichert ist. */
   function suggestFormatFromUrl(url, pickerEl) {
-    if (!pickerEl || pickerEl.dataset.kind !== 'video') return;
+    if (!pickerEl || pickerEl.dataset.kind !== 'video' || pickerEl.dataset.formatLocked) return;
     const chips = [...pickerEl.querySelectorAll('.tag-chip')];
     const playlist = chips.find(c => c.dataset.tag === 'Playlist');
     const single = chips.find(c => c.dataset.tag === 'Einzelvideo');
-    if (!playlist || !single || playlist.dataset.userSet || single.dataset.userSet) return;
+    if (!playlist || !single) return;
 
     const isPlaylist = (/[?&]list=/.test(url) && !/[?&]v=/.test(url)) || /\/playlist\b/.test(url);
     const isSingle = !isPlaylist && /(youtu\.be\/|youtube\.com\/(watch|live|shorts))/.test(url);
@@ -457,7 +452,9 @@
     validateTagPicker(pickerEl);
   }
 
-  /* ---------- Modus 1: Video-/Buch-Zeilen ---------- */
+  /* =========================================================
+     Video-/Buch-Zeilen
+     ========================================================= */
 
   function rowContainer(kind) {
     return $(kind === 'video' ? 'videos-container' : 'buecher-container');
@@ -470,120 +467,292 @@
     });
   }
 
-  function createDynamicRow(kind) {
+  /**
+   * Eine Zeile für ein Video/Buch. Mit "item" vorbelegt (Bearbeiten),
+   * sonst leer (neuer Eintrag). Bestehende Einträge starten eingeklappt.
+   */
+  function createDynamicRow(kind, item = null) {
     const isVideo = kind === 'video';
-    const row = document.createElement('div');
+    const row = document.createElement('details');
     row.className = 'dynamic-row';
+    row.open = !item;
+    row._kind = kind;
+    row._original = item ? JSON.parse(JSON.stringify(item)) : null;
+    row._extraTags = item ? (item.themen || []).filter(t => typeof t === 'string' && !tagInfo(cfg, t)) : [];
+
     row.innerHTML = `
-      <div class="dynamic-row-header">
+      <summary class="dynamic-row-header">
         <span class="dynamic-row-kind"></span>
-        <button type="button" class="icon-btn" aria-label="Eintrag entfernen">
+        <span class="dynamic-row-title"></span>
+        <button type="button" class="icon-btn" aria-label="Eintrag entfernen" title="Eintrag entfernen">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
-      </div>
-      <div class="field">
-        <label>Titel</label>
-        <input type="text" class="res-titel" placeholder="${isVideo ? 'Video-Titel' : 'Buch-/Quellentitel'}" />
-      </div>
-      <div class="field">
-        <label>URL</label>
-        <input type="url" class="res-url" placeholder="${isVideo ? 'https://www.youtube.com/watch?v=…' : 'https://…'}" />
-      </div>
-      <div class="field">
-        <label>Sprache</label>
-        <select class="res-sprache">${languageSelectHtml('Wie beim Gelehrten')}</select>
-      </div>
-      <div class="field" style="margin-bottom: 0;">
-        <label>Themen</label>
-        <div class="tag-picker" data-role="tag-picker"></div>
+      </summary>
+      <div class="dynamic-row-body">
+        <div class="field">
+          <label>Titel</label>
+          <input type="text" class="res-titel" placeholder="${isVideo ? 'Video-Titel' : 'Buch-/Quellentitel'}" />
+        </div>
+        <div class="field">
+          <label>URL</label>
+          <input type="url" class="res-url" placeholder="${isVideo ? 'https://www.youtube.com/watch?v=…' : 'https://…'}" />
+        </div>
+        <div class="field">
+          <label>Kurzbeschreibung <span class="optional">(optional)</span></label>
+          <textarea class="res-beschreibung" rows="2" maxlength="600" placeholder="1–2 Sätze: Worum geht es, für wen ist es gedacht?"></textarea>
+        </div>
+        <div class="field">
+          <label>Sprache</label>
+          <select class="res-sprache">${languageSelectHtml('Wie beim Gelehrten')}</select>
+        </div>
+        <div class="field" style="margin-bottom: 0;">
+          <label>Themen</label>
+          <div class="tag-picker" data-role="tag-picker"></div>
+          ${row._extraTags.length ? `<p class="field-hint">Weitere Tags, die nicht in tags.json stehen: ${escapeHtml(row._extraTags.join(', '))} – sie bleiben erhalten.</p>` : ''}
+        </div>
       </div>
     `;
 
-    row.querySelector('.icon-btn').addEventListener('click', () => {
+    const titelInput = row.querySelector('.res-titel');
+    const urlInput = row.querySelector('.res-url');
+    const titleEl = row.querySelector('.dynamic-row-title');
+    const updateTitle = () => { titleEl.textContent = titelInput.value.trim() || '(neu)'; };
+
+    if (item) {
+      titelInput.value = item.titel || '';
+      urlInput.value = item.url || '';
+      row.querySelector('.res-beschreibung').value = item.beschreibung || '';
+      setSelectKeepingValue(row.querySelector('.res-sprache'), item.sprache || '');
+    }
+    updateTitle();
+    titelInput.addEventListener('input', updateTitle);
+
+    row.querySelector('.icon-btn').addEventListener('click', e => {
+      e.preventDefault(); // nicht auf-/zuklappen
+      e.stopPropagation();
+      const name = titelInput.value.trim();
+      if ((row._original || name) && !window.confirm(`„${name || 'Diesen Eintrag'}“ entfernen? Endgültig wird das erst, wenn du übernimmst und die neue data.json hochlädst.`)) return;
       row.remove();
       renumberRows(kind);
+      formDirty = true;
     });
+
     rowContainer(kind).appendChild(row);
     renumberRows(kind);
 
     const picker = row.querySelector('[data-role="tag-picker"]');
-    renderTagPicker(picker, kind);
-    if (isVideo) {
-      row.querySelector('.res-url').addEventListener('input', e => suggestFormatFromUrl(e.target.value, picker));
-    }
+    renderTagPicker(picker, kind, item ? item.themen || [] : []);
+    if (isVideo) urlInput.addEventListener('input', () => suggestFormatFromUrl(urlInput.value, picker));
+    return row;
   }
 
-  $('add-video-btn').addEventListener('click', () => createDynamicRow('video'));
-  $('add-buch-btn').addEventListener('click', () => createDynamicRow('buch'));
+  function addRow(kind) {
+    const row = createDynamicRow(kind);
+    formDirty = true;
+    row.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' });
+    row.querySelector('.res-titel').focus({ preventScroll: true });
+  }
 
-  function collectRows(kind, profSprache, errors, warnings) {
+  $('add-video-btn').addEventListener('click', () => addRow('video'));
+  $('add-buch-btn').addEventListener('click', () => addRow('buch'));
+
+  /** Liest eine Zeile aus. Unbekannte Felder und die Tag-Reihenfolge des Originals bleiben erhalten. */
+  function rowResource(row, profSprache) {
+    const orig = row._original;
+    const titel = row.querySelector('.res-titel').value.trim();
+    const url = row.querySelector('.res-url').value.trim();
+    const sprache = row.querySelector('.res-sprache').value;
+    const beschreibung = row.querySelector('.res-beschreibung').value.trim();
+    let themen = [...getSelectedTags(row.querySelector('[data-role="tag-picker"]')), ...row._extraTags];
+    if (orig && Array.isArray(orig.themen) && sameSet(themen, orig.themen)) themen = [...orig.themen];
+
+    const resource = { titel, url };
+    if (sprache && sprache !== profSprache) resource.sprache = sprache;
+    if (beschreibung) resource.beschreibung = beschreibung;
+    resource.themen = themen;
+    if (orig) Object.keys(orig).forEach(k => { if (!RESOURCE_KEYS.includes(k)) resource[k] = orig[k]; });
+    return resource;
+  }
+
+  function collectRows(kind, profSprache, errors, warnings, stats) {
     const label = kind === 'video' ? 'Video' : 'Buch';
     const result = [];
     rowContainer(kind).querySelectorAll('.dynamic-row').forEach((row, i) => {
       const name = `${label} ${i + 1}`;
       const titel = row.querySelector('.res-titel').value.trim();
       const url = row.querySelector('.res-url').value.trim();
-      if (!titel && !url) return; // leere Zeile wird ignoriert
-      if (!titel || !url) {
-        errors.push(`${name}: Bitte Titel und URL ausfüllen.`);
-        return;
+      const fail = msg => { errors.push(msg); row.open = true; };
+
+      if (!titel && !url && !row._original) return; // leere neue Zeile wird ignoriert
+      if (!titel || !url) return fail(`${name}: Bitte Titel und URL ausfüllen (oder den Eintrag über ✕ entfernen).`);
+      if (!isHttpUrl(url)) return fail(`${name}: Die URL muss mit http:// oder https:// beginnen.`);
+
+      const resource = rowResource(row, profSprache);
+      const changed = !row._original || JSON.stringify(resource) !== JSON.stringify(row._original);
+      if (changed) {
+        stats[row._original ? 'changed' : 'added'] += 1;
+        stats.touched.push(resource);
+        getTagWarnings(resource.themen, kind).forEach(w => warnings.push(`${name} „${titel}“: ${w}`));
+        if ((resource.beschreibung || '').length > DESCRIPTION_MAX) {
+          warnings.push(`${name} „${titel}“: Die Beschreibung ist recht lang (${resource.beschreibung.length} Zeichen). 1–2 Sätze reichen.`);
+        }
       }
-      if (!isHttpUrl(url)) {
-        errors.push(`${name}: Die URL muss mit http:// oder https:// beginnen.`);
-        return;
-      }
-      const picker = row.querySelector('[data-role="tag-picker"]');
-      const themen = getSelectedTags(picker);
-      getTagWarnings(themen, kind).forEach(w => warnings.push(`${name} „${titel}“: ${w}`));
-      result.push(buildResource(titel, url, row.querySelector('.res-sprache').value, profSprache, themen));
+      if (row._original) stats.kept += 1;
+      result.push(resource);
     });
     return result;
   }
 
-  /* ---------- Modus 1: Name → ID ---------- */
+  /* =========================================================
+     Formular laden (Neu / Bearbeiten)
+     ========================================================= */
+
+  function fillBaseFields(prof) {
+    $('f-name').value = prof?.name || '';
+    $('f-id').value = prof?.id || '';
+    $('f-id').readOnly = Boolean(prof);
+    delete $('f-id').dataset.manuallyEdited;
+    $('f-id-hint').textContent = prof
+      ? 'Die ID bleibt fest, damit geteilte Links auf dieses Profil weiter funktionieren.'
+      : 'Wird automatisch aus dem Namen erzeugt. Nur Kleinbuchstaben, Ziffern und Bindestriche.';
+
+    fillLanguageSelect();
+    if (prof) setSelectKeepingValue($('f-sprache'), prof.sprache || '');
+    fillSpezSelect();
+    setSelectKeepingValue($('f-spez'), prof?.spezialisierung || '');
+    $('f-anmerkung').value = prof?.anmerkung || '';
+
+    $('videos-container').innerHTML = '';
+    $('buecher-container').innerHTML = '';
+  }
+
+  function loadFormForNew() {
+    editId = null;
+    fillBaseFields(null);
+    createDynamicRow('video');
+    createDynamicRow('buch');
+    $('save-btn').textContent = 'In data.json übernehmen';
+    $('delete-btn').hidden = true;
+    $('prof-form').hidden = false;
+    formDirty = false;
+  }
+
+  function loadFormForEdit(id) {
+    const prof = currentProfessor(id);
+    if (!prof) {
+      editId = null;
+      $('prof-form').hidden = true;
+      return;
+    }
+    editId = id;
+    fillBaseFields(prof);
+    (Array.isArray(prof.videos) ? prof.videos : []).forEach(v => { if (v && typeof v === 'object') createDynamicRow('video', v); });
+    (Array.isArray(prof.buecher) ? prof.buecher : []).forEach(b => { if (b && typeof b === 'object') createDynamicRow('buch', b); });
+    $('save-btn').textContent = 'Änderungen übernehmen';
+    $('delete-btn').hidden = false;
+    $('prof-form').hidden = false;
+    $('edit-prof-select').value = id;
+    formDirty = false;
+  }
+
+  function confirmDiscard() {
+    return !formDirty || window.confirm('Im Formular gibt es Eingaben, die noch nicht übernommen wurden. Verwerfen?');
+  }
+
+  function setMode(next) {
+    mode = next;
+    $('tab-new').classList.toggle('active', mode === 'new');
+    $('tab-edit').classList.toggle('active', mode === 'edit');
+    $('edit-section').hidden = mode !== 'edit';
+  }
+
+  $('tab-new').addEventListener('click', () => {
+    if (mode === 'new' && !formDirty) return;
+    if (!confirmDiscard()) return;
+    setMode('new');
+    loadFormForNew();
+  });
+
+  $('tab-edit').addEventListener('click', () => {
+    if (mode === 'edit') return;
+    if (!confirmDiscard()) return;
+    setMode('edit');
+    editId = null;
+    refreshEditSelect();
+    $('prof-form').hidden = true;
+    formDirty = false;
+  });
+
+  $('edit-prof-select').addEventListener('change', e => {
+    const id = e.target.value;
+    if (!confirmDiscard()) {
+      e.target.value = editId || '';
+      return;
+    }
+    if (!id) {
+      editId = null;
+      $('prof-form').hidden = true;
+      formDirty = false;
+      return;
+    }
+    loadFormForEdit(id);
+  });
 
   $('f-name').addEventListener('input', e => {
     const idField = $('f-id');
-    if (!idField.dataset.manuallyEdited) idField.value = suggestId(e.target.value);
+    if (mode === 'new' && !idField.dataset.manuallyEdited) idField.value = suggestId(e.target.value);
   });
+  $('f-id').addEventListener('input', e => { e.target.dataset.manuallyEdited = 'true'; });
 
-  $('f-id').addEventListener('input', e => {
-    e.target.dataset.manuallyEdited = 'true';
-  });
+  // Jede Eingabe im Formular merkt sich, dass etwas noch nicht übernommen ist
+  ['input', 'change'].forEach(type => $('prof-form').addEventListener(type, () => { formDirty = true; }));
+  $('prof-form').addEventListener('click', e => { if (e.target.closest('.tag-chip')) formDirty = true; });
 
-  /* ---------- Modus 1: Übernehmen ---------- */
+  /* =========================================================
+     Übernehmen
+     ========================================================= */
 
-  function generateNew() {
+  function save() {
     if (!guardLoaded()) return;
+
+    const isEdit = mode === 'edit';
+    const orig = isEdit ? currentProfessor(editId) : null;
+    if (isEdit && !orig) {
+      setStatus('error', 'Bitte zuerst einen Gelehrten auswählen.');
+      revealOutput();
+      return;
+    }
 
     const errors = [];
     const warnings = [];
+    const stats = { added: 0, changed: 0, kept: 0, touched: [] };
     const name = $('f-name').value.trim();
-    const id = $('f-id').value.trim() || suggestId(name);
+    const id = isEdit ? editId : ($('f-id').value.trim() || suggestId(name));
     const sprache = $('f-sprache').value;
     const spezialisierung = $('f-spez').value;
     const anmerkung = $('f-anmerkung').value.trim();
 
     if (!name) errors.push('Name fehlt.');
-    if (!id) {
-      errors.push('ID fehlt.');
-    } else if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(id)) {
-      errors.push('Die ID darf nur Kleinbuchstaben, Ziffern und einzelne Bindestriche enthalten (z. B. prof-max-mustermann).');
-    } else if (id !== editingNewId && mergedData().some(p => p.id === id)) {
-      errors.push(changes.get(id)?.isNew
-        ? `„${id}“ wurde in dieser Sitzung schon angelegt. Weitere Videos dazu bitte über den Reiter „Video/Buch zu bestehendem Gelehrten“ ergänzen.`
-        : `Die ID „${id}“ gibt es schon. Bitte eine andere wählen.`);
+    if (!isEdit) {
+      if (!id) {
+        errors.push('ID fehlt.');
+      } else if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(id)) {
+        errors.push('Die ID darf nur Kleinbuchstaben, Ziffern und einzelne Bindestriche enthalten (z. B. prof-max-mustermann).');
+      } else if (mergedData().some(p => p.id === id)) {
+        errors.push(`Die ID „${id}“ gibt es schon. Bitte eine andere wählen – oder den Gelehrten über „Gelehrten bearbeiten“ ändern.`);
+      }
     }
 
-    const videos = collectRows('video', sprache, errors, warnings);
-    const buecher = collectRows('buch', sprache, errors, warnings);
+    const videos = collectRows('video', sprache, errors, warnings, stats);
+    const buecher = collectRows('buch', sprache, errors, warnings, stats);
 
+    // Doppelte Links: innerhalb des Formulars und bei anderen Gelehrten (nur neue/geänderte Einträge)
     const all = [...videos, ...buecher];
-    all.forEach((r, i) => {
-      if (all.findIndex(o => urlKey(o.url) === urlKey(r.url)) !== i) {
-        warnings.push(`„${r.titel}“: Dieser Link steht in diesem Formular doppelt.`);
+    stats.touched.forEach(r => {
+      if (all.filter(o => urlKey(o.url) === urlKey(r.url)).length > 1) {
+        warnings.push(`„${r.titel}“: Dieser Link steht bei diesem Gelehrten doppelt.`);
       }
-      const dup = findDuplicateUrl(r.url, editingNewId);
+      const dup = findDuplicateUrl(r.url, id);
       if (dup) warnings.push(`„${r.titel}“: Dieser Link ist schon bei ${dup.prof.name} eingetragen („${dup.item.titel}“).`);
     });
 
@@ -594,165 +763,81 @@
     }
 
     const entry = { id, name, sprache, spezialisierung, anmerkung, videos, buecher };
-    const isUpdate = Boolean(editingNewId && changes.has(editingNewId));
-    if (isUpdate) changes.delete(editingNewId);
-    changes.set(id, { entry, isNew: true });
-    editingNewId = id;
-    $('f-id').value = id;
+    if (orig) Object.keys(orig).forEach(k => { if (!(k in entry)) entry[k] = orig[k]; });
 
-    changeLog.push(isUpdate ? `Neu (überarbeitet): ${name}` : `Neu: ${name}`);
+    if (isEdit && JSON.stringify(entry) === JSON.stringify(orig)) {
+      formDirty = false;
+      setStatus('ok', 'Keine Änderungen gefunden – es gibt nichts zu übernehmen.');
+      revealOutput();
+      return;
+    }
+
+    if (isEdit) {
+      const previous = changes.get(id);
+      changes.set(id, { entry, isNew: previous ? previous.isNew : false });
+      const origCount = (orig.videos || []).length + (orig.buecher || []).length;
+      const removed = origCount - stats.kept;
+      const parts = [];
+      if (['name', 'sprache', 'spezialisierung', 'anmerkung'].some(k => (orig[k] || '') !== entry[k])) parts.push('Grunddaten');
+      if (stats.added) parts.push(`${stats.added} neu`);
+      if (stats.changed) parts.push(`${stats.changed} geändert`);
+      if (removed) parts.push(`${removed} entfernt`);
+      changeLog.push(`Bearbeitet: ${name} – ${parts.join(', ') || 'Kleinigkeiten'}`);
+    } else {
+      changes.set(id, { entry, isNew: true });
+      changeLog.push(`Neu: ${name} (${countLabel(videos.length, 'Video', 'Videos')}, ${countLabel(buecher.length, 'Buch', 'Bücher')})`);
+    }
+
     unsaved = true;
-    refreshProfSelect();
+    // Nach dem Übernehmen geht es im Bearbeiten-Modus mit dem gespeicherten Stand weiter
+    setMode('edit');
+    editId = id;
+    refreshEditSelect();
+    loadFormForEdit(id);
     renderOutput();
 
-    const title = isUpdate ? `„${name}“ wurde aktualisiert.` : `„${name}“ wurde übernommen.`;
+    const title = isEdit ? `Änderungen an „${name}“ übernommen.` : `„${name}“ wurde angelegt.`;
     if (warnings.length) {
       setStatus('warn', `${title} Bitte noch prüfen:`, warnings);
     } else {
-      setStatus('ok', title, ['Lade jetzt die data.json herunter oder lege weitere Einträge an. Korrekturen an diesem Eintrag: Formular anpassen und erneut übernehmen.']);
+      setStatus('ok', title, [isEdit
+        ? 'Lade jetzt die data.json herunter oder bearbeite weitere Einträge.'
+        : 'Du kannst den Eintrag links direkt weiter bearbeiten oder die data.json herunterladen.']);
     }
     revealOutput(warnings.length ? `Übernommen – ${warnings.length} Hinweis(e) prüfen.` : 'Übernommen.');
   }
 
-  function resetNewForm() {
-    ['f-name', 'f-id', 'f-anmerkung'].forEach(id => { $(id).value = ''; });
-    delete $('f-id').dataset.manuallyEdited;
-    $('f-sprache').selectedIndex = 0;
-    $('f-spez').value = '';
-    $('videos-container').innerHTML = '';
-    $('buecher-container').innerHTML = '';
-    createDynamicRow('video');
-    createDynamicRow('buch');
-    editingNewId = null;
-    $('f-name').focus();
-  }
+  function deleteProfessor() {
+    if (!guardLoaded()) return;
+    const prof = currentProfessor(editId);
+    if (!prof) return;
 
-  $('generate-btn').addEventListener('click', generateNew);
-  $('reset-new-btn').addEventListener('click', resetNewForm);
-
-  /* ---------- Modus 2: Gelehrten wählen ---------- */
-
-  function refreshProfSelect() {
-    const select = $('existing-prof-select');
-    const previous = select.value;
-    const list = sortProfessors(mergedData());
-
-    if (list.length === 0) {
-      select.innerHTML = '<option value="">Keine Gelehrten gefunden – prüfe data.json</option>';
-      return;
-    }
-    select.innerHTML = '<option value="">Bitte wählen …</option>' + list.map(p =>
-      `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}${changes.get(p.id)?.isNew ? ' (neu)' : ''}</option>`
-    ).join('');
-    if (list.some(p => p.id === previous)) select.value = previous;
-    updateProfessorSummary();
-  }
-
-  function updateProfessorSummary() {
-    const prof = currentProfessor($('existing-prof-select').value);
-    const summary = $('existing-prof-summary');
-    const langSelect = $('existing-sprache');
-    const previousLang = langSelect.value;
-
-    langSelect.innerHTML = languageSelectHtml(`Wie beim Gelehrten${prof?.sprache ? ` (${prof.sprache})` : ''}`);
-    if ([...langSelect.options].some(o => o.value === previousLang)) langSelect.value = previousLang;
-
-    if (!prof) {
-      summary.textContent = '';
-      return;
-    }
     const videos = (prof.videos || []).length;
     const buecher = (prof.buecher || []).length;
-    summary.textContent = `${prof.spezialisierung || '–'} · ${prof.sprache || '–'} · bereits ${countLabel(videos, 'Video', 'Videos')} und ${countLabel(buecher, 'Buch', 'Bücher')}.`;
-  }
+    const question = `„${prof.name}“ mit ${countLabel(videos, 'Video', 'Videos')} und ${countLabel(buecher, 'Buch', 'Büchern')} löschen?\n\nEndgültig wird das erst, wenn du die neue data.json hochlädst.`;
+    if (!window.confirm(question)) return;
 
-  $('existing-prof-select').addEventListener('change', updateProfessorSummary);
+    const change = changes.get(prof.id);
+    changes.delete(prof.id);
+    if (!change?.isNew) deletions.add(prof.id);
 
-  /* ---------- Modus 2: Video oder Buch ---------- */
-
-  function setResourceKind(kind) {
-    currentResourceKind = kind;
-    $('kind-video-btn').classList.toggle('active', kind === 'video');
-    $('kind-buch-btn').classList.toggle('active', kind === 'buch');
-    $('existing-titel').placeholder = kind === 'video' ? 'Video-Titel' : 'Buch-/Quellentitel';
-    $('existing-url').placeholder = kind === 'video' ? 'https://www.youtube.com/watch?v=…' : 'https://…';
-
-    // Tag-Auswahl neu aufbauen (Format-Tags nur bei Videos), bisherige Auswahl behalten
-    const picker = $('existing-tag-picker');
-    const keep = new Set(getSelectedTags(picker));
-    renderTagPicker(picker, kind);
-    picker.querySelectorAll('.tag-chip').forEach(chip => {
-      if (keep.has(chip.dataset.tag)) chip.classList.add('selected');
-    });
-    if (kind === 'video') suggestFormatFromUrl($('existing-url').value, picker);
-    validateTagPicker(picker);
-  }
-
-  $('kind-video-btn').addEventListener('click', () => setResourceKind('video'));
-  $('kind-buch-btn').addEventListener('click', () => setResourceKind('buch'));
-  $('existing-url').addEventListener('input', e => suggestFormatFromUrl(e.target.value, $('existing-tag-picker')));
-
-  /* ---------- Modus 2: Übernehmen ---------- */
-
-  function generateExisting() {
-    if (!guardLoaded()) return;
-
-    const errors = [];
-    const id = $('existing-prof-select').value;
-    const prof = id ? currentProfessor(id) : null;
-    const titel = $('existing-titel').value.trim();
-    const url = $('existing-url').value.trim();
-
-    if (!prof) errors.push('Bitte einen Gelehrten auswählen.');
-    if (!titel) errors.push('Titel fehlt.');
-    if (!url) errors.push('URL fehlt.');
-    else if (!isHttpUrl(url)) errors.push('Die URL muss mit http:// oder https:// beginnen.');
-
-    if (errors.length) {
-      setStatus('error', 'Noch nicht übernommen – bitte korrigieren:', errors);
-      revealOutput('Bitte die markierten Punkte korrigieren.');
-      return;
-    }
-
-    const picker = $('existing-tag-picker');
-    const themen = getSelectedTags(picker);
-    const warnings = getTagWarnings(themen, currentResourceKind);
-    const dup = findDuplicateUrl(url);
-    if (dup) warnings.push(`Dieser Link ist schon bei ${dup.prof.name} eingetragen („${dup.item.titel}“).`);
-
-    const resource = buildResource(titel, url, $('existing-sprache').value, prof.sprache, themen);
-    const updated = JSON.parse(JSON.stringify(prof)); // tiefe Kopie, Original bleibt unverändert
-    const listKey = currentResourceKind === 'video' ? 'videos' : 'buecher';
-    if (!Array.isArray(updated[listKey])) updated[listKey] = [];
-    updated[listKey].push(resource);
-
-    const previous = changes.get(id);
-    changes.set(id, { entry: updated, isNew: previous ? previous.isNew : false });
-    // Das Formular „Neuer Gelehrter“ darf diesen Eintrag ab jetzt nicht mehr überschreiben
-    if (editingNewId === id) editingNewId = null;
-
-    const kindLabel = currentResourceKind === 'video' ? 'Video' : 'Buch';
-    changeLog.push(`${kindLabel} bei ${prof.name}: „${titel}“`);
+    changeLog.push(`Gelöscht: ${prof.name}`);
     unsaved = true;
-
-    // Felder leeren, damit derselbe Eintrag nicht versehentlich doppelt übernommen wird
-    $('existing-titel').value = '';
-    $('existing-url').value = '';
-    $('existing-sprache').value = '';
-    renderTagPicker(picker, currentResourceKind);
-
-    refreshProfSelect();
+    formDirty = false;
+    editId = null;
+    refreshEditSelect();
+    $('prof-form').hidden = true;
     renderOutput();
-
-    const title = `${kindLabel} „${titel}“ wurde bei ${prof.name} ergänzt.`;
-    if (warnings.length) setStatus('warn', `${title} Bitte noch prüfen:`, warnings);
-    else setStatus('ok', title, ['Lade jetzt die data.json herunter oder ergänze weitere Einträge.']);
-    revealOutput(warnings.length ? `Übernommen – ${warnings.length} Hinweis(e) prüfen.` : 'Übernommen.');
+    setStatus('ok', `„${prof.name}“ wurde gelöscht.`, ['Lade jetzt die data.json herunter, damit die Änderung online wirksam wird.']);
+    revealOutput('Gelöscht.');
   }
 
-  $('generate-existing-btn').addEventListener('click', generateExisting);
+  $('save-btn').addEventListener('click', save);
+  $('delete-btn').addEventListener('click', deleteProfessor);
 
-  /* ---------- Ausgabe, Status, Download ---------- */
+  /* =========================================================
+     Ausgabe, Status, Download
+     ========================================================= */
 
   function guardLoaded() {
     if (dataLoaded) return true;
@@ -772,10 +857,10 @@
   }
 
   function renderOutput() {
-    const hasChanges = changes.size > 0;
+    const hasChanges = changes.size > 0 || deletions.size > 0;
     $('json-output').textContent = hasChanges
       ? dataFileText()
-      : '// Noch keine Änderungen. Fülle links ein Formular aus und klicke auf „In data.json übernehmen“.';
+      : '// Noch keine Änderungen. Fülle links das Formular aus und klicke auf „übernehmen“.';
     $('download-btn').disabled = !hasChanges;
     $('copy-btn').disabled = !hasChanges;
     $('change-list').innerHTML = changeLog.map(t => `<li>${escapeHtml(t)}</li>`).join('');
@@ -812,19 +897,6 @@
     showToast('data.json wurde heruntergeladen.');
   }
 
-  async function copyToClipboard(text) {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-    }
-  }
-
   function showToast(message) {
     const toast = $('toast');
     toast.textContent = message;
@@ -835,27 +907,28 @@
 
   $('download-btn').addEventListener('click', downloadData);
   $('copy-btn').addEventListener('click', async () => {
-    await copyToClipboard(dataFileText());
-    unsaved = false;
-    showToast('Komplette data.json in die Zwischenablage kopiert.');
+    const ok = await copyText(dataFileText());
+    if (ok) unsaved = false;
+    showToast(ok ? 'Komplette data.json in die Zwischenablage kopiert.' : 'Kopieren nicht möglich – bitte „Herunterladen“ nutzen.');
   });
 
-  // Warnung beim Verlassen, wenn Änderungen noch nicht gesichert wurden
+  // Warnung beim Verlassen, wenn etwas noch nicht gesichert ist
   window.addEventListener('beforeunload', e => {
-    if (!unsaved) return;
+    if (!unsaved && !formDirty) return;
     e.preventDefault();
     e.returnValue = '';
   });
 
-  /* ---------- Start ---------- */
+  /* =========================================================
+     Start
+     ========================================================= */
 
   (async function init() {
     const [data, tagCfg] = await Promise.all([loadData(), loadTagConfig()]);
     cfg = tagCfg;
 
     if (data === null) {
-      dataLoaded = false;
-      ['generate-btn', 'generate-existing-btn'].forEach(id => { $(id).disabled = true; });
+      ['save-btn', 'delete-btn'].forEach(id => { $(id).disabled = true; });
       setStatus('error', 'data.json konnte nicht geladen werden.', [
         'Das Übernehmen ist gesperrt, damit keine Datei ohne die bisherigen Einträge entsteht.',
         'Öffne die Seite über GitHub Pages oder einen lokalen Webserver und prüfe, ob data.json gültiges JSON enthält.'
@@ -865,15 +938,10 @@
       dataLoaded = true;
     }
 
-    $('f-sprache').innerHTML = languageSelectHtml(null);
-    fillSpezSelect();
     document.querySelectorAll('[data-role="tag-guide"]').forEach(renderTagGuide);
-
-    createDynamicRow('video');
-    createDynamicRow('buch');
-
-    refreshProfSelect();
-    renderTagPicker($('existing-tag-picker'), 'video');
+    refreshEditSelect();
+    setMode('new');
+    loadFormForNew();
     renderOutput();
   })();
   </script>

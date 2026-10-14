@@ -1022,6 +1022,42 @@ pre#json-output{
 }
 .more-btn:hover{ border-color: var(--accent); background: var(--accent-soft); }
 
+/* Teilen-Button */
+.share-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color .15s ease, background-color .15s ease;
+}
+.share-btn:hover{ border-color: var(--accent); background: var(--accent-soft); }
+.filters-row .share-btn{ margin-left: auto; }
+.profile-head .share-btn{ flex-shrink: 0; }
+
+/* Titel + optionale Kurzbeschreibung in Video-/Buch-Einträgen */
+.resource-item .label{
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.resource-item .label-desc{
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
 /* Format-, Niveau- und Zugangs-Tags dezenter als inhaltliche Themen */
 .badge.meta{
   background: transparent;
@@ -1095,6 +1131,37 @@ pre#json-output{
 .tag-check div + div{ margin-top: 2px; }
 .tag-check .ok{ color: var(--accent); }
 .tag-check .warn{ color: #f2b65a; }
+
+/* ---------- Admin: aufklappbare Video-/Buch-Zeilen ---------- */
+details.dynamic-row > summary.dynamic-row-header{
+  list-style: none;
+  cursor: pointer;
+  gap: 10px;
+  margin-bottom: 0;
+}
+details.dynamic-row > summary.dynamic-row-header::-webkit-details-marker{ display: none; }
+details.dynamic-row > summary.dynamic-row-header::before{
+  content: '▸';
+  color: var(--text-faint);
+  font-size: 12px;
+  transition: transform .15s ease;
+}
+details.dynamic-row[open] > summary.dynamic-row-header::before{ transform: rotate(90deg); }
+details.dynamic-row[open] > summary.dynamic-row-header{ margin-bottom: 14px; }
+
+.dynamic-row-kind{ flex-shrink: 0; }
+.dynamic-row-title{
+  flex: 1;
+  min-width: 0;
+  font-size: 13.5px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.field label .optional{ font-weight: 400; color: var(--text-faint); }
+.field textarea.res-beschreibung{ min-height: 0; }
 
 /* ---------- Admin: Status, Änderungen, Ausgabe ---------- */
 .status-box{

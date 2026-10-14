@@ -147,7 +147,7 @@ function normalizeText(str) {
     .toLowerCase()
     .replace(/ß/g, 'ss')
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
     .replace(/['’‘`´ʿʾ]/g, '');
 }
 
@@ -171,6 +171,80 @@ function profileUrl(id) {
 
 function countLabel(n, singular, plural) {
   return `${n} ${n === 1 ? singular : plural}`;
+}
+
+/* =========================================================
+   Teilbare Links: Suche und Filter stehen in der Adresszeile
+   ========================================================= */
+
+/** Wert aus der URL in ein <select> übernehmen (Groß-/Kleinschreibung egal), unbekannte Werte ignorieren. */
+function setSelectValue(select, value) {
+  if (!select || !value) return;
+  const options = [...select.options];
+  const match = options.find(o => o.value === value)
+    || options.find(o => o.value.toLowerCase() === String(value).toLowerCase());
+  if (match) select.value = match.value;
+}
+
+/** Ersetzt die Parameter der aktuellen Adresse, ohne einen neuen Verlaufseintrag anzulegen. */
+function replaceUrlParams(params) {
+  const search = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value) search.set(key, value);
+  });
+  const query = search.toString();
+  const url = window.location.pathname + (query ? `?${query}` : '') + window.location.hash;
+  try {
+    window.history.replaceState(null, '', url);
+  } catch {
+    /* z. B. bei lokal geöffneten Dateien – Teilen funktioniert dann nur ohne Filter */
+  }
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    try {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      const ok = document.execCommand('copy');
+      textarea.remove();
+      return ok;
+    } catch {
+      return false;
+    }
+  }
+}
+
+/**
+ * „Link teilen“-Button: Auf dem Handy öffnet sich das Teilen-Menü
+ * (WhatsApp, Signal …), sonst wird der Link kopiert.
+ */
+function bindShareButton(button) {
+  if (!button) return;
+  const label = button.textContent.trim();
+  button.addEventListener('click', async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: document.title, url });
+        return;
+      } catch (err) {
+        if (err && err.name === 'AbortError') return; // Nutzer hat abgebrochen
+      }
+    }
+    const ok = await copyText(url);
+    button.textContent = ok ? 'Link kopiert ✓' : 'Kopieren nicht möglich';
+    clearTimeout(button._resetTimer);
+    button._resetTimer = setTimeout(() => { button.textContent = label; }, 2200);
+  });
 }
 
 /** Alphabetisch nach Namen, der Sammel-Eintrag „Allgemein“ zuletzt. */
@@ -211,6 +285,7 @@ function professorResources(prof) {
       if (!item || typeof item !== 'object' || !item.titel) return;
       list.push({
         titel: String(item.titel),
+        beschreibung: typeof item.beschreibung === 'string' ? item.beschreibung.trim() : '',
         url: item.url,
         themen: Array.isArray(item.themen) ? item.themen.filter(t => typeof t === 'string') : [],
         kind,
@@ -283,6 +358,7 @@ function resourceScore(cfg, r, terms) {
   return scoreFields([
     [normalizeText(r.titel), 4],
     [normalizeText(r.themen.map(t => tagLabel(cfg, t)).join(' ')), 3],
+    [normalizeText(r.beschreibung), 2],
     [normalizeText(r.prof.name), 2],
     [normalizeText(r.themen.map(t => tagInfo(cfg, t)?.beschreibung || '').join(' ')), 1]
   ], terms);
@@ -346,7 +422,10 @@ function resourceItemHtml(cfg, r, { showProf = false, showLang = 'always' } = {}
     <li class="resource-item">
       <a class="resource-main" href="${escapeHtml(safeUrl(r.url))}" target="_blank" rel="noopener noreferrer">
         <span class="icon" title="${kindLabel}">${ICONS[r.kind] || ICONS.video}</span>
-        <span class="label">${escapeHtml(r.titel)}</span>
+        <span class="label">
+          <span class="label-title">${escapeHtml(r.titel)}</span>
+          ${r.beschreibung ? `<span class="label-desc">${escapeHtml(r.beschreibung)}</span>` : ''}
+        </span>
         <span class="go">Öffnen ↗</span>
       </a>
       ${badges ? `<div class="resource-themes">${badges}</div>` : ''}
@@ -459,6 +538,29 @@ const IndexPage = (() => {
     els.resMore = document.getElementById('resource-more');
     els.grid = document.getElementById('card-grid');
     els.profCount = document.getElementById('result-count');
+    els.share = document.getElementById('share-btn');
+  }
+
+  /** URL-Parameter → Suchfeld und Filter (z. B. ?q=ramadan&sprache=Deutsch). */
+  function readUrlState() {
+    const params = new URLSearchParams(window.location.search);
+    els.search.value = params.get('q') || '';
+    setSelectValue(els.lang, params.get('sprache'));
+    setSelectValue(els.thema, params.get('thema'));
+    setSelectValue(els.niveau, params.get('niveau'));
+    setSelectValue(els.format, params.get('format'));
+    setSelectValue(els.spez, params.get('spez'));
+  }
+
+  function writeUrlState() {
+    replaceUrlParams({
+      q: els.search.value.trim(),
+      sprache: els.lang.value,
+      thema: els.thema.value,
+      niveau: els.niveau.value,
+      format: els.format.value,
+      spez: els.spez.value
+    });
   }
 
   function populateFilters() {
@@ -522,6 +624,7 @@ const IndexPage = (() => {
 
     renderResources(resourceHits, searchActive);
     renderProfessors(profHits);
+    writeUrlState();
   }
 
   function renderResources(hits, visible) {
@@ -629,8 +732,10 @@ const IndexPage = (() => {
       resources = allResources(profs);
       resourcesByProf = new Map(profs.map(p => [p, resources.filter(r => r.prof === p)]));
       populateFilters();
+      readUrlState();
       bindEvents();
       bindCardNavigation();
+      bindShareButton(els.share);
       applyFilters();
     } catch (err) {
       console.error('Fehler beim Aufbau der Übersicht:', err);
@@ -711,6 +816,7 @@ const ProfilePage = (() => {
         return;
       }
       renderProfile(entry);
+      bindShareButton(document.getElementById('profile-share'));
     } catch (err) {
       console.error('Fehler beim Anzeigen des Profils:', err);
       show('not-found');
@@ -816,8 +922,12 @@ const ThemenPage = (() => {
 
     try {
       stats = collectStats(data);
+      els.search.value = new URLSearchParams(window.location.search).get('q') || '';
       render();
-      els.search.addEventListener('input', render);
+      els.search.addEventListener('input', () => {
+        render();
+        replaceUrlParams({ q: els.search.value.trim() });
+      });
     } catch (err) {
       console.error('Fehler beim Aufbau der Themen-Übersicht:', err);
       els.groups.innerHTML = errorStateHtml(
@@ -838,15 +948,16 @@ const ThemenPage = (() => {
 const ThemaPage = (() => {
   let cfg = buildTagConfig(null);
   let matches = [];
+  let themaLabel = '';
   const els = {};
 
   function cacheEls() {
     [
       ['loading', 'thema-loading-state'], ['notFound', 'thema-not-found-state'], ['empty', 'thema-empty-state'],
       ['content', 'thema-content'], ['eyebrow', 'thema-eyebrow'], ['title', 'thema-title'],
-      ['desc', 'thema-desc'], ['summary', 'thema-summary'], ['filters', 'thema-filters'],
+      ['desc', 'thema-desc'], ['summary', 'thema-summary'],
       ['lang', 'thema-filter-lang'], ['format', 'thema-filter-format'], ['niveau', 'thema-filter-niveau'],
-      ['clear', 'thema-clear'], ['filterEmpty', 'thema-filter-empty'],
+      ['clear', 'thema-clear'], ['filterEmpty', 'thema-filter-empty'], ['share', 'thema-share'],
       ['profPanel', 'thema-professoren-panel'], ['profList', 'thema-professoren'],
       ['videosPanel', 'thema-videos-panel'], ['videosList', 'thema-videos'],
       ['buecherPanel', 'thema-buecher-panel'], ['buecherList', 'thema-buecher']
@@ -869,7 +980,7 @@ const ThemaPage = (() => {
     setup(els.lang, 'Alle Sprachen', languageOptions(cfg, matches));
     setup(els.format, 'Alle Formate', formatOptions(cfg, matches));
     setup(els.niveau, 'Alle Niveaus', groupOptions(cfg, matches, 'niveau'));
-    els.filters.hidden = [els.lang, els.format, els.niveau].every(s => s.hidden);
+    els.clear.hidden = [els.lang, els.format, els.niveau].every(s => s.hidden);
   }
 
   function currentFilters() {
@@ -908,6 +1019,9 @@ const ThemaPage = (() => {
     renderPanel(els.videosPanel, els.videosList, videos, item);
     renderPanel(els.buecherPanel, els.buecherList, buecher, item);
     els.filterEmpty.hidden = visible.length > 0;
+
+    const f = currentFilters();
+    replaceUrlParams({ thema: themaLabel, sprache: f.sprache, format: f.format, niveau: f.niveau });
   }
 
   async function init() {
@@ -923,6 +1037,7 @@ const ThemaPage = (() => {
 
     try {
       const label = tagLabel(cfg, thema.trim());
+      themaLabel = label;
       const info = tagInfo(cfg, label);
       const needle = label.toLowerCase();
       matches = allResources(sortProfessors(data)).filter(r => r.themen.some(t => t.toLowerCase() === needle));
@@ -939,6 +1054,11 @@ const ThemaPage = (() => {
       }
 
       setupFilters();
+      const params = new URLSearchParams(window.location.search);
+      setSelectValue(els.lang, params.get('sprache'));
+      setSelectValue(els.format, params.get('format'));
+      setSelectValue(els.niveau, params.get('niveau'));
+      bindShareButton(els.share);
       [els.lang, els.format, els.niveau].forEach(s => s.addEventListener('change', render));
       els.clear.addEventListener('click', () => {
         [els.lang, els.format, els.niveau].forEach(s => { s.value = ''; });
