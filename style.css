@@ -528,22 +528,29 @@ a.badge:hover{
   border: 1px solid var(--border-soft);
   background: var(--bg-elevated);
   overflow: hidden;
+  transition: border-color .15s ease, box-shadow .15s ease;
 }
 
 .resource-main{
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 14px;
-  transition: background-color .15s ease;
+  padding: 14px 16px;
 }
 
-.resource-item:hover .resource-main{
-  background: var(--accent-soft);
-}
-
-.resource-item:has(.resource-main:hover){
+/* Hover färbt den ganzen Eintrag einheitlich ein – Titelzeile und Tag-Zeile.
+   Die Einfärbung liegt als innerer Schatten über dem Hintergrund, damit
+   die halbtransparente Akzentfarbe auf dem dunklen Grund gleich aussieht. */
+.resource-item:hover,
+.resource-item:focus-within{
   border-color: var(--accent);
+  box-shadow: inset 0 0 0 100vmax var(--accent-soft);
+}
+
+/* Tag-Ränder auf der eingefärbten Fläche sichtbar halten */
+.resource-item:hover .badge,
+.resource-item:focus-within .badge{
+  border-color: rgba(141, 152, 179, 0.35);
 }
 
 .resource-item .icon{
@@ -576,7 +583,8 @@ a.badge:hover{
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  padding: 0 14px 12px 60px;
+  /* links bündig mit dem Titel: 16px Rand + 34px Icon + 12px Abstand */
+  padding: 2px 16px 16px 62px;
 }
 
 .not-found{
@@ -1216,5 +1224,5 @@ details.dynamic-row[open] > summary.dynamic-row-header{ margin-bottom: 14px; }
   .card-grid{ grid-template-columns: 1fr; }
   .themen-cloud{ grid-template-columns: 1fr; }
   .profile-head{ flex-direction: column; }
-  .resource-themes{ padding-left: 14px; }
+  .resource-themes{ padding-left: 16px; }
 }
