@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Archiv Logo">
+  <defs>
+    <linearGradient id="archivGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#29d4e8"/>
+      <stop offset="1" stop-color="#7c9dfb"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Hintergrund: abgerundetes Quadrat im Seitenverlauf -->
+  <rect width="64" height="64" rx="15" fill="url(#archivGrad)"/>
+
+  <!-- Buchstabe A als Dach / Buchrücken -->
+  <path d="M16 49 L32 14 L48 49" fill="none" stroke="#051019" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Querbalken als aufgeschlagenes Buch -->
+  <path d="M23.5 38 Q28 34.5 32 38 Q36 34.5 40.5 38" fill="none" stroke="#051019" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
