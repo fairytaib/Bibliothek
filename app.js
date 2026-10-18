@@ -1123,6 +1123,104 @@ const ThemaPage = (() => {
 })();
 
 /* =========================================================
+   LEITFADEN (leitfaden.html): Duas und Vorlage kopieren,
+   SharePoint-Button nur aktiv, wenn ein Link eingetragen ist
+   ========================================================= */
+
+const LeitfadenPage = (() => {
+  function toast(message) {
+    const el = document.getElementById('toast');
+    if (!el) return;
+    el.textContent = message;
+    el.classList.add('show');
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  /** Kurze Bestätigung direkt am Button, ohne das Icon zu verlieren. */
+  function flashButton(button, labelSelector, text) {
+    const label = button.querySelector(labelSelector) || button;
+    if (!button.dataset.label) button.dataset.label = label.textContent;
+    label.textContent = text;
+    button.classList.add('is-done');
+    clearTimeout(button._timer);
+    button._timer = setTimeout(() => {
+      label.textContent = button.dataset.label;
+      button.classList.remove('is-done');
+    }, 2000);
+  }
+
+  function textOf(id) {
+    const el = document.getElementById(id);
+    return el ? el.textContent.trim() : '';
+  }
+
+  /** Die Vorlage nutzt dieselben Dua-Texte wie die Seite – es gibt sie nur an einer Stelle. */
+  function templateText() {
+    return [
+      '[Titel des Unterrichts]',
+      '',
+      '1. Basmala & Dua',
+      textOf('dua-eroeffnung'),
+      '',
+      '2. Salawat',
+      textOf('dua-salawat'),
+      '',
+      '3. Inhalt',
+      '[Hauptteil – jede Aussage mit Quelle belegen]',
+      '• Koranvers: „…“ (Sure:Vers)',
+      '• Hadith: „…“ (Sammlung Nummer)',
+      '• Kommentar: „…“ (Vortrag, Buch, YouTube …)',
+      '',
+      '4. Fazit',
+      'Merksatz: […]',
+      '',
+      '5. Abschlussdua',
+      textOf('dua-abschluss'),
+      '',
+      '6. Quellen',
+      '• […]',
+      ''
+    ].join('\n');
+  }
+
+  function bindCopy() {
+    document.querySelectorAll('[data-copy]').forEach(button => {
+      button.addEventListener('click', async () => {
+        const ok = await copyText(textOf(button.dataset.copy));
+        flashButton(button, '.copy-label', ok ? 'Kopiert ✓' : 'Nicht möglich');
+      });
+    });
+    document.querySelectorAll('[data-action="copy-template"]').forEach(button => {
+      button.addEventListener('click', async () => {
+        const ok = await copyText(templateText());
+        flashButton(button, '.btn-label', ok ? 'Vorlage kopiert ✓' : 'Kopieren nicht möglich');
+        toast(ok ? 'Vorlage kopiert – jetzt in dein Dokument einfügen.' : 'Kopieren wird von diesem Browser nicht unterstützt.');
+      });
+    });
+  }
+
+  /** Ohne gültigen Link ist der Button ausgegraut statt ins Leere zu führen. */
+  function checkSharepointLink() {
+    const link = document.getElementById('sharepoint-link');
+    if (!link) return;
+    const href = (link.getAttribute('href') || '').trim();
+    if (/^https?:\/\//i.test(href)) return;
+    link.removeAttribute('href');
+    link.setAttribute('aria-disabled', 'true');
+    link.classList.add('is-disabled');
+    link.title = 'Link folgt';
+  }
+
+  function init() {
+    bindCopy();
+    checkSharepointLink();
+  }
+
+  return { init };
+})();
+
+/* =========================================================
    Start je nach Seite
    ========================================================= */
 
@@ -1131,4 +1229,5 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('profile-content')) ProfilePage.init();
   if (document.getElementById('themen-groups')) ThemenPage.init();
   if (document.getElementById('thema-content')) ThemaPage.init();
+  if (document.querySelector('.guide')) LeitfadenPage.init();
 });

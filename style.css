@@ -1445,3 +1445,167 @@ a, button, summary, select{ -webkit-tap-highlight-color: transparent; }
   /* auto-fit: ein einzelner sichtbarer Filter nimmt automatisch die volle Breite */
   .thema-filters .filter-fields{ display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
 }
+
+/* =========================================================
+   LEITFADEN (leitfaden.html) – kompakt
+   ========================================================= */
+.guide{ padding: 48px 0 88px; }
+.guide-wrap{ max-width: 760px; }
+
+.guide-intro{ margin-bottom: 28px; }
+.guide-intro h1{
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0 0 8px;
+}
+.guide-intro > p:not(.hero-eyebrow){ margin: 0 0 18px; color: var(--text-muted); font-size: 15.5px; }
+.btn.is-done{ filter: brightness(1.1); }
+
+.guide-card{
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px 22px;
+  margin-bottom: 12px;
+  scroll-margin-top: 90px;
+}
+.guide-card h2{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+}
+.guide-num{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+}
+.guide-card > p{ margin: 0 0 14px; color: var(--text-muted); font-size: 15px; line-height: 1.6; }
+.guide-card a:not(.btn){ color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+
+.guide-list{ margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.guide-list li{ position: relative; padding-left: 18px; color: var(--text-muted); font-size: 15px; line-height: 1.55; }
+.guide-list li::before{
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: .62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* Ablauf: kompakte Liste, Duas zum Aufklappen */
+.steps{ margin: 0; padding: 0; list-style: none; counter-reset: step; display: flex; flex-direction: column; gap: 6px; }
+.steps > li{ counter-increment: step; }
+.step{
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+}
+.step > summary, .step-plain{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 10px 14px;
+}
+.step > summary{ cursor: pointer; list-style: none; }
+.step > summary::-webkit-details-marker{ display: none; }
+.step > summary::before, .step-plain::before{
+  content: counter(step);
+  flex-shrink: 0;
+  width: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-faint);
+}
+.step-name{ font-size: 15px; font-weight: 600; color: var(--text); }
+.step-hint{ font-size: 13.5px; color: var(--text-faint); }
+.step-more{ margin-left: auto; font-size: 13px; font-weight: 600; color: var(--accent); white-space: nowrap; }
+.step-more::after{ content: '▾'; display: inline-block; margin-left: 4px; transition: transform .15s ease; }
+.step[open] .step-more::after{ transform: rotate(180deg); }
+.step > summary:hover .step-name{ color: var(--accent-strong); }
+
+.recite, .step-body{ padding: 0 14px 14px 44px; }
+.recite-text{
+  margin: 0 0 10px;
+  white-space: pre-line;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: var(--text);
+}
+.copy-btn{
+  height: 32px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.copy-btn:hover, .copy-btn.is-done{ border-color: var(--accent); background: var(--accent-soft); }
+
+.step-body p{ margin: 0 0 6px; font-size: 14px; color: var(--text-muted); }
+.cite{ display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.cite code{ font-family: var(--font-mono); font-size: 13px; color: var(--accent-strong); }
+
+/* SharePoint-Button ohne Link */
+.btn.is-disabled{ opacity: .45; cursor: not-allowed; pointer-events: none; }
+
+/* Format */
+.format-line{ display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+.format-line span{
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+.guide-card > p.guide-note{ margin: 0; font-size: 14.5px; font-weight: 600; color: #f2b65a; }
+
+@media (max-width: 640px){
+  .guide{ padding: 24px 0 56px; }
+  .guide-intro{ margin-bottom: 20px; }
+  .guide-intro .btn{ width: 100%; justify-content: center; }
+  .guide-card{ padding: 16px; }
+  .guide-card h2{ font-size: 18px; }
+  .recite, .step-body{ padding: 0 12px 12px; }
+  .step > summary, .step-plain{ padding: 10px 12px; }
+}
+
+/* Kopfzeile mit vier Menüpunkten: auf dem Handy nur das Logo als Startseiten-Link */
+@media (max-width: 640px){
+  .brand-name{ display: none; }
+  .nav-links{ gap: 0; }
+  .nav-links a{ padding: 8px 9px; font-size: 14px; }
+}
+@media (max-width: 380px){
+  .nav-links a{ padding: 8px 7px; font-size: 13.5px; }
+}
+@media (max-width: 359px){
+  .brand .mark{ display: inline-flex; width: 26px; height: 26px; }
+  .nav-links a{ padding: 8px 5px; font-size: 13px; }
+}
