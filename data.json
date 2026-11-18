@@ -358,7 +358,26 @@
     "sprache": "Englisch",
     "spezialisierung": "Allrounder",
     "anmerkung": "Englischer Prediger",
-    "videos": [],
+    "videos": [
+      {
+        "titel": "Ramadan erklärt",
+        "url": "https://www.youtube.com/watch?v=7nEk5SsLcos",
+        "themen": [
+          "Einzelvideo",
+          "Ramadan",
+          "Tazkiyah"
+        ]
+      },
+      {
+        "titel": "Vor Ramadan aufräumen",
+        "url": "https://www.youtube.com/watch?v=Q-eK7M4OqSo",
+        "themen": [
+          "Einzelvideo",
+          "Ramadan",
+          "Tazkiyah"
+        ]
+      }
+    ],
     "buecher": []
   },
   {
@@ -377,25 +396,7 @@
         ]
       },
       {
-        "titel": "Ramadan erklärt",
-        "url": "https://www.youtube.com/watch?v=7nEk5SsLcos",
-        "themen": [
-          "Einzelvideo",
-          "Ramadan",
-          "Tazkiyah"
-        ]
-      },
-      {
-        "titel": "Vor Ramadan aufräumen",
-        "url": "https://www.youtube.com/watch?v=Q-eK7M4OqSo",
-        "themen": [
-          "Einzelvideo",
-          "Ramadan",
-          "Tazkiyah"
-        ]
-      },
-      {
-        "titel": "“Aus dem Kontext genommen”",
+        "titel": "„Aus dem Kontext genommen“",
         "url": "https://youtube.com/playlist?list=PLutdSTmJ7bAJQaNrfGlijtvLsDcERufni&si=cSYjVSsNwXnziLZD",
         "themen": [
           "Playlist",
@@ -458,7 +459,7 @@
     "anmerkung": "Englischer Prediger",
     "videos": [
       {
-        "titel": "“Jüdische” Propheten",
+        "titel": "„Jüdische“ Propheten",
         "url": "https://youtube.com/playlist?list=PLZ6keVEpgaQudSpBndyDMV1j8RfesYXSD&si=5pDNhHy-IS-YVQwn",
         "themen": [
           "Playlist",
@@ -474,7 +475,7 @@
     "name": "Omar Suleiman",
     "sprache": "Englisch",
     "spezialisierung": "Allrounder",
-    "anmerkung": "Gründer des \"Yaqeen-Institutes\"",
+    "anmerkung": "Gründer des „Yaqeen-Institutes“",
     "videos": [
       {
         "titel": "Das Paradies",
@@ -494,7 +495,7 @@
         ]
       },
       {
-        "titel": "\"Für diejenigen, die jemanden verloren haben\"",
+        "titel": "„Für diejenigen, die jemanden verloren haben“",
         "url": "https://youtube.com/playlist?list=PLQ02IYL5pmhExgMFX9tTxaKRYcU18W0zJ&si=_eJ0SkaxIcuYIS6b",
         "themen": [
           "Playlist",
@@ -565,7 +566,7 @@
         ]
       },
       {
-        "titel": "Ramadan Prep 2026: A Complete Guide",
+        "titel": "Ramadan-Vorbereitung 2026: Ein umfassender Leitfaden",
         "url": "https://www.youtube.com/watch?v=yUvp5FblDl4",
         "themen": [
           "Einzelvideo",
