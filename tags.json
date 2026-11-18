@@ -54,6 +54,15 @@
       ]
     },
     {
+      "id": "anlaesse",
+      "name": "Islamische Anlässe",
+      "art": "thema",
+      "hinweis": "Hauptthema",
+      "tags": [
+        { "name": "Ramadan", "beschreibung": "Der gesegnete Monat Ramadan, in welchem der Quran herabgesandt wurde." },
+      ]
+    },
+    {
       "id": "geschichte",
       "name": "Geschichte & Personen",
       "art": "thema",
