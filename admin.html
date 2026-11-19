@@ -32,7 +32,7 @@
     <div class="container">
       <p class="hero-eyebrow">Admin</p>
       <h1>Einträge pflegen</h1>
-      <p>Gelehrte anlegen oder bearbeiten, Videos und Bücher ergänzen, ändern oder entfernen. Danach die fertige <code>data.json</code> herunterladen und im Repository ersetzen.</p>
+      <p>Neue Gelehrte anlegen, bei bestehenden Gelehrten neue Videos und Bücher hinzufügen oder vorhandene Einträge bearbeiten und löschen. Danach die fertige <code>data.json</code> herunterladen und im Repository ersetzen.</p>
     </div>
   </section>
 
@@ -45,23 +45,26 @@
 
           <div class="mode-tabs">
             <button type="button" class="mode-tab active" id="tab-new">Neu anlegen</button>
+            <button type="button" class="mode-tab" id="tab-add">Hinzufügen</button>
             <button type="button" class="mode-tab" id="tab-edit">Bearbeiten</button>
           </div>
+          <p class="field-hint" id="mode-description" style="margin: -6px 0 20px;"></p>
 
-          <!-- Nur im Bearbeiten-Modus -->
-          <div class="form-section" id="edit-section" hidden>
+          <!-- Nur in „Hinzufügen“ und „Bearbeiten“ -->
+          <div class="form-section" id="pick-section" hidden>
             <h2>Gelehrten auswählen</h2>
             <div class="field" style="margin-bottom: 0;">
-              <label for="edit-prof-select">Gelehrter</label>
-              <select id="edit-prof-select"></select>
-              <p class="field-hint">Alle Videos und Bücher erscheinen eingeklappt. Zum Ändern aufklappen, zum Entfernen auf ✕ klicken.</p>
+              <label for="pick-select">Gelehrter</label>
+              <select id="pick-select"></select>
+              <p class="field-hint" id="pick-hint"></p>
             </div>
           </div>
 
-          <!-- Gemeinsames Formular für Neu und Bearbeiten -->
+          <!-- Gemeinsames Formular für Neu anlegen, Hinzufügen und Bearbeiten -->
           <div id="prof-form">
 
-            <div class="form-section">
+            <!-- Nicht in „Hinzufügen“: Dort werden Gelehrte nicht verändert -->
+            <div class="form-section" id="base-section">
               <h2>Grunddaten</h2>
 
               <div class="field">
@@ -93,18 +96,21 @@
               </div>
             </div>
 
-            <div class="form-section">
+            <div class="form-section" id="videos-section">
               <h2>Videos</h2>
               <p class="field-hint" style="margin: -8px 0 16px;">Tags und Kurzbeschreibung sorgen dafür, dass ein Video über Suche, Filter und Themen-Seite gefunden wird.</p>
               <div data-role="tag-guide"></div>
               <div id="videos-container"></div>
+              <p class="field-hint" id="videos-empty" hidden>Keine Videos vorhanden. Neue Videos ergänzt du unter „Hinzufügen“.</p>
+              <!-- Nicht in „Bearbeiten“: Dort entstehen keine neuen Einträge -->
               <button type="button" class="add-row-btn" id="add-video-btn">+ Video hinzufügen</button>
             </div>
 
-            <div class="form-section">
+            <div class="form-section" id="buecher-section">
               <h2>Bücher &amp; Quellen</h2>
               <p class="field-hint" style="margin: -8px 0 16px;">Auch hier Tags zuordnen. Format-Tags (Playlist/Einzelvideo) entfallen bei Büchern.</p>
               <div id="buecher-container"></div>
+              <p class="field-hint" id="buecher-empty" hidden>Keine Bücher vorhanden. Neue Bücher ergänzt du unter „Hinzufügen“.</p>
               <button type="button" class="add-row-btn" id="add-buch-btn">+ Buch / Quelle hinzufügen</button>
             </div>
 
@@ -173,8 +179,8 @@
   const changes = new Map();  // id → { entry, isNew }
   const deletions = new Set();
   const changeLog = [];
-  let mode = 'new';           // 'new' | 'edit'
-  let editId = null;          // im Bearbeiten-Modus geöffneter Gelehrter
+  let mode = 'new';           // 'new' | 'add' | 'edit'
+  let selectedId = null;      // in „Hinzufügen“ / „Bearbeiten“ ausgewählter Gelehrter
   let formDirty = false;      // Formular enthält noch nicht übernommene Eingaben
   let unsaved = false;        // übernommene Änderungen noch nicht heruntergeladen/kopiert
 
@@ -301,13 +307,13 @@
     fillSelect($('f-spez'), '– keine Angabe –', options);
   }
 
-  function refreshEditSelect() {
-    const select = $('edit-prof-select');
+  function refreshPickSelect() {
+    const select = $('pick-select');
     const list = sortProfessors(mergedData());
     select.innerHTML = '<option value="">Bitte wählen …</option>' + list.map(p =>
       `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}${changes.get(p.id)?.isNew ? ' (neu)' : ''}</option>`
     ).join('');
-    select.value = editId && list.some(p => p.id === editId) ? editId : '';
+    select.value = selectedId && list.some(p => p.id === selectedId) ? selectedId : '';
   }
 
   /* =========================================================
@@ -537,6 +543,7 @@
       if ((row._original || name) && !window.confirm(`„${name || 'Diesen Eintrag'}“ entfernen? Endgültig wird das erst, wenn du übernimmst und die neue data.json hochlädst.`)) return;
       row.remove();
       renumberRows(kind);
+      updateEmptyNotes();
       formDirty = true;
     });
 
@@ -630,31 +637,47 @@
   }
 
   function loadFormForNew() {
-    editId = null;
+    selectedId = null;
     fillBaseFields(null);
     createDynamicRow('video');
     createDynamicRow('buch');
-    $('save-btn').textContent = 'In data.json übernehmen';
-    $('delete-btn').hidden = true;
     $('prof-form').hidden = false;
+    applyModeLayout();
+    formDirty = false;
+  }
+
+  /** „Hinzufügen“: nur leere Zeilen für neue Einträge. Vorhandene Videos/Bücher und Grunddaten werden nicht geladen. */
+  function loadFormForAdd(id) {
+    if (!currentProfessor(id)) {
+      selectedId = null;
+      $('prof-form').hidden = true;
+      return;
+    }
+    selectedId = id;
+    $('videos-container').innerHTML = '';
+    $('buecher-container').innerHTML = '';
+    createDynamicRow('video');
+    createDynamicRow('buch');
+    $('pick-select').value = id;
+    $('prof-form').hidden = false;
+    applyModeLayout();
     formDirty = false;
   }
 
   function loadFormForEdit(id) {
     const prof = currentProfessor(id);
     if (!prof) {
-      editId = null;
+      selectedId = null;
       $('prof-form').hidden = true;
       return;
     }
-    editId = id;
+    selectedId = id;
     fillBaseFields(prof);
     (Array.isArray(prof.videos) ? prof.videos : []).forEach(v => { if (v && typeof v === 'object') createDynamicRow('video', v); });
     (Array.isArray(prof.buecher) ? prof.buecher : []).forEach(b => { if (b && typeof b === 'object') createDynamicRow('buch', b); });
-    $('save-btn').textContent = 'Änderungen übernehmen';
-    $('delete-btn').hidden = false;
     $('prof-form').hidden = false;
-    $('edit-prof-select').value = id;
+    $('pick-select').value = id;
+    applyModeLayout();
     formDirty = false;
   }
 
@@ -662,43 +685,81 @@
     return !formDirty || window.confirm('Im Formular gibt es Eingaben, die noch nicht übernommen wurden. Verwerfen?');
   }
 
+  const MODE_TEXT = {
+    new: 'Neue Gelehrte mit ihren Videos und Büchern anlegen. Bestehende Gelehrte bleiben hier unverändert.',
+    add: 'Neue Videos und Bücher bei bestehenden Gelehrten ergänzen. Vorhandene Einträge sind hier nicht sichtbar und bleiben unverändert.',
+    edit: 'Vorhandene Gelehrte, Videos und Bücher ändern oder löschen. Neue Einträge legst du unter „Hinzufügen“ an.'
+  };
+
+  const PICK_HINT = {
+    add: 'Es werden nur neue Einträge ergänzt. Nach dem Übernehmen kannst du den nächsten Gelehrten auswählen.',
+    edit: 'Alle Videos und Bücher erscheinen eingeklappt. Zum Ändern aufklappen, zum Entfernen auf ✕ klicken.'
+  };
+
+  const SAVE_LABEL = {
+    new: 'Gelehrten anlegen',
+    add: 'Einträge hinzufügen',
+    edit: 'Änderungen übernehmen'
+  };
+
   function setMode(next) {
     mode = next;
-    $('tab-new').classList.toggle('active', mode === 'new');
-    $('tab-edit').classList.toggle('active', mode === 'edit');
-    $('edit-section').hidden = mode !== 'edit';
+    ['new', 'add', 'edit'].forEach(m => $('tab-' + m).classList.toggle('active', mode === m));
+    $('pick-section').hidden = mode === 'new';
+    $('pick-hint').textContent = PICK_HINT[mode] || '';
+    $('mode-description').textContent = MODE_TEXT[mode];
   }
 
-  $('tab-new').addEventListener('click', () => {
-    if (mode === 'new' && !formDirty) return;
-    if (!confirmDiscard()) return;
-    setMode('new');
-    loadFormForNew();
-  });
+  /** Blendet je nach Bereich ein, was dort erlaubt ist – und nur das. */
+  function applyModeLayout() {
+    $('base-section').hidden = mode === 'add';                   // Gelehrte werden in „Hinzufügen“ nicht verändert
+    $('add-video-btn').hidden = mode === 'edit';                 // in „Bearbeiten“ entstehen keine neuen Einträge
+    $('add-buch-btn').hidden = mode === 'edit';
+    $('delete-btn').hidden = !(mode === 'edit' && selectedId);   // Löschen nur in „Bearbeiten“
+    $('save-btn').textContent = SAVE_LABEL[mode];
+    updateEmptyNotes();
+  }
 
-  $('tab-edit').addEventListener('click', () => {
-    if (mode === 'edit') return;
-    if (!confirmDiscard()) return;
-    setMode('edit');
-    editId = null;
-    refreshEditSelect();
-    $('prof-form').hidden = true;
-    formDirty = false;
-  });
+  /** In „Bearbeiten“ ohne Einträge: kurzer Hinweis statt leerer Fläche. */
+  function updateEmptyNotes() {
+    $('videos-empty').hidden = !(mode === 'edit' && !$('videos-container').children.length);
+    $('buecher-empty').hidden = !(mode === 'edit' && !$('buecher-container').children.length);
+  }
 
-  $('edit-prof-select').addEventListener('change', e => {
+  function switchMode(next) {
+    if (mode === next && !formDirty) return;
+    if (!confirmDiscard()) return;
+    setMode(next);
+    selectedId = null;
+    if (next === 'new') {
+      loadFormForNew();
+    } else {
+      refreshPickSelect();
+      $('prof-form').hidden = true;
+      formDirty = false;
+      applyModeLayout();
+    }
+  }
+
+  $('tab-new').addEventListener('click', () => switchMode('new'));
+  $('tab-add').addEventListener('click', () => switchMode('add'));
+  $('tab-edit').addEventListener('click', () => switchMode('edit'));
+
+  $('pick-select').addEventListener('change', e => {
     const id = e.target.value;
     if (!confirmDiscard()) {
-      e.target.value = editId || '';
+      e.target.value = selectedId || '';
       return;
     }
     if (!id) {
-      editId = null;
+      selectedId = null;
       $('prof-form').hidden = true;
       formDirty = false;
+      applyModeLayout();
       return;
     }
-    loadFormForEdit(id);
+    if (mode === 'add') loadFormForAdd(id);
+    else loadFormForEdit(id);
   });
 
   $('f-name').addEventListener('input', e => {
@@ -717,9 +778,13 @@
 
   function save() {
     if (!guardLoaded()) return;
+    if (mode === 'add') {
+      saveAdditions();
+      return;
+    }
 
     const isEdit = mode === 'edit';
-    const orig = isEdit ? currentProfessor(editId) : null;
+    const orig = isEdit ? currentProfessor(selectedId) : null;
     if (isEdit && !orig) {
       setStatus('error', 'Bitte zuerst einen Gelehrten auswählen.');
       revealOutput();
@@ -730,7 +795,7 @@
     const warnings = [];
     const stats = { added: 0, changed: 0, kept: 0, touched: [] };
     const name = $('f-name').value.trim();
-    const id = isEdit ? editId : ($('f-id').value.trim() || suggestId(name));
+    const id = isEdit ? selectedId : ($('f-id').value.trim() || suggestId(name));
     const sprache = $('f-sprache').value;
     const spezialisierung = $('f-spez').value;
     const anmerkung = $('f-anmerkung').value.trim();
@@ -742,7 +807,10 @@
       } else if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(id)) {
         errors.push('Die ID darf nur Kleinbuchstaben, Ziffern und einzelne Bindestriche enthalten (z. B. prof-max-mustermann).');
       } else if (mergedData().some(p => p.id === id)) {
-        errors.push(`Die ID „${id}“ gibt es schon. Bitte eine andere wählen – oder den Gelehrten über „Bearbeiten“ ändern.`);
+        errors.push(`Die ID „${id}“ gibt es schon. Bitte eine andere wählen. Neue Videos für bestehende Gelehrte gehören unter „Hinzufügen“.`);
+      }
+      if (name && mergedData().some(p => String(p.name || '').trim().toLowerCase() === name.toLowerCase())) {
+        warnings.push(`Es gibt bereits einen Gelehrten namens „${name}“. Falls du nur neue Videos ergänzen willst, nutze „Hinzufügen“.`);
       }
     }
 
@@ -792,11 +860,17 @@
     }
 
     unsaved = true;
-    // Nach dem Übernehmen geht es im Bearbeiten-Modus mit dem gespeicherten Stand weiter
-    setMode('edit');
-    editId = id;
-    refreshEditSelect();
-    loadFormForEdit(id);
+    if (isEdit) {
+      // Bearbeiten: mit dem gespeicherten Stand weitermachen
+      selectedId = id;
+      refreshPickSelect();
+      loadFormForEdit(id);
+    } else {
+      // Neu anlegen: leeres Formular für den nächsten Gelehrten. Der neue Gelehrte wird hier
+      // nicht weiter verändert – das geht unter „Bearbeiten“ bzw. „Hinzufügen“.
+      loadFormForNew();
+      refreshPickSelect();
+    }
     renderOutput();
 
     const title = isEdit ? `Änderungen an „${name}“ übernommen.` : `„${name}“ wurde angelegt.`;
@@ -805,14 +879,85 @@
     } else {
       setStatus('ok', title, [isEdit
         ? 'Lade jetzt die data.json herunter oder bearbeite weitere Einträge.'
-        : 'Du kannst den Eintrag direkt weiter bearbeiten oder die data.json herunterladen.']);
+        : 'Das Formular ist wieder leer. Lege den nächsten Gelehrten an oder lade die data.json herunter.']);
     }
     revealOutput(warnings.length ? `Übernommen – ${warnings.length} Hinweis(e) prüfen.` : 'Übernommen.');
   }
 
+  /**
+   * „Hinzufügen“: hängt neue Videos/Bücher an einen bestehenden Gelehrten an.
+   * Vorhandene Einträge und Grunddaten werden unverändert übernommen.
+   */
+  function saveAdditions() {
+    const orig = currentProfessor(selectedId);
+    if (!orig) {
+      setStatus('error', 'Bitte zuerst einen Gelehrten auswählen.');
+      revealOutput();
+      return;
+    }
+
+    const errors = [];
+    const warnings = [];
+    const stats = { added: 0, changed: 0, kept: 0, touched: [] };
+    const profSprache = orig.sprache || '';
+    const videos = collectRows('video', profSprache, errors, warnings, stats);
+    const buecher = collectRows('buch', profSprache, errors, warnings, stats);
+
+    if (!errors.length && videos.length + buecher.length === 0) {
+      errors.push('Bitte mindestens ein Video oder Buch ausfüllen.');
+    }
+
+    // Doppelte Links: innerhalb der neuen Einträge und gegenüber allen vorhandenen.
+    // Bei vorhandenen Einträgen wird nur der Gelehrte genannt, nicht deren Titel.
+    const all = [...videos, ...buecher];
+    stats.touched.forEach(r => {
+      if (all.filter(o => urlKey(o.url) === urlKey(r.url)).length > 1) {
+        warnings.push(`„${r.titel}“: Dieser Link steht in diesem Formular doppelt.`);
+      }
+      const dup = findDuplicateUrl(r.url, null);
+      if (dup) warnings.push(`„${r.titel}“: Dieser Link ist schon bei ${dup.prof.name} eingetragen.`);
+    });
+
+    if (errors.length) {
+      setStatus('error', 'Noch nicht übernommen – bitte korrigieren:', errors);
+      revealOutput('Bitte die markierten Punkte korrigieren.');
+      return;
+    }
+
+    const entry = {
+      ...orig,
+      videos: [...(Array.isArray(orig.videos) ? orig.videos : []), ...videos],
+      buecher: [...(Array.isArray(orig.buecher) ? orig.buecher : []), ...buecher]
+    };
+    const previous = changes.get(orig.id);
+    changes.set(orig.id, { entry, isNew: previous ? previous.isNew : false });
+
+    const parts = [];
+    if (videos.length) parts.push(countLabel(videos.length, 'Video', 'Videos'));
+    if (buecher.length) parts.push(countLabel(buecher.length, 'Buch', 'Bücher'));
+    changeLog.push(`Hinzugefügt: ${orig.name} – ${parts.join(', ')}`);
+    unsaved = true;
+
+    // Für den nächsten Gelehrten zurücksetzen
+    selectedId = null;
+    refreshPickSelect();
+    $('prof-form').hidden = true;
+    formDirty = false;
+    applyModeLayout();
+    renderOutput();
+
+    const title = `${parts.join(' und ')} bei „${orig.name}“ hinzugefügt.`;
+    if (warnings.length) {
+      setStatus('warn', `${title} Bitte noch prüfen:`, warnings);
+    } else {
+      setStatus('ok', title, ['Wähle den nächsten Gelehrten aus oder lade die data.json herunter.']);
+    }
+    revealOutput(warnings.length ? `Hinzugefügt – ${warnings.length} Hinweis(e) prüfen.` : 'Hinzugefügt.');
+  }
+
   function deleteProfessor() {
     if (!guardLoaded()) return;
-    const prof = currentProfessor(editId);
+    const prof = currentProfessor(selectedId);
     if (!prof) return;
 
     const videos = (prof.videos || []).length;
@@ -827,8 +972,8 @@
     changeLog.push(`Gelöscht: ${prof.name}`);
     unsaved = true;
     formDirty = false;
-    editId = null;
-    refreshEditSelect();
+    selectedId = null;
+    refreshPickSelect();
     $('prof-form').hidden = true;
     renderOutput();
     setStatus('ok', `„${prof.name}“ wurde gelöscht.`, ['Lade jetzt die data.json herunter, damit die Änderung online wirksam wird.']);
@@ -863,7 +1008,7 @@
     const hasChanges = changes.size > 0 || deletions.size > 0;
     $('json-output').textContent = hasChanges
       ? dataFileText()
-      : '// Noch keine Änderungen. Fülle das Formular aus und klicke auf „In data.json übernehmen“.';
+      : '// Noch keine Änderungen. Sobald du Eingaben übernimmst, erscheint hier die fertige data.json.';
     $('download-btn').disabled = !hasChanges;
     $('copy-btn').disabled = !hasChanges;
     $('change-list').innerHTML = changeLog.map(t => `<li>${escapeHtml(t)}</li>`).join('');
@@ -942,7 +1087,7 @@
     }
 
     document.querySelectorAll('[data-role="tag-guide"]').forEach(renderTagGuide);
-    refreshEditSelect();
+    refreshPickSelect();
     setMode('new');
     loadFormForNew();
     renderOutput();
